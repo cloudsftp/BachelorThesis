@@ -1,6 +1,9 @@
 \documentclass{article}
+
+\usepackage[toc,page]{appendix}
+
 \author{Fabian Weik}
-\date{October 3, 2020}
+\date{October 5, 2020}
 
 \title{Quantum Computing for Smart Energy Optimizations}
 
@@ -8,8 +11,16 @@
 
   \maketitle
 
+  \input{Section/intro.tex}
   \input{Section/research_questions.tex}
   \input{Section/method.tex}
-  \input{Section/time_plan.tex}
+
+  \begin{appendices}
+    \input{Section/time_plan.tex}
+  \end{appendices}
+
+
+  \bibliography{references}
+  \bibliographystyle{ieeetr}
 
 \end{document}
