@@ -1,9 +1,12 @@
 import json
-
-from pandas.core.indexes import interval
 import numpy as np
 import pandas as pd
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
+
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+from Experiments.Data.demand_data import DemandData
 
 class EV_Data(object):
   unimportant_keys = ['clusterID', 'siteID', 'spaceID', 'stationID', 'timezone', 'userID', 'userInputs']
@@ -47,25 +50,14 @@ class EV_Data(object):
       item['hours'] = hours
       item['kw'] = kw
 
-  def get_load_of_timeframe(self, start: datetime, end : datetime, period_minutes = 10) -> pd.DataFrame:
-    interval = end - start
-    interval_minutes = interval.days * 1440 + interval.seconds / 60
-    num_data_points = int (interval_minutes / period_minutes)
-
-    df = pd.DataFrame(
-      np.array([[0, 0, 0, 0] for x in range(num_data_points)]),
-      index=[start + timedelta(minutes=period_minutes) * x for x in range(num_data_points)],
-      columns=['timestamp', 'kw', 'num_cons', 'num_prod'],
-      dtype=float
-    )
+  def get_load_of_timeframe(self, start: datetime, end : datetime, period_minutes=10) -> pd.DataFrame:
+    demand_data = DemandData(start, end, period_minutes)
     
-    # above : in datatype for load data
     # todo : fill dataframe
+    df = demand_data.data
+    print(df)
 
-    return df
-
-  def get_current_data(self):
-    return self.items
+    return demand_data.data
 
 
 if __name__ == "__main__":
@@ -75,8 +67,6 @@ if __name__ == "__main__":
   ev_data.remove_unnescessary_info()
   ev_data.parse_dates()
   ev_data.specify_load()
-
-  data = ev_data.get_current_data()
 
   load_df = ev_data.get_load_of_timeframe(datetime(2020, 1, 1, 0, 0), datetime(2020, 1, 2, 0, 0))
   print(load_df)
