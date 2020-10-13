@@ -8,7 +8,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 from Experiments.Data.demand_data import DemandData
 
-class EV_Data(object):
+class ACN_Data(object):
   unimportant_keys = ['clusterID', 'siteID', 'spaceID', 'stationID', 'timezone', 'userID', 'userInputs']
   date_keys = ['connectionTime', 'disconnectTime', 'doneChargingTime']
 
@@ -62,7 +62,7 @@ class EV_Data(object):
 
 if __name__ == "__main__":
   data_file_name = "ACN_caltech_2020-10.json"
-  ev_data = EV_Data(data_file_name)
+  ev_data = ACN_Data(data_file_name)
 
   ev_data.remove_unnescessary_info()
   ev_data.parse_dates()
