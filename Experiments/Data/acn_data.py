@@ -1,20 +1,21 @@
 import json
 from typing import List
-import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
+from dataclasses import dataclass
 
 import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 from Experiments.Data.demand_data import DemandData
 
+@dataclass
 class ACN_DataItem(object):
   start: datetime
   end: datetime
-  kWh: float
-  period_hours: float
-  kw: float
+  kWh: float = 0
+  period_hours: float = 0
+  kw: float = 0
 
 class ACN_Data(object):
   date_keys = ['connectionTime', 'disconnectTime', 'doneChargingTime']
@@ -41,17 +42,12 @@ class ACN_Data(object):
 
   def convert_items(self) -> None:
     for raw_item in self.raw_items:
-      item = ACN_DataItem()
-      item.start = raw_item['connectionTime']
-
       if raw_item['doneChargingTime'] is None:
-        item.end = raw_item['disconnectTime']
+        end = raw_item['disconnectTime']
       else:
-        item.end = raw_item['doneChargingTime']
+        end = raw_item['doneChargingTime']
 
-      item.kWh = raw_item['kWhDelivered']
-
-      self.items.append(item)
+      self.items.append(ACN_DataItem(raw_item['connectionTime'], end, kWh=raw_item['kWhDelivered']))
 
   def specify_load(self) -> None:
     for item in self.items:
@@ -67,7 +63,6 @@ class ACN_Data(object):
   def get_load_of_timeframe(self, start: datetime, end: datetime, interval_minutes=10) -> pd.DataFrame:
     demand_data = DemandData(start, end, interval_minutes)
     
-    # todo : fill dataframe
     df = demand_data.data
 
     for i in range(df.shape[0]):
