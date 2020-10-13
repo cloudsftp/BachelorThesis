@@ -42,6 +42,7 @@ class ACN_Data(object):
   def convert_items(self) -> None:
     for raw_item in self.raw_items:
       item = ACN_DataItem()
+      item.start = raw_item['connectionTime']
 
       if raw_item['doneChargingTime'] is None:
         item.end = raw_item['disconnectTime']
@@ -49,6 +50,8 @@ class ACN_Data(object):
         item.end = raw_item['doneChargingTime']
 
       item.kWh = raw_item['kWhDelivered']
+
+      self.items.append(item)
 
   def specify_load(self) -> None:
     for item in self.items:
@@ -67,6 +70,15 @@ class ACN_Data(object):
     # todo : fill dataframe
     df = demand_data.data
 
+    for i in range(df.shape[0]):
+      current_delta = timedelta(minutes=interval_minutes) * i
+      current_moment = start + current_delta
+
+      for item in self.items:
+        if current_moment >= item.start and current_moment < item.end:
+          df.loc[[current_delta], ['kw']] += item.kw
+          df.loc[[current_delta], ['num_cons']] += 1
+
     return demand_data.data
 
 
@@ -76,4 +88,4 @@ if __name__ == "__main__":
   ev_data.process_data()
 
   load_df = ev_data.get_load_of_timeframe(datetime(2020, 1, 1, 0, 0), datetime(2020, 1, 9, 0, 0))
-  print(load_df)
+  print(load_df.max())
