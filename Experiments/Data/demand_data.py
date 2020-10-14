@@ -1,3 +1,5 @@
+#!/bin/python3.8
+
 import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
@@ -15,6 +17,6 @@ class DemandData:
     self.data = pd.DataFrame(
       np.array([[0, 0, 0] for _ in range(num_data_points)]),
       index=[timedelta(minutes=interval_minutes) * i for i in range(num_data_points)],
-      columns=['kw', 'num_cons', 'num_prod'],
+      columns=['power_kW', 'num_cons', 'num_prod'],
       dtype=float
     )

@@ -1,21 +1,22 @@
-import json
-from typing import List
-import pandas as pd
-from datetime import datetime, timedelta
-from dataclasses import dataclass
+#!/bin/python3.8
 
 import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 from Experiments.Data.demand_data import DemandData
 
+import json
+import pandas as pd
+from datetime import datetime, timedelta
+from dataclasses import dataclass
+
 @dataclass
 class ACN_DataItem(object):
   start: datetime
   end: datetime
-  kWh: float = 0
+  work_kWh: float = 0
   period_hours: float = 0
-  kw: float = 0
+  power_kW: float = 0
 
 class ACN_Data(object):
   date_keys = ['connectionTime', 'disconnectTime', 'doneChargingTime']
@@ -47,13 +48,13 @@ class ACN_Data(object):
       else:
         end = raw_item['doneChargingTime']
 
-      self.items.append(ACN_DataItem(raw_item['connectionTime'], end, kWh=raw_item['kWhDelivered']))
+      self.items.append(ACN_DataItem(raw_item['connectionTime'], end, work_kWh=raw_item['kWhDelivered']))
 
   def specify_load(self) -> None:
     for item in self.items:
       charging_period = item.end - item.start
       item.period_hours = charging_period.total_seconds() / 3600
-      item.kw = item.kWh * item.period_hours
+      item.power_kW = item.work_kWh * item.period_hours
 
   def process_data(self) -> None:
     self.parse_dates()
@@ -71,7 +72,7 @@ class ACN_Data(object):
 
       for item in self.items:
         if current_moment >= item.start and current_moment < item.end:
-          df.loc[[current_delta], ['kw']] += item.kw
+          df.loc[[current_delta], ['power_kW']] += item.power_kW
           df.loc[[current_delta], ['num_cons']] += 1
 
     return demand_data.data
