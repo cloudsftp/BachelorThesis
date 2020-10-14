@@ -1,0 +1,4 @@
+# classical solver
+
+coinor-clp
+coinor-libipopt-dev
