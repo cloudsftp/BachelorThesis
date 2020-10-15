@@ -1,6 +1,7 @@
 #!/bin/python3.8
 
-import numpy as np
+import autograd.numpy as np
+import autograd
 import ipopt
 
 class opt_obj(object):
@@ -11,18 +12,13 @@ class opt_obj(object):
     return x[0] * x[3] * np.sum(x[0:3]) + x[2]
 
   def gradient(self, x):
-    return np.array([
-      x[0] * x[3] + x[3] * np.sum(x[0:3]),
-      x[0] * x[3],
-      x[0] * x[3] + 1.0,
-      x[0] * np.sum(x[0:3])
-    ])
+    return autograd.grad(self.objective)(x)
 
   def constraints(self, x):
     return np.array((np.prod(x), np.dot(x, x)))
 
   def jacobian(self, x):
-    return np.concatenate((np.prod(x) / x, 2*x))
+    return autograd.jacobian(self.constraints)(x)
 
 
 if __name__ == "__main__":

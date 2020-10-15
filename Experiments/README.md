@@ -36,4 +36,5 @@ a MINLP (mixed integer non-linear problem) on a classical computer
 - `coinor-clp` (linux)
 - `pulp` (python)
 - `coinor-libipopt-dev` (linux)
+- `autograd` (python)
 - `ipopt` (python)
