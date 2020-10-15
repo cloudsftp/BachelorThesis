@@ -16,7 +16,7 @@ and can be installed via `conda env create -f conda_environment.yml`
 
 ## Data
 
-[Pandas]() is used for extracting the data
+[Pandas](https://pandas.pydata.org/) is used for extracting the data
 
 #### Packages
 
@@ -25,16 +25,15 @@ and can be installed via `conda env create -f conda_environment.yml`
 
 ## Classical Solver
 
-[CLP]() is used for solving the optimization problem
+[CLP](https://github.com/coin-or/Clp) is used for solving the optimization problem
 as a MILP (mixed integer linear problem) on a classical computer
 
-[IPOPT]() is used for solving the optimization problem as
+[?]() is used for solving the optimization problem as
 a MINLP (mixed integer non-linear problem) on a classical computer
 
 #### Packages
 
 - `coinor-clp` (linux)
 - `pulp` (python)
-- `coinor-libipopt-dev` (linux)
-- `autograd` (python)
-- `ipopt` (python)
+
+- `pyomo` (python)
