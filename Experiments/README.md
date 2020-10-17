@@ -25,15 +25,11 @@ and can be installed via `conda env create -f conda_environment.yml`
 
 ## Classical Solver
 
-[CLP](https://github.com/coin-or/Clp) is used for solving the optimization problem
-as a MILP (mixed integer linear problem) on a classical computer
-
-[?]() is used for solving the optimization problem as
+[Couenne](https://projects.coin-or.org/Couenne) is used for solving the optimization problem as
 a MINLP (mixed integer non-linear problem) on a classical computer
 
-#### Packages
+[Installation](Classical/README.md)
 
-- `coinor-clp` (linux)
-- `pulp` (python)
+#### Packages
 
 - `pyomo` (python)
