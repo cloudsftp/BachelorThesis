@@ -6,8 +6,6 @@ from datetime import datetime, timedelta
 
 class DemandData:
   def __init__(self, start: datetime, end: datetime, interval_minutes=10) -> None:
-    self.startdate = start
-    self.enddate = end
     self.interval_minutes = interval_minutes
 
     period = end - start
