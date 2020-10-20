@@ -21,7 +21,7 @@ def create_model():
 if __name__ == "__main__":
   with SolverFactory("couenne") as opt:
     model = create_model()
-    opt.options.linear_solver = "mumps"
+    #opt.options.linear_solver = "mumps"
     results = opt.solve(model, load_solutions=False)
     if results.solver.termination_condition != TerminationCondition.optimal:
             raise RuntimeError('Solver did not report optimality:\n%s'
