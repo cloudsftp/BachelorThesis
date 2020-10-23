@@ -15,12 +15,12 @@ jobs:
           working_directory: Paper
           root_file: main.tex
 
-      - run: ls
+      - run: ls Paper
 
       - name: Rename output
         run: mv Paper/main.pdf Paper/$pdf_name.pdf
 
-      - run: ls
+      - run: ls Paper
 
       - name: Publish
         uses: actions/upload-artifact@v2
