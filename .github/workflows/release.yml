@@ -9,7 +9,6 @@ jobs:
   create_release:
     name: Craete Release
     runs-on: ubuntu-latest
-    needs: build_latex
     steps:
       - name: Download PDF
         uses: actions/download-artifacts@v2
