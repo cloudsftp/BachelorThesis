@@ -18,7 +18,7 @@ jobs:
       - run: ls Paper
 
       - name: Rename output
-        run: mv Paper/main.pdf Paper/$pdf_name.pdf
+        run: cp Paper/main.pdf Paper/$pdf_name.pdf
 
       - run: ls Paper
 
@@ -26,4 +26,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: BachelorThesis
-          path: Paper/$pdf_name.pdf
+          path: Paper/main.pdf
