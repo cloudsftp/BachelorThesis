@@ -2,10 +2,10 @@ name: Build Paper
 
 on:
   push:
-    branches:
-      - develop
-    tags:
-      - 'QSG.*'
+#    branches:
+#      - develop
+#    tags:
+#      - 'QSG.*'
 
 jobs:
   build_paper:
@@ -36,6 +36,6 @@ jobs:
     env:
       ref: ${{ github.ref }}
     needs: build_paper
-    runs-on: ubuntu_latest
+    runs-on: ubuntu-latest
     steps:
-      - run: exho Create Release
+      - run: echo Create Release
