@@ -7,6 +7,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Compile LaTeX
-        uses: dante-dev/latex-action@master
+        uses: dante-ev/latex-action@master
         with:
           root_file: Paper/main.tex
