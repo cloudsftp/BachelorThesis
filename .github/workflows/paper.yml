@@ -9,4 +9,5 @@ jobs:
       - name: Compile LaTeX
         uses: dante-ev/latex-action@master
         with:
+          working_directory: Paper
           root_file: Paper/main.tex
