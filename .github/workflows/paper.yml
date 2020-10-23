@@ -20,7 +20,7 @@ jobs:
       - name: Rename output
         run: mv Paper/main.pdf Paper/$pdf_name.pdf
 
-      -run: ls
+      - run: ls
 
       - name: Publish
         uses: actions/upload-artifact@v2
