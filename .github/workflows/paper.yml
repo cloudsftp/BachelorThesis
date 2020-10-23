@@ -15,7 +15,12 @@ jobs:
           working_directory: Paper
           root_file: main.tex
 
-      - run: mv Paper/main.pdf Paper/$pdf_name.pdf
+      - run: ls
+
+      - name: Rename output
+        run: mv Paper/main.pdf Paper/$pdf_name.pdf
+
+      -run: ls
 
       - name: Publish
         uses: actions/upload-artifact@v2
