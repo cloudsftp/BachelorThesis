@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - develop
+    tags:
+      - 'QSG.*'
 
 jobs:
-  build_latex:
+  build_paper:
     name: Build LaTeX
     runs-on: ubuntu-latest
     steps:
@@ -27,3 +29,13 @@ jobs:
         with:
           name: BachelorThesis_Weik
           path: Paper/quantum_computing_for_smart_energy_optimizations_weik.pdf
+
+  create_release:
+    name: Create Release
+    if: contains(github.ref, '/tags/')
+    env:
+      ref: ${{ github.ref }}
+    needs: build_paper
+    runs-on: ubuntu_latest
+    steps:
+      - run: exho Create Release
