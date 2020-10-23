@@ -1,0 +1,12 @@
+name: Build Paper
+on: [push]
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Compile LaTeX
+        uses: dante-dev/latex-action@master
+        with:
+          root_file: Paper/main.tex
