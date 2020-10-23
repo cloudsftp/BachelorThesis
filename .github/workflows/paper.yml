@@ -3,8 +3,6 @@ on: [push]
 jobs:
   build_latex:
     runs-on: ubuntu-latest
-    env:
-      pdf_name: bachelorthesis_weik
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -15,15 +13,11 @@ jobs:
           working_directory: Paper
           root_file: main.tex
 
-      - run: ls Paper
-
       - name: Rename output
-        run: cp Paper/main.pdf Paper/$pdf_name.pdf
-
-      - run: ls Paper
+        run: cp Paper/main.pdf Paper/quantum_computing_for_smart_energy_optimizations_weik.pdf
 
       - name: Publish
         uses: actions/upload-artifact@v2
         with:
-          name: BachelorThesis
-          path: Paper/main.pdf
+          name: BachelorThesis_Weik
+          path: Paper/quantum_computing_for_smart_energy_optimizations_weik.pdf
