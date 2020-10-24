@@ -2,10 +2,10 @@ name: Build Paper
 
 on:
   push:
-#    branches:
-#      - develop
-#    tags:
-#      - 'QSG.*'
+    branches:
+      - develop
+    tags:
+      - 'QSG.*'
 
 jobs:
   build_paper:
@@ -30,7 +30,7 @@ jobs:
           name: BachelorThesis_Weik
           path: Paper/quantum_computing_for_smart_energy_optimizations_weik.pdf
 
-  release_paper:
+  release:
     name: Create Release
     if: contains(github.ref, '/tags/')
     env:
