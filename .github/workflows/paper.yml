@@ -61,5 +61,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./quantum_computing_for_smart_energy_optimizations_weik.pdf
-          asset_name: BachelorThesis_Weik
+          asset_name: quantum_computing_for_smart_energy_optimizations_weik.pdf
           asset_content_type: application/pdf
