@@ -8,6 +8,8 @@
 *.pdf
 *.synctex.gz
 
+# python
+__pycache__
+
 # vscode
 .vscode
-
