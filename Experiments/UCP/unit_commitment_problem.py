@@ -15,7 +15,7 @@ class CombustionPlant(object):
 
 @dataclass
 class UCP(object):
-  load: float
+  loads: List[float]
   plants: List[CombustionPlant] = field(default_factory=list)
 
   def save_to(self, filename) -> None:
@@ -26,7 +26,7 @@ class UCP(object):
     with open(filename, 'r') as file:
       instance_dict: dict = json.load(file)
 
-      load: int = instance_dict['load']
+      loads: List[int] = instance_dict['loads']
 
       plants_dict_list: List[dict] = instance_dict['plants']
       plants: List[CombustionPlant] = []
@@ -40,7 +40,4 @@ class UCP(object):
 
         plants.append(CombustionPlant(A, B, C, Pmin, Pmax))
 
-      return UCP(load, plants)
-
-if __name__ == "__main__":
-  pass
+      return UCP(loads, plants)
