@@ -38,8 +38,3 @@ class TestUCP(unittest.TestCase):
     ucp = UCP.load_from(self.test_file_name)
 
     assert(asdict(ucp) == self.ucp_dict)
-
-
-
-if __name__ == "__main__":
-  unittest.main()
