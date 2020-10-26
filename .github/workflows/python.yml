@@ -13,10 +13,10 @@ jobs:
       - name: Setup Anaconda
         uses: s-weigand/setup-conda@v1
 
-      - run: cd Experiments
-
       - name: Install Anaconda Environment
-        run: conda env create -f conda_environment.yml
+        run: conda env create -f Experiments/conda_environment.yml
 
       - name: Run Unittests
-        run: python -m unittest discover
+        run: |
+          cd Experiments
+          python -m unittest discover
