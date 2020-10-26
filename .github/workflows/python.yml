@@ -1,6 +1,9 @@
 name: Test Python
 
-on: [push]
+on:
+  push:
+    branches:
+      - develop
 
 jobs:
   test_python:
