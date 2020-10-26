@@ -16,6 +16,9 @@ jobs:
       - name: Install Anaconda Environment
         run: conda env create -f Experiments/conda_environment.yml
 
+      - name: Activate Anaconda Environment
+        run: conda activate opt
+
       - name: Run Unittests
         run: |
           cd Experiments
