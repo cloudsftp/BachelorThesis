@@ -9,6 +9,7 @@ import json
 import pandas as pd
 from datetime import datetime, timedelta
 from dataclasses import dataclass
+from typing import List
 
 @dataclass
 class ACN_DataItem(object):
@@ -24,7 +25,7 @@ class ACN_Data(object):
 
   def __init__(self, data_file_name) -> None:
     self.read_data(data_file_name)
-    self.items: list[ACN_DataItem] = []
+    self.items: List[ACN_DataItem] = []
 
   def read_data(self, data_file_name) -> None:
     with open(data_file_name, 'r') as file:

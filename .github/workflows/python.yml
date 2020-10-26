@@ -1,0 +1,25 @@
+name: Test Python
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  test_python:
+    name: Python Unittests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Anaconda
+        uses: s-weigand/setup-conda@v1
+
+      - name: Install Anaconda Environment
+        run: conda env create -f Experiments/conda_environment.yml
+
+      - name: Run Unittests
+        run: |
+          cd Experiments
+          python -m unittest discover
