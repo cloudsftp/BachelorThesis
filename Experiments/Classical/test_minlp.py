@@ -1,13 +1,13 @@
 #!/bin/python3.8
 
-from pyomo.core.base.PyomoModel import ConcreteModel
-from pyomo.core.base.constraint import Constraint
-from pyomo.core.base.objective import Objective
-from pyomo.core.base.var import Var
-from pyomo.core.expr.logical_expr import inequality
-from pyomo.environ import NonNegativeReals, Boolean
-from pyomo.opt import SolverFactory
-from pyomo.opt.results.solver import TerminationCondition
+from pyomo.core.base.PyomoModel import ConcreteModel # type: ignore
+from pyomo.core.base.constraint import Constraint # type: ignore
+from pyomo.core.base.objective import Objective # type: ignore
+from pyomo.core.base.var import Var # type: ignore
+from pyomo.core.expr.logical_expr import inequality # type: ignore
+from pyomo.environ import NonNegativeReals, Boolean # type: ignore
+from pyomo.opt import SolverFactory # type: ignore
+from pyomo.opt.results.solver import TerminationCondition # type: ignore
 
 def create_model() -> ConcreteModel:
   model = ConcreteModel()
