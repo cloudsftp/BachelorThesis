@@ -10,6 +10,7 @@
 
 # python
 __pycache__
+.mypy_cache
 
 # vscode
 .vscode

@@ -22,4 +22,4 @@ jobs:
       - name: Run Unittests
         run: |
           cd Experiments
-          python -m unittest discover
+          ./run_python_verification.sh

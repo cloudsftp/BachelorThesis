@@ -2,12 +2,10 @@
 
 import json
 import os
-import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
-from Experiments.UCP.unit_commitment_problem import CombustionPlant, UCP
-
 from dataclasses import asdict
 import unittest
+
+from unit_commitment_problem import CombustionPlant, UCP
 
 
 class TestUCP(unittest.TestCase):
