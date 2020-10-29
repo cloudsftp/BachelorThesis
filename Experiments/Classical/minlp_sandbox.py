@@ -17,8 +17,8 @@ def create_model() -> ConcreteModel:
   model.p2 = Var(domain=NonNegativeReals, initialize=100)
   model.u2 = Var(domain=Boolean, initialize=1)
 
-  f1 = model.u1 * (200 + 10 * model.p1 + model.p1 ** 2)
-  f2 = model.u2 * (100 + 5 * model.p2 + 5 * model.p2 ** 2)
+  f1 = 200 * model.u1 + 10 * model.p1 + model.p1 ** 2
+  f2 = 100 * model.u2 + 5 * model.p2 + 5 * model.p2 ** 2
 
   model.o = Objective(expr=f1 + f2)
 
