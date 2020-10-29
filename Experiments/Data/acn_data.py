@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from dataclasses import dataclass
 from typing import Dict, List
 
-from demand_data import DemandData
+from Data.demand_data import DemandData
 
 @dataclass
 class ACN_DataItem(object):
@@ -79,7 +79,7 @@ class ACN_Data(object):
 
 
 if __name__ == "__main__":
-  data_file_name = "ACN_caltech_2020-10.json"
+  data_file_name = "Data/ACN_caltech_2020-10.json"
   ev_data: ACN_Data = ACN_Data(data_file_name)
   ev_data.process_data()
 
