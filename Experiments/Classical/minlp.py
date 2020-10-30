@@ -7,8 +7,8 @@ from pyomo.environ import NonNegativeReals, Boolean # type: ignore
 
 from UCP.unit_commitment_problem import CombustionPlant, UCP, UCP_Solution
 
-def create_variable_list(type, initialize: float, num: int) -> Var:
-  return Var([x for x in range(num)], domain=type, initialize=initialize)
+def create_variable_list(type, initialize: float, x: int, y: int) -> Var:
+  return Var(range(x), range(y), domain=type, initialize=initialize)
 
 
 class UCP_MINLP(object):
@@ -18,9 +18,12 @@ class UCP_MINLP(object):
     ''' Build self.model from UCP '''
     self.model = ConcreteModel()
 
-    var_num: int = len(ucp.loads) * len(ucp.plants)
-    self.model.u = create_variable_list(Boolean, 1, var_num)
-    self.model.p = create_variable_list(NonNegativeReals, 1, var_num)
+    I: int = len(ucp.plants)
+    T: int = len(ucp.loads)
+
+    self.model.u = create_variable_list(Boolean, 1, I, T)
+    self.model.p = create_variable_list(NonNegativeReals, 1, I, T)
+
 
   def optimize(self) -> UCP_Solution:
     ''' Optimize self.model and return the solution '''
