@@ -43,5 +43,5 @@ class UCP(object):
       return UCP(loads, plants)
 
 @dataclass
-class UCP_Solution(object):
+class UCP_Solution(object): # TODO implement datastructure
   ucp: UCP

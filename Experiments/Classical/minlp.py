@@ -1,15 +1,13 @@
 #!/bin/python3.8
 
-from sys import platform
 from pyomo.core.base.PyomoModel import ConcreteModel # type: ignore
-from pyomo.core.base.constraint import Constraint, ConstraintList
-from pyomo.core.base.expression import Expression # type: ignore
-from pyomo.core.base.objective import Objective
-from pyomo.core.base.plugin import ExpressionFactory # type: ignore
+from pyomo.core.base.constraint import Constraint # type: ignore
+from pyomo.core.base.objective import Objective # type: ignore
 from pyomo.core.base.set import RangeSet # type: ignore
-from pyomo.core.base.var import Var, VarList
+from pyomo.core.base.var import Var # type: ignore
 from pyomo.core.expr.logical_expr import inequality # type: ignore
 from pyomo.environ import NonNegativeReals, Boolean # type: ignore
+from pyomo.opt import SolverFactory # type: ignore
 
 from UCP.unit_commitment_problem import CombustionPlant, UCP, UCP_Solution
 
@@ -62,17 +60,22 @@ class UCP_MINLP(object):
     self.build_load_constraints(ucp)
     self.build_power_constraints(ucp)
 
-    self.model.display()
-
   def optimize(self) -> UCP_Solution:
     ''' Optimize self.model and return the solution '''
-    pass
+    with SolverFactory("couenne") as solver:
+      results = solver.solve(self.model)
+      print('time: {} seconds -----------------'
+        .format(results.solver.time))
+      self.model.display()
+
+      return UCP_Solution(self.ucp) # TODO return a solution
 
 
 if __name__ == "__main__":
-  ucp = UCP([1, 2, 1], [
-    CombustionPlant(1, 2, 3, 1, 2),
-    CombustionPlant(0, 1, 1, 2, 3)
+  ucp = UCP([x for x in range(6)], [
+    CombustionPlant(2, 2, 3, 1, 24),
+    CombustionPlant(9, 1, 1, 1, 24)
   ])
 
   minlp = UCP_MINLP(ucp)
+  minlp.optimize()
