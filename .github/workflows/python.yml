@@ -16,9 +16,6 @@ jobs:
       - name: Setup Anaconda
         uses: s-weigand/setup-conda@v1
 
-      - name: Init Anaconda
-        run: conda init bash
-
       - name: Install Anaconda Environment
         run: conda env create -f Experiments/conda_environment.yml
 
@@ -26,5 +23,6 @@ jobs:
         run: |
           cd Experiments
           chmod +x run_python_verification.sh
+          conda init bash
           conda activate opt
           ./run_python_verification.sh
