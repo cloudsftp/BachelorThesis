@@ -43,5 +43,10 @@ class UCP(object):
       return UCP(loads, plants)
 
 @dataclass
-class UCP_Solution(object): # TODO implement datastructure
+class UCP_Solution(object):
   ucp: UCP
+  time: float
+  optimal: bool
+  o: float
+  u: List[List[bool]]
+  p: List[List[float]]

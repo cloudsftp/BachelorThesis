@@ -1,5 +1,7 @@
 #!/bin/python3.8
 
+from dataclasses import asdict
+from typing import List
 from pyomo.core.base.PyomoModel import ConcreteModel # type: ignore
 from pyomo.core.base.constraint import Constraint # type: ignore
 from pyomo.core.base.objective import Objective # type: ignore
@@ -8,6 +10,7 @@ from pyomo.core.base.var import Var # type: ignore
 from pyomo.core.expr.logical_expr import inequality # type: ignore
 from pyomo.environ import NonNegativeReals, Boolean # type: ignore
 from pyomo.opt import SolverFactory # type: ignore
+from pyomo.opt.results.solver import TerminationCondition # type: ignore
 
 from UCP.unit_commitment_problem import CombustionPlant, UCP, UCP_Solution
 
@@ -65,15 +68,27 @@ class UCP_MINLP(object):
     self.build_load_constraints()
     self.build_power_constraints()
 
+  
+  def to_ucp_solution(self, results) -> UCP_Solution:
+    time: float = results.solver.time
+    optimal: bool = results.solver.termination_condition == TerminationCondition.optimal
+
+    o: float = self.model.o()
+    u: List[List[bool]] = [[self.model.u[(i, t)].value == 1 for t in self.model.T]
+                                                            for i in self.model.I]
+
+    p: List[List[float]] = [[self.model.p[(i, t)].value if u[i][t]
+                                                        else 0
+                                                        for t in self.model.T]
+                                                        for i in self.model.I]
+
+    return UCP_Solution(self.ucp, time, optimal, o, u, p)
+
   def optimize(self) -> UCP_Solution:
     ''' Optimize self.model and return the solution '''
-    with SolverFactory("couenne") as solver:
+    with SolverFactory('couenne') as solver:
       results = solver.solve(self.model)
-      print('time: {} seconds -----------------'
-        .format(results.solver.time))
-      self.model.display()
-
-      return UCP_Solution(self.ucp) # TODO return a solution
+      return self.to_ucp_solution(results)
 
 
 if __name__ == "__main__":
@@ -83,4 +98,5 @@ if __name__ == "__main__":
   ])
 
   minlp = UCP_MINLP(ucp)
-  minlp.optimize()
+  solution: UCP_Solution = minlp.optimize()
+  print(asdict(solution))
