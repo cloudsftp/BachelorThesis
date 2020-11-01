@@ -5,7 +5,7 @@ import os
 from dataclasses import asdict
 import unittest
 
-from unit_commitment_problem import CombustionPlant, UCP
+from UCP.unit_commitment_problem import CombustionPlant, UCP
 
 
 class TestUCP(unittest.TestCase):

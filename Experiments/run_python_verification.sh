@@ -2,15 +2,10 @@
 
 status=0
 
-folders="Classical Data UCP"
-for folder in $folders
-do
-  cd $folder
-  python -m unittest
-  [ $? -eq 0 ] || status=1
-  mypy *.py
-  [ $? -eq 0 ] || status=1
-  cd ..
-done
+python -m unittest
+[ $? -eq 0 ] || status=1
+
+find . -maxdepth 2 -name '*\.py' | grep -v __init__ | sed 's/\.py//g' | sed 's#\./##g' | sed 's#/#.#g' | xargs -I{} mypy -m {}
+[ $? -eq 0 ] || status=1
 
 exit $status

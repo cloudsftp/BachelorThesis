@@ -1,0 +1,6 @@
+{
+  "python.pythonPath": "/home/fabi/anaconda3/envs/opt/bin/python",
+  "python.analysis.extraPaths": [
+    "Experiments"
+  ]
+}
