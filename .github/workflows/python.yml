@@ -17,7 +17,7 @@ jobs:
         uses: s-weigand/setup-conda@v1
 
       - name: Install Anaconda Environment
-        run: conda env create -f Experiments/conda_environment.yml
+        run: conda env update --file Experiments/conda_environment.yml --name base
 
       - name: Run Unittests
         run: |
