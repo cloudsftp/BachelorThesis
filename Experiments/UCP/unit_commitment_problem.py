@@ -4,6 +4,8 @@ from dataclasses import dataclass, field, asdict
 import json
 from typing import List
 
+from Util.json_file_handler import write_dataclass_to, read_dataclass_from
+
 @dataclass
 class CombustionPlant(object):
   A: float
@@ -18,29 +20,11 @@ class UCP(object):
   loads: List[float]
   plants: List[CombustionPlant] = field(default_factory=list)
 
-  def save_to(self, filename) -> None:
-    with open(filename, 'w') as file:
-      json.dump(asdict(self), file, ensure_ascii=False, indent=4)
+  def save_to(self, file_name) -> None:
+    write_dataclass_to(self, file_name)
 
-  def load_from(filename):
-    with open(filename, 'r') as file:
-      instance_dict: dict = json.load(file)
-
-      loads: List[int] = instance_dict['loads']
-
-      plants_dict_list: List[dict] = instance_dict['plants']
-      plants: List[CombustionPlant] = []
-
-      for plants_dict in plants_dict_list:
-        A: float = plants_dict['A']
-        B: float = plants_dict['B']
-        C: float = plants_dict['C']
-        Pmin: float = plants_dict['Pmin']
-        Pmax: float = plants_dict['Pmax']
-
-        plants.append(CombustionPlant(A, B, C, Pmin, Pmax))
-
-      return UCP(loads, plants)
+  def load_from(file_name):
+    return read_dataclass_from(file_name, UCP)
 
 @dataclass
 class UCP_Solution(object):
