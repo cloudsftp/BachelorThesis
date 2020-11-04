@@ -1,3 +1,14 @@
 \section{The Unit Commitment Problem}
 
-A description of the problem at hand.
+The Unit Commitment Problem (UCP) generally is concerned with the scheduling of thermal power plants.
+Where thermal power plants can be coal, oil, gas or nuclear power plants.
+The commitment of the power plants should be scheduled in such a way, that the fuel cost is minimized.
+Other than minimizing a cost function, the problem also consideres various constraints of the power plants.
+Such as minimum and maximum power output.
+\cite{Baldick1995}
+
+The problem is often mathematically formulated as a Mixed-Integer Non-Linear Problem (MINLP).
+MINLP is a class of optimization problems, with a non-linear objective funtion, integer and floating-point variables,
+as well as various constraints on the variables.
+These models are non-convex in the case of the UCP, due to the binary nature of the commitment variables $u_{i, t}$.
+\cite{Abujarad2017}
