@@ -1,77 +1,72 @@
 #!/bin/python3.8
 
-import json
 import pandas as pd # type: ignore
 from datetime import datetime, timedelta
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Any, Dict, List
 
+from Util.json_file_handler import read_dataclass_from
 from Data.DemandData.demand_data import DemandData
+
+
+@dataclass
+class ACN_Root(object):
+  _meta: Dict
+  _items: List[Dict[str, Any]]
 
 @dataclass
 class ACN_DataItem(object):
   start: datetime
-  end: datetime
+  disconnectTime: datetime
   work_kWh: float = 0
   period_hours: float = 0
   power_kW: float = 0
 
-class ACN_Data(object):
-  date_keys = ['connectionTime', 'disconnectTime', 'doneChargingTime']
-  dateformat ='%a, %d %b %Y %H:%M:%S %Z'
+class ACN_DataConverter(object):
+  @staticmethod
+  def date(date_str: str) -> datetime:
+    dateformat ='%a, %d %b %Y %H:%M:%S %Z'
+    return datetime.strptime(date_str, dateformat)
+
+  items: List[ACN_DataItem] = []
 
   def __init__(self, data_file_name) -> None:
-    self.read_data(data_file_name)
-    self.items: List[ACN_DataItem] = []
-
-  def read_data(self, data_file_name) -> None:
-    with open(data_file_name, 'r') as file:
-      raw_data: Dict = json.load(file)
-
-    self.raw_items = raw_data['_items']
-
-  def parse_dates(self) -> None:
-    for item in self.raw_items:
-      for key in self.date_keys:
-        datestr: str = item[key]
-
-        if datestr:
-          date: datetime = datetime.strptime(datestr, self.dateformat)
-          item[key] = date
+    acn_root: ACN_Root = read_dataclass_from(data_file_name, ACN_Root)
+    self.acn_loading_sessions: List[Dict] = acn_root._items
 
   def convert_items(self) -> None:
-    for raw_item in self.raw_items:
-      end: datetime
+    for loading_session in self.acn_loading_sessions:
+      connectionTime: datetime = ACN_DataConverter.date(loading_session['connectionTime'])
 
-      if raw_item['doneChargingTime'] is None:
-        end = raw_item['disconnectTime']
+      disconnectTime: datetime
+      if loading_session.get('doneChargingTime'):
+        disconnectTime = ACN_DataConverter.date(loading_session['doneChargingTime'])
       else:
-        end = raw_item['doneChargingTime']
+        disconnectTime = ACN_DataConverter.date(loading_session['disconnectTime'])
 
-      self.items.append(ACN_DataItem(raw_item['connectionTime'], end, work_kWh=raw_item['kWhDelivered']))
+      self.items.append(ACN_DataItem(connectionTime, disconnectTime, work_kWh=loading_session['kWhDelivered']))
 
   def specify_load(self) -> None:
     for item in self.items:
-      charging_period: timedelta = item.end - item.start
+      charging_period: timedelta = item.disconnectTime - item.start
       item.period_hours = charging_period.total_seconds() / 3600
       item.power_kW = item.work_kWh * item.period_hours
 
   def process_data(self) -> None:
-    self.parse_dates()
     self.convert_items()
     self.specify_load()
 
-  def get_load_of_timeframe(self, start: datetime, end: datetime, interval_minutes=10) -> pd.DataFrame:
-    demand_data: DemandData = DemandData(start, end, interval_minutes)
+  def get_load_of_timeframe(self, connectionTime: datetime, disconnectTime: datetime, interval_minutes=10) -> pd.DataFrame:
+    demand_data: DemandData = DemandData(connectionTime, disconnectTime, interval_minutes)
     
     df: pd.DataFrame = demand_data.data
 
     for i in range(df.shape[0]):
       current_delta: timedelta = timedelta(minutes=interval_minutes) * i
-      current_moment: datetime = start + current_delta
+      current_moment: datetime = connectionTime + current_delta
 
       for item in self.items:
-        if current_moment >= item.start and current_moment < item.end:
+        if current_moment >= item.start and current_moment < item.disconnectTime:
           df.loc[[current_delta], ['power_kW']] += item.power_kW
           df.loc[[current_delta], ['num_cons']] += 1
 
@@ -79,8 +74,8 @@ class ACN_Data(object):
 
 
 if __name__ == "__main__":
-  data_file_name = "Data/ACN_caltech_2020-10.json"
-  ev_data: ACN_Data = ACN_Data(data_file_name)
+  data_file_name = "Data/DemandData/ACN_caltech_2020-10.json"
+  ev_data: ACN_DataConverter = ACN_DataConverter(data_file_name)
   ev_data.process_data()
 
   load_df: pd.DataFrame = ev_data.get_load_of_timeframe(datetime(2020, 1, 1, 0, 0), datetime(2020, 1, 9, 0, 0))
