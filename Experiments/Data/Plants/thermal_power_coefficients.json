@@ -1,99 +1,100 @@
 {
   "meta": {
     "formula": "C(p) = A + B * p + C * p²",
+    "constraint": "Pmin <= p <= Pmax",
     "unit": {
       "p": "MW",
-      "C": "GJ"
-    },
-    "source": [
-      {
-        "index": 0,
-        "title": "Particle Swarm Optimization Based Approach for Estimating the Fuel-cost Function Parameters of Thermal Power Plants with Valve Loading Effects",
-        "detail": "Table 2, PSO"
-      },
-      {
-        "index": 1,
-        "title": "Particle Swarm Optimization Based Approach for Estimating the Fuel-cost Function Parameters of Thermal Power Plants with Valve Loading Effects",
-        "detail": "Table 2, LES"
-      },
-      {
-        "index": 2,
-        "title": "Estimation of fuel cost curve parameters for thermal power plants using the ABC algorithm",
-        "doi": "10.3906/elk-1203-10",
-        "detail": "Table 6, ABC"
-      },
-      {
-        "index": 3,
-        "title": "Estimation of fuel cost curve parameters for thermal power plants using the ABC algorithm",
-        "doi": "10.3906/elk-1203-10",
-        "detail": "Table 6, GA"
-      }
-    ]
+      "C(p)": "GJ"
+    }
   },
   "coal": [
     {
       "A": 96.279,
       "B": 7.592,
-      "C": 0.042
+      "C": 0.042,
+      "Pmin": 150,
+      "Pmax": 300,
+      "AU": 140,
+      "AD": 0,
+      "source": {
+        "title": "Particle Swarm Optimization Based Approach for Estimating the Fuel-cost Function Parameters of Thermal Power Plants with Valve Loading Effects",
+        "detail": "Table 2, PSO",
+        "factual": [ "A", "B", "C" ]
+      }
     },
     {
       "A": 95.856,
       "B": 7.374,
-      "C": 0.047
-    },
-    {
-      "A": 96.6046,
-      "B": 7.5874,
-      "C": 0.0414
-    },
-    {
-      "A": 100.3937,
-      "B": 6.9761,
-      "C": 0.0533
+      "C": 0.047,
+      "Pmin": 200,
+      "Pmax": 300,
+      "AU": 145,
+      "AD": 10,
+      "source": {
+        "title": "Particle Swarm Optimization Based Approach for Estimating the Fuel-cost Function Parameters of Thermal Power Plants with Valve Loading Effects",
+        "detail": "Table 2, LES",
+        "factual": [ "A", "B", "C" ]
+      }
     }
   ],
   "oil": [
     {
       "A": 101.0,
       "B": 7.8,
-      "C": 0.046
+      "C": 0.046,
+      "Pmin": 200,
+      "Pmax": 350,
+      "AU": 150,
+      "AD": 0,
+      "source": {
+        "title": "Particle Swarm Optimization Based Approach for Estimating the Fuel-cost Function Parameters of Thermal Power Plants with Valve Loading Effects",
+        "detail": "Table 2, PSO",
+        "factual": [ "A", "B", "C" ]
+      }
     },
     {
       "A": 100.71,
       "B": 7.67,
-      "C": 0.049
-    },
-    {
-      "A": 101.536,
-      "B": 7.8779,
-      "C": 0.0442
-    },
-    {
-      "A": 107.1688,
-      "B": 7.7235,
-      "C": 0.0467
+      "C": 0.049,
+      "Pmin": 50,
+      "Pmax": 100,
+      "AU": 100,
+      "AD": 50,
+      "source": {
+        "title": "Particle Swarm Optimization Based Approach for Estimating the Fuel-cost Function Parameters of Thermal Power Plants with Valve Loading Effects",
+        "detail": "Table 2, LES",
+        "factual": [ "A", "B", "C" ]
+      }
     }
   ],
   "gas": [
     {
       "A": 102.0,
       "B": 7.9,
-      "C": 0.048
+      "C": 0.048,
+      "Pmin": 10,
+      "Pmax": 500,
+      "AU": 120,
+      "AD": 5,
+      "source": {
+        "title": "Particle Swarm Optimization Based Approach for Estimating the Fuel-cost Function Parameters of Thermal Power Plants with Valve Loading Effects",
+        "detail": "Table 2, PSO",
+        "factual": [ "A", "B", "C" ]
+      }
     },
     {
       "A": 101.1,
       "B": 7.881,
-      "C": 0.049
-    },
-    {
-      "A": 101.8179,
-      "B": 8.0991,
-      "C": 0.0439
-    },
-    {
-      "A": 116.3854,
-      "B": 6.7342,
-      "C": 0.0667
+      "C": 0.049,
+      "Pmin": 100,
+      "Pmax": 300,
+      "AU": 60,
+      "AD": 60,
+      "source": {
+        "title": "Particle Swarm Optimization Based Approach for Estimating the Fuel-cost Function Parameters of Thermal Power Plants with Valve Loading Effects",
+        "detail": "Table 2, LES",
+        "factual": [ "A", "B", "C" ]
+      }
     }
   ]
 }
