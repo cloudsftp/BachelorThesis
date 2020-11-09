@@ -1,7 +1,6 @@
 #/bin/python3.8
 
 from dataclasses import dataclass, field, asdict
-import json
 from typing import List
 
 from Util.json_file_handler import write_dataclass_to, read_dataclass_from
@@ -13,6 +12,8 @@ class CombustionPlant(object):
   C: float
   Pmin: float
   Pmax: float
+  AU: float
+  AD: float
   
 
 @dataclass
