@@ -14,6 +14,7 @@ class CombustionPlant(object):
   Pmax: float
   AU: float
   AD: float
+  initially_on: bool = False
   
 
 @dataclass

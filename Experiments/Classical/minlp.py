@@ -3,16 +3,13 @@
 from dataclasses import asdict
 from typing import List
 from pyomo.core.base.PyomoModel import ConcreteModel # type: ignore
-from pyomo.core.base.constraint import Constraint
+from pyomo.core.base.constraint import Constraint # type: ignore
 from pyomo.core.base.expression import Expression # type: ignore
 from pyomo.core.base.objective import Objective # type: ignore
-from pyomo.core.base.set import RangeSet, Set # type: ignore
 from pyomo.core.base.var import Var # type: ignore
 from pyomo.core.base.plugin import TransformationFactory # type: ignore
 from pyomo.core.expr.logical_expr import inequality # type: ignore
 from pyomo.gdp import Disjunct, Disjunction # type: ignore
-from pyomo.dae import ContinuousSet # type: ignore
-from pyomo.dae.diffvar import DerivativeVar # type: ignore
 from pyomo.environ import NonNegativeReals, Boolean # type: ignore
 from pyomo.opt import SolverFactory # type: ignore
 from pyomo.opt.results.solver import TerminationCondition # type: ignore
@@ -28,7 +25,7 @@ class UCP_MINLP(object):
     self.model.p = Var(self.model.I, self.model.T, domain=NonNegativeReals, initialize=0)
     self.model.startup_shutdown_cost = Var(self.model.I, self.model.T, domain=NonNegativeReals, initialize=0, bounds=(0, 1000))
 
-  def build_startup_shutdown_disjunctions(self): # TODO: implement disjuction to specify startup and shutdown cost
+  def build_startup_shutdown_disjunctions(self):
     self.model.shutdown_disjunct = Disjunct(self.model.I, self.model.T)
     self.model.on_disjunct = Disjunct(self.model.I, self.model.T)
     self.model.off_disjunct = Disjunct(self.model.I, self.model.T)
@@ -43,17 +40,25 @@ class UCP_MINLP(object):
         self.model.off_disjunct[i, t].l = Constraint(expr=self.model.startup_shutdown_cost[i, t] == 0)
         self.model.off_disjunct[i, t].c = Constraint(expr=self.model.u[i, t] == 0)
 
+        self.model.shutdown_disjunct[i, t].l = Constraint(expr=self.model.startup_shutdown_cost[i, t] == plants[i].AD)
+        self.model.shutdown_disjunct[i, t].c = Constraint(expr=self.model.u[i, t] == 0)
+
+        self.model.startup_disjunct[i, t].l = Constraint(expr=self.model.startup_shutdown_cost[i, t] == plants[i].AU)
+        self.model.startup_disjunct[i, t].c = Constraint(expr=self.model.u[i, t] == 1)
+
         if t > 0:
           self.model.on_disjunct[i, t].p = Constraint(expr=self.model.u[i, t-1] == 1)
           self.model.off_disjunct[i, t].p = Constraint(expr=self.model.u[i, t-1] == 0)
-
-          self.model.shutdown_disjunct[i, t].l = Constraint(expr=self.model.startup_shutdown_cost[i, t] == plants[i].AD)
-          self.model.shutdown_disjunct[i, t].c = Constraint(expr=self.model.u[i, t] == 0)
           self.model.shutdown_disjunct[i, t].p = Constraint(expr=self.model.u[i, t-1] == 1)
-
           self.model.startup_disjunct[i, t].p = Constraint(expr=self.model.u[i, t-1] == 0)
-          self.model.startup_disjunct[i, t].l = Constraint(expr=self.model.startup_shutdown_cost[i, t] == plants[i].AU)
-          self.model.startup_disjunct[i, t].c = Constraint(expr=self.model.u[i, t] == 1)
+
+        else:
+          if plants[i].initially_on:
+            self.model.on_disjunct[i, t].p = Constraint.Feasible
+            self.model.shutdown_disjunct[i, t].p = Constraint.Feasible
+          else:
+            self.model.off_disjunct[i, t].p = Constraint.Feasible
+            self.model.startup_disjunct[i, t].p = Constraint.Feasible
 
     def disjunction_rule(model: ConcreteModel, i: int, t: int) -> Expression:
       return [
@@ -106,13 +111,15 @@ class UCP_MINLP(object):
     self.model = ConcreteModel()
 
     self.model.I = range(len(ucp.plants))
-    self.model.T = ContinuousSet(initialize=range(len(ucp.loads)))
+    self.model.T = range(len(ucp.loads))
 
     self.instanciate_variables()
     self.build_startup_shutdown_disjunctions()
     self.build_objective()
     self.build_load_constraints()
     self.build_power_constraints()
+
+    TransformationFactory('gdp.bigm').apply_to(self.model)
 
   def to_ucp_solution(self, results) -> UCP_Solution:
     time: float = results.solver.time
@@ -131,7 +138,6 @@ class UCP_MINLP(object):
 
   def optimize(self, solver_command: str = 'couenne') -> UCP_Solution: # TODO: allow pyomo solver
     ''' Optimize self.model and return the solution '''
-    TransformationFactory('gdp.bigm').apply_to(self.model)
     with SolverFactory(solver_command) as solver:
       results = solver.solve(self.model)
       return self.to_ucp_solution(results)
