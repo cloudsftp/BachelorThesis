@@ -10,8 +10,8 @@ from UCP.unit_commitment_problem import CombustionPlant, UCP
 
 class TestUCP(unittest.TestCase):
   ucp = UCP([1, 2, 3], [
-    CombustionPlant(1, 1, 1, 0, 100),
-    CombustionPlant(2, 2, 2, 0, 200),
+    CombustionPlant(1, 1, 1, 0, 100, 1, 0),
+    CombustionPlant(2, 2, 2, 0, 200, 1, 1)
   ])
 
   ucp_dict = asdict(ucp)

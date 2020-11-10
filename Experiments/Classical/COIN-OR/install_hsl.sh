@@ -17,6 +17,6 @@ sudo rm -rf $install_dir
 sudo mkdir $install_dir
 sudo cp $hsl_name/* $install_dir/ -r
 
-sudo cp libgfortran/* $install_dir/lib/
+sudo cp Libgfortran/* $install_dir/lib/
 
 sudo ln -s $install_dir/lib/libcoinhsl.so.0 $install_dir/lib/libhsl.so
