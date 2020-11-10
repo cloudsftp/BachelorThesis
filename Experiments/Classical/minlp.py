@@ -87,7 +87,7 @@ class UCP_MINLP(object):
 
   def build_load_constraints(self) -> None:
     def load_constraint_rule(model: ConcreteModel, t: int) -> Expression:
-      return self.ucp.loads[t] <= sum(model.u[(i, t)] * model.p[(i, t)] for i in model.I)
+      return self.ucp.loads[t] == sum(model.u[(i, t)] * model.p[(i, t)] for i in model.I)
 
     self.model.l_constr = Constraint(self.model.T, rule=load_constraint_rule)
 
