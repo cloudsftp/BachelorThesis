@@ -16,4 +16,3 @@ do
 done
 
 sudo chmod +x $install_dir/bin/*
-sudo chmod +x $bin_dir/*
