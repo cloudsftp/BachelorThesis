@@ -16,6 +16,7 @@ jobs:
       - name: Install Couenne
         run: |
           cd Experiments/Classical/COIN-OR
+          chmod +x *.sh
           ./install_couenne_precompiled.sh
           ./install_hsl.sh
 
@@ -28,5 +29,5 @@ jobs:
       - name: Run Unittests
         run: |
           cd Experiments
-          chmod +x run_python_verification.sh
+          chmod +x *.sh
           ./run_python_verification.sh
