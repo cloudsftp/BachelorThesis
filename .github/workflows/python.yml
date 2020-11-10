@@ -28,12 +28,8 @@ jobs:
 
       - name: Run Unittests
         run: |
+          export LD_LIBRARY_PATH=/usr/local/share/hsl/lib:$LD_LIBRARY_PATH
+          export PATH=/usr/local/sbin:$PATH
           cd Experiments
           chmod +x *.sh
-          export LD_LIBRARY_PATH=/usr/local/share/hsl/lib:$LD_LIBRARY_PATH
-          ls /usr/local | grep sbin
-          export PATH=/usr/local/sbin:$PATH
-          ls /usr/local/share/coin-or/bin
-          ls /usr/local/sbin | grep couenne
-          couenne
           ./run_python_verification.sh
