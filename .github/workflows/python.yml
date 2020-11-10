@@ -19,8 +19,6 @@ jobs:
           chmod +x *.sh
           ./install_couenne_precompiled.sh
           ./install_hsl.sh
-          ls /usr/local/share/coin-or
-          echo $PATH
 
       - name: Setup Anaconda
         uses: s-weigand/setup-conda@v1
@@ -33,7 +31,9 @@ jobs:
           cd Experiments
           chmod +x *.sh
           export LD_LIBRARY_PATH=/usr/local/share/hsl/lib:$LD_LIBRARY_PATH
+          ls /usr/local | grep sbin
           export PATH=/usr/local/sbin:$PATH
-          ls /usr/local/share/coin-or
-          echo $PATH
+          ls /usr/local/share/coin-or/bin
+          ls /usr/local/sbin | grep couenne
+          couenne
           ./run_python_verification.sh
