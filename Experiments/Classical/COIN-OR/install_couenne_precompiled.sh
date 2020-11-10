@@ -14,3 +14,5 @@ do
   sudo rm $bin_dir/$binary
   sudo ln -s $install_dir/bin/$binary $bin_dir/$binary
 done
+
+sudo chmod +x /usr/local/share/coin-or/*

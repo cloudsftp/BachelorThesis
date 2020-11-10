@@ -29,9 +29,7 @@ jobs:
       - name: Run Unittests
         run: |
           export LD_LIBRARY_PATH=/usr/local/share/hsl/lib:$LD_LIBRARY_PATH
-          export PATH=/usr/local/sbin:$PATH
           cd Experiments
           chmod +x *.sh
-          ls /usr/local/sbin
           couenne
           ./run_python_verification.sh
