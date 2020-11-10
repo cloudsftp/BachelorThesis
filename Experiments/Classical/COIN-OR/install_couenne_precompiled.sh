@@ -6,7 +6,7 @@ install_dir="/usr/local/share/coin-or"
 bin_dir="/usr/local/sbin"
 binaries="cbc clp ipopt bonmin couenne"
 
-mkdir $install_dir
+sudo mkdir $install_dir
 sudo cp -r * $install_dir
 
 for binary in $binaries
