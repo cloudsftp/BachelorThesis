@@ -15,6 +15,21 @@ class TestUCP(unittest.TestCase):
     minlp: UCP_MINLP = UCP_MINLP(ucp)
     return minlp.optimize() # TODO: use pyomo optimizer
 
+  def assertFloatCustomEqual(self, actual: float, expected: float) -> None:
+    self.assertAlmostEqual(actual, expected, delta=0.01)
+
+  def assertFloatArrayCustomEqual(self, actual: List[float], expected: List[float]) -> None:
+    self.assertEqual(len(actual), len(expected))
+
+    for i in range(len(actual)):
+      self.assertFloatCustomEqual(actual[i], expected[i])
+
+  def assertFloat2DimArrayCustomEqual(self, actual: List[List[float]], expected: List[List[float]]) -> None:
+    self.assertEqual(len(actual), len(expected))
+
+    for i in range(len(actual)):
+      self.assertFloatArrayCustomEqual(expected[i], actual[i])
+
   def assert_solution(self, solution: UCP_Solution, \
                       u: List[List[bool]] = None, p: List[List[float]] = None, o: float = None) -> None:
 
@@ -22,10 +37,10 @@ class TestUCP(unittest.TestCase):
       self.assertEqual(solution.u, u)
 
     if p:
-      self.assertEqual(solution.p, p)
+      self.assertFloat2DimArrayCustomEqual(solution.p, p)
 
     if o or o == 0:
-      self.assertAlmostEqual(solution.o, o, delta=0.1)
+      self.assertFloatCustomEqual(solution.o, o)
 
   def plants(self, load: List[float], plants: List[CombustionPlant], \
                   u: List[List[bool]] = None, p: List[List[float]] = None, o: float = None) -> None:
@@ -67,10 +82,14 @@ class TestUCP(unittest.TestCase):
       [0, 10], CombustionPlant(0, 1, 0, 10, 1000, 5, 0),
       u=[False, True], p=[0, 10], o=15
     )
+    self.single_plant(
+      [10], CombustionPlant(0, 1, 0, 10, 1000, 5, 0),
+      u=[True], p=[10], o=15
+    )
 
   def test_no_startup_cost_when_initially_on(self):
     self.single_plant(
-      [0, 10], CombustionPlant(0, 1, 0, 10, 1000, 15, 0),
+      [0, 10], CombustionPlant(0, 1, 0, 10, 1000, 15, 0, initially_on=True),
       u=[True, True], p=[10, 10], o=20
     )
 
@@ -84,4 +103,16 @@ class TestUCP(unittest.TestCase):
     self.single_plant(
       [10, 0], CombustionPlant(0, 1, 0, 10, 1000, 0, 15),
       u=[True, True], p=[10, 10], o=20
+    )
+
+  def test_two_plants_only_load(self):
+    self.plants(
+      [10, 20],
+      [
+        CombustionPlant(1, 1, 0, 0, 1000, 0, 0),
+        CombustionPlant(1, 2, 0, 0, 1000, 0, 0)
+      ],
+      u=[[True, True], [False, False]],
+      p=[[10, 20], [0, 0]],
+      o=32
     )

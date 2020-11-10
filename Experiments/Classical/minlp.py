@@ -34,39 +34,35 @@ class UCP_MINLP(object):
     plants: List[CombustionPlant] = self.ucp.plants
     for i in self.model.I:
       for t in self.model.T:
-        self.model.on_disjunct[i, t].l = Constraint(expr=self.model.startup_shutdown_cost[i, t] == 0)
-        self.model.on_disjunct[i, t].c = Constraint(expr=self.model.u[i, t] == 1)
-
-        self.model.off_disjunct[i, t].l = Constraint(expr=self.model.startup_shutdown_cost[i, t] == 0)
-        self.model.off_disjunct[i, t].c = Constraint(expr=self.model.u[i, t] == 0)
-
         self.model.shutdown_disjunct[i, t].l = Constraint(expr=self.model.startup_shutdown_cost[i, t] == plants[i].AD)
         self.model.shutdown_disjunct[i, t].c = Constraint(expr=self.model.u[i, t] == 0)
+
+        self.model.on_disjunct[i, t].l = Constraint(expr=self.model.startup_shutdown_cost[i, t] == 0)
+        self.model.on_disjunct[i, t].c = Constraint(expr=self.model.u[i, t] == 1)
 
         self.model.startup_disjunct[i, t].l = Constraint(expr=self.model.startup_shutdown_cost[i, t] == plants[i].AU)
         self.model.startup_disjunct[i, t].c = Constraint(expr=self.model.u[i, t] == 1)
 
-        if t > 0:
-          self.model.on_disjunct[i, t].p = Constraint(expr=self.model.u[i, t-1] == 1)
-          self.model.off_disjunct[i, t].p = Constraint(expr=self.model.u[i, t-1] == 0)
-          self.model.shutdown_disjunct[i, t].p = Constraint(expr=self.model.u[i, t-1] == 1)
-          self.model.startup_disjunct[i, t].p = Constraint(expr=self.model.u[i, t-1] == 0)
+        self.model.off_disjunct[i, t].l = Constraint(expr=self.model.startup_shutdown_cost[i, t] == 0)
+        self.model.off_disjunct[i, t].c = Constraint(expr=self.model.u[i, t] == 0)
 
-        else:
-          if plants[i].initially_on:
-            self.model.on_disjunct[i, t].p = Constraint.Feasible
-            self.model.shutdown_disjunct[i, t].p = Constraint.Feasible
-          else:
-            self.model.off_disjunct[i, t].p = Constraint.Feasible
-            self.model.startup_disjunct[i, t].p = Constraint.Feasible
+        if t > 0:
+          self.model.shutdown_disjunct[i, t].p = Constraint(expr=self.model.u[i, t-1] == 1)
+          self.model.on_disjunct[i, t].p = Constraint(expr=self.model.u[i, t-1] == 1)
+          self.model.startup_disjunct[i, t].p = Constraint(expr=self.model.u[i, t-1] == 0)
+          self.model.off_disjunct[i, t].p = Constraint(expr=self.model.u[i, t-1] == 0)
 
     def disjunction_rule(model: ConcreteModel, i: int, t: int) -> Expression:
-      return [
-        model.shutdown_disjunct[i, t],
-        model.on_disjunct[i, t],
-        model.off_disjunct[i, t],
-        model.startup_disjunct[i, t]
-      ]
+      if t > 0:
+        return [
+          model.shutdown_disjunct[i, t], model.on_disjunct[i, t],
+          model.startup_disjunct[i, t], model.off_disjunct[i, t]
+        ]
+      else:
+        if plants[i].initially_on:
+          return [model.shutdown_disjunct[i, t], model.on_disjunct[i, t]]
+        else:
+          return [model.startup_disjunct[i, t], model.off_disjunct[i, t]]
 
     self.model.startup_shutdown_disjunction = Disjunction(self.model.I, self.model.T, rule=disjunction_rule)
 
