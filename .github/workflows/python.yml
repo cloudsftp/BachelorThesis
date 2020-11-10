@@ -31,5 +31,4 @@ jobs:
           export LD_LIBRARY_PATH=/usr/local/share/hsl/lib:$LD_LIBRARY_PATH
           cd Experiments
           chmod +x *.sh
-          couenne
           ./run_python_verification.sh
