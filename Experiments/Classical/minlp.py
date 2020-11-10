@@ -132,7 +132,7 @@ class UCP_MINLP(object):
 
     return UCP_Solution(self.ucp, time, optimal, o, u, p)
 
-  def optimize(self, solver_command: str = 'couenne') -> UCP_Solution: # TODO: allow pyomo solver
+  def optimize(self, solver_command: str = 'couenne') -> UCP_Solution:
     ''' Optimize self.model and return the solution '''
     with SolverFactory(solver_command) as solver:
       results = solver.solve(self.model)

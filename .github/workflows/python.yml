@@ -1,9 +1,9 @@
 name: Test Python
 
-on:
-  push:
-    branches:
-      - develop
+on: [push]
+#  push:
+#    branches:
+#      - develop
 
 jobs:
   test_python:
@@ -12,6 +12,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Install Couenne
+        run: |
+          cd Experiments/Classical/COIN-OR
+          ./install_couenne_precompiled.sh
+          ./install_hsl.sh
 
       - name: Setup Anaconda
         uses: s-weigand/setup-conda@v1

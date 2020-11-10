@@ -13,7 +13,7 @@ class TestUCP(unittest.TestCase):
   @staticmethod
   def optimize(ucp: UCP) -> UCP_Solution:
     minlp: UCP_MINLP = UCP_MINLP(ucp)
-    return minlp.optimize() # TODO: use pyomo optimizer
+    return minlp.optimize()
 
   def assertFloatCustomEqual(self, actual: float, expected: float) -> None:
     self.assertAlmostEqual(actual, expected, delta=0.00001)
@@ -32,6 +32,7 @@ class TestUCP(unittest.TestCase):
 
   def assert_solution(self, solution: UCP_Solution, \
                       u: List[List[bool]] = None, p: List[List[float]] = None, o: float = None) -> None:
+    self.assertTrue(solution.optimal)
 
     if u:
       self.assertEqual(solution.u, u)
