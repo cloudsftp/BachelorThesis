@@ -1,17 +1,27 @@
 \section{The Unit Commitment Problem}
 
-The Unit Commitment Problem (UCP) generally is concerned with the scheduling of thermal power plants.
+The Unit Commitment Problem (UCP) generally is concerned with the scheduling or ''commitment''
+of thermal power plants over a given time period.
 Where thermal power plants can be coal, oil, gas or nuclear power plants.
-The commitment of the power plants should be scheduled in such a way, that the fuel cost is minimized
-while fulfilling the demand of power.
-The fuel cost depends on the power output $p_{i, t}$ as well as start-up and shut-down costs.
-While minimizing the cost function, the problem also consideres various constraints of the power plants.
-These include meeting the power demand,
-ramping constraints of each plant,
-the minimum and maximum power output of each plant
+The commitment of the power plants should be scheduled in such a way,
+that the power demand or ''load'' at each moment of the time period
+is satisfied by the power output of the power plants.
+While satisfying the load, the fuel cost should be minimal.
+The fuel cost depends on the commitment of each power plant at each time ($u_{i, t}$),
+the power output of each power plant at each time ($p_{i, t}$),
+the power plant specific cost function coefficients ($A_i$, $B_i$ and $C_i$),
+as well as start-up and shut-down costs ($A_{i}^{U}$ and $A_{i}^{D}$).
+Other than the load, the problem also consideres various other constraints of the power plants.
+These include the minimum and maximum power output of each plant ($P_{min,i}$ and $P_{max,i}$),
+the ramping constraints of each plant,
 and the minimum up- and down-time.
 \cite{Baldick1995}
 
+In this paper, only load serves as a constraint to the commitment of the thermal power plants.
+\todo{Problem description, cost function formula}
+
+
+\todo{Rationale for MINLP vs MILP}
 The problem is often mathematically formulated as a Mixed-Integer Non-Linear Problem (MINLP).
 MINLP is a class of optimization problems, with a non-linear objective funtion, integer and floating-point variables,
 as well as various constraints on the variables.
