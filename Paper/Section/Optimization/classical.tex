@@ -1,3 +1,29 @@
 \section{Classical Computer}
 
-Problem formulation and experiment on classical computers.
+The UCP is formulated as a MINLP for classical computers to solve,
+as mentioned in section \ref{intro:ucp}.
+The equations (\ref{opt:clas:minlp}) represent the formulated MINLP.
+
+\begin{equation}
+\begin{aligned}
+  \min_{u, p} \quad &
+  \sum_{i \in \mathbb{I}, t \in \mathbb{T}} f_{i, t}
+  = \sum_{i \in \mathbb{I}, t \in \mathbb{T}}
+    u_{i, t} (A_i + B_i p_{i, t} + C_i p_{i, t}^2) + S_{i, t} \\
+  \text{s.t.} \quad & L_t = \sum_{i \in \mathbb{I}} u_{i, t} p_{i, t} \quad &
+  \forall t \in \mathbb{T} \\
+  &
+  P_{min, i} \leq p_{i, t} \leq P_{max, i} \quad &
+  \forall i \in \mathbb{I}, t \in \mathbb{T} \\
+  &
+  S_{i, t} = \begin{cases}
+    A_i^U & \text{if } u_{i, t} = 1 \land u_{i, t-1} = 0 \\
+    A_i^D & \text{if } u_{i, t} = 0 \land u_{u, t-1} = 1 \\
+    0 & \text{else}
+  \end{cases} \quad &
+  \forall i \in \mathbb{I}, t \in \mathbb{T} \\
+\end{aligned}
+\label{opt:clas:minlp}
+\end{equation}
+
+\todo{u is defined for t = -1}
