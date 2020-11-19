@@ -1,0 +1,34 @@
+name: Test Python
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  test_python:
+    name: Python Unittests
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Couenne
+        run: |
+          cd Experiments/Classical/COIN-OR
+          chmod +x *.sh
+          ./install_couenne_precompiled.sh
+          ./install_hsl.sh
+
+      - name: Setup Anaconda
+        uses: s-weigand/setup-conda@v1
+
+      - name: Install Anaconda Environment
+        run: conda env update --file Experiments/conda_environment.yml --name base
+
+      - name: Run Unittests
+        run: |
+          export LD_LIBRARY_PATH=/usr/local/share/hsl/lib:$LD_LIBRARY_PATH
+          cd Experiments
+          chmod +x *.sh
+          ./run_python_verification.sh

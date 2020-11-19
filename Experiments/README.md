@@ -2,9 +2,9 @@
 
 ## Setup Conda Environment
 
-All required packages are lsited in `conda_environment.yml`
+All required packages are listed in `conda_environment.yml`
 
-They environmetn idś called `opt` and can be installed via `./install_conda_env.sh`
+The environment is called `opt` and can be installed via `./install_conda_env.sh`
 
 It is setup by running `source setup.sh`
 

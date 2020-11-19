@@ -5,11 +5,10 @@
 *.fdb_latexmk
 *.fls
 *.log
+*.out
 *.pdf
 *.synctex.gz
 
 # python
 __pycache__
-
-# vscode
-.vscode
+.mypy_cache

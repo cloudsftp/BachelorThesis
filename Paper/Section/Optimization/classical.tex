@@ -1,3 +1,98 @@
 \section{Classical Computer}
 
-Problem formulation and experiment on classical computers.
+The UCP is formulated as a MINLP for classical computers to solve,
+as mentioned in section \ref{intro:ucp}.
+The equations (\ref{formula:minlp}) represent the formulated MINLP.
+
+\begin{subequations}
+\begin{align}
+  \min_{u, p} \quad &
+  \sum_{i \in \mathbb{I}, t \in \mathbb{T}} f_{i, t}
+  = \sum_{i \in \mathbb{I}, t \in \mathbb{T}}
+    u_{i, t} (A_i + B_i p_{i, t}' + C_i (p_{i, t}')^2) + S_{i, t}
+  \label{formula:minlp.obj} \\
+  \text{s.t.} \quad & L_t = \sum_{i \in \mathbb{I}} u_{i, t} p_{i, t}' \quad &
+  \forall t \in \mathbb{T}
+  \label{formula:minlp.load} \\
+  &
+  P_{min, i} \leq p_{i, t}' \leq P_{max, i} \quad &
+  \forall i \in \mathbb{I}, t \in \mathbb{T}
+  \label{formula:minlp.power} \\
+  &
+  S_{i, t} = \begin{cases}
+    A_i^U & \text{if } u_{i, t} > u_{i, t-1} \\
+    A_i^D & \text{if } u_{i, t} < u_{u, t-1} \\
+    0 & \text{else}
+  \end{cases} \quad &
+  \forall i \in \mathbb{I}, t \in \mathbb{T}
+  \label{formula:minlp.updowncost}
+\end{align}
+\label{formula:minlp}
+\end{subequations}
+
+The formula (\ref{formula:minlp.obj}) represents the global cost function.
+This function has to be minimized and is called the ''objective function''.
+It is the sum of all cost functions $f_{i, t}$ of the individual power plants at every time step.
+
+The individual cost funtions $f_{i, t}$ take $u_{i, t}$ and $p_{i, t}'$ as free variables.
+$A_i, B_i$ and $C_i$ are constant for every power plant.
+$f_{i, t}$ also depend on $S_{i, t}$ or equation (\ref{formula:minlp.updowncost}),
+which evaluates to $A_i^U, A_i^D$ or $0$ depending on the free commitment variables $u_{i, t}$ and $u_{i, t-1}$.
+$A_i^U$ and $A_i^D$ are also constant for every power plant,
+as well as $u_{i, -1}$.
+
+$A_i, A_i^U$ and $A_i^D$ are the linear coefficients of the cost function,
+because they are not a factor of $p_{i, t}$.
+$A_i$ is the constant cost when the power plant is active
+and is added to $f_{i, t}$ if $u_{i, t} = 1$.
+$A_i^U$ is the cost of starting the power plant
+and is added to $f_{i, t}$ if $u_{i, t} > u_{i, t-1}$.
+$A_i^D$ is the cost of shutting down the power plant
+and is added to $f_{i, t}$ if $u_{i, t} < u_{i, t-1}$.
+If $t = 0$ this would lead to problems, because $u_{i, t-1} = u_{i, -1}$ would be undefined.
+That's why the initial state of the power plant $u_{i, -1}$ is also constant.
+$B_i$ is the linear coefficient of the cost function,
+because it is a factor of $p_{i, t}'$.
+It is multiplied by $p_{i, t}'$ and added to $f_{i, t}$ if $u_{i,  t} = 1$.
+$C_i$ is the quadratic coefficient of the cost function,
+because it is a factor of $p_{i, t}^2$.
+It is multiplied by $p_{i, t}^2$ and added to $f_{i, t}$ if $u_{i,  t} = 1$.
+
+So the obbjective function takes the free variables
+$
+(u_{i, t})_{i \in \mathbb{I}, t \in \mathbb{T}},
+(p_{i, t}')_{i \in \mathbb{I}, t \in \mathbb{T}}
+$ and the constants $
+(A_i)_{i \in \mathbb{I}}, \\
+(A_i^U)_{i \in \mathbb{I}},
+(A_i^D)_{i \in \mathbb{I}},
+(B_i)_{i \in \mathbb{I}},
+(C_i)_{i \in \mathbb{I}},
+$ and $
+(u_{i, -1})_{i \in \mathbb{I}}
+$ as input.
+The free variables are chosen, such that the objective function is minimized.
+\\
+
+As the optimal inputs are computed, the optimizer has to also take the constraints into account.
+These are given as equations or inequations.
+In this case there is one equation (\ref{formula:minlp.load}) and one inequation (\ref{formula:minlp.power}).
+
+The equation (\ref{formula:minlp.load}) makes sure, that the combined power
+of all power plants equals the power demand or ''load'' at each time instance $t$.
+This is achieved by setting each constant $(L_t)_{t \in \mathbb{T}}$
+equal to the sum of the power of all power plants at that time $t$.
+The summands on the right-hand side are the multiplication of
+$u_{i, t}$ and $p_{i, t}'$ and not simply $p_{i, t}'$,
+because in this model the power output can be greater than 0
+when the unit is not committet.
+This is a modeling trick, in order to enable the modeling of the inequation (\ref{formula:minlp.power}).
+
+The inequation (\ref{formula:minlp.power}) makes sure, that the power output $p_{i, t}'$
+of each power plant $i$ at each time intance $t$ is within the limits of the power plant.
+These limits are $P_{min, i}$ for the minimum and $P_{max, i}$ for the maximum
+power output.
+As mentioned earlier, the power output $p_{i, t}'$ never reaches 0,
+if $P_{min, i}$ is greater than 0.
+So after finding the minimum inputs $u$ and $p'$ for the MINLP problem,
+the solution to the UCP is the actual power $p_{i, t} = u_{i, t} p_{i, t}'$.
