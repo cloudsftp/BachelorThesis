@@ -58,13 +58,13 @@ class ACN_DataConverter(object):
     self.specify_load()
 
   def get_load_of_timeframe(self, start: datetime, end: datetime, interval_minutes=10) -> DemandData:
-    demand_data: DemandData = DemandData(start, end, interval_minutes)
-    
+    demand_data: DemandData = DemandData(period=end - start, interval_minutes=interval_minutes)
+
     df: pd.DataFrame = demand_data.data
 
     for i in range(df.shape[0]):
-      current_delta: timedelta = timedelta(minutes=interval_minutes) * i
-      current_moment: datetime = start + current_delta
+      current_delta: timedelta = interval_minutes * i
+      current_moment: datetime = start + timedelta(minutes=current_delta)
 
       for item in self.items:
         if current_moment >= item.start and current_moment < item.disconnectTime:
@@ -85,7 +85,7 @@ def get_average_day() -> DemandData:
   dates: Dict[int, int] = { # The key is the month, the entry is the last day of the month
     1: 31, 2: 29, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 30, 9: 31
   }
-  
+
   demand: DemandData = ev_data.get_load_of_one_day(datetime(2020, 1, 1, 0, 0)) # this day has no power demand
   load_df: pd.DataFrame = demand.data
   num_of_days = 0

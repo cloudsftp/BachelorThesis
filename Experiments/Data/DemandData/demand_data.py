@@ -2,23 +2,30 @@
 
 import numpy as np # type: ignore
 import pandas as pd # type: ignore
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 class DemandData:
-  def __init__(self, start: datetime, end: datetime, interval_minutes=10) -> None:
-    self.interval_minutes: float = interval_minutes
+  path: str= 'Data/DemandData/'
 
-    period: timedelta = end - start
-    period_minutes: float = period.days * 1440 + period.seconds / 60
-    num_data_points: int = int (period_minutes / interval_minutes)
+  def __init__(self, period: timedelta=None, data: pd.DataFrame=None, interval_minutes: int=10) -> None:
+    if timedelta == None:
+      self.data = data
 
-    self.data = pd.DataFrame(
-      np.array([[0, 0] for _ in range(num_data_points)]),
-      index=[timedelta(minutes=interval_minutes) * i for i in range(num_data_points)],
-      columns=['power_kW', 'num_cons'],
-      dtype=float
-    )
+    else:
+      period_minutes: float = period.days * 1440 + period.seconds / 60
+      num_data_points: int = int (period_minutes / interval_minutes)
+
+      self.data = pd.DataFrame(
+        np.array([[0, 0] for _ in range(num_data_points)]),
+        index=[interval_minutes * i for i in range(num_data_points)],
+        columns=['power_kW', 'num_cons'],
+        dtype=float
+      )
 
   def to_csv(self, name: str) -> None:
-    path: str= 'Data/DemandData/'
-    self.data.to_csv(path + name)
+    self.data.to_csv(self.path + name)
+
+  def read_from_csv(name: str):
+    data: pd.DataFrame = pd.read_csv(DemandData.path + name, index_col=0)
+    period: timedelta = timedelta(minutes=int(data.index[-1] - data.index[0]))
+    return DemandData(period, data=data)
