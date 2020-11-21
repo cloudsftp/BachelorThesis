@@ -13,8 +13,12 @@ class DemandData:
     num_data_points: int = int (period_minutes / interval_minutes)
 
     self.data = pd.DataFrame(
-      np.array([[0, 0, 0] for _ in range(num_data_points)]),
+      np.array([[0, 0] for _ in range(num_data_points)]),
       index=[timedelta(minutes=interval_minutes) * i for i in range(num_data_points)],
-      columns=['power_kW', 'num_cons', 'num_prod'],
+      columns=['power_kW', 'num_cons'],
       dtype=float
     )
+
+  def to_csv(self, name: str) -> None:
+    path: str= 'Data/DemandData/'
+    self.data.to_csv(path + name)

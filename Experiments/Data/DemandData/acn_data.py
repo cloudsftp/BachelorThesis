@@ -1,7 +1,8 @@
 #!/bin/python3.8
 
 import pandas as pd # type: ignore
-from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
+from datetime import date, datetime, timedelta
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
@@ -56,27 +57,50 @@ class ACN_DataConverter(object):
     self.convert_items()
     self.specify_load()
 
-  def get_load_of_timeframe(self, connectionTime: datetime, disconnectTime: datetime, interval_minutes=10) -> pd.DataFrame:
-    demand_data: DemandData = DemandData(connectionTime, disconnectTime, interval_minutes)
+  def get_load_of_timeframe(self, start: datetime, end: datetime, interval_minutes=10) -> DemandData:
+    demand_data: DemandData = DemandData(start, end, interval_minutes)
     
     df: pd.DataFrame = demand_data.data
 
     for i in range(df.shape[0]):
       current_delta: timedelta = timedelta(minutes=interval_minutes) * i
-      current_moment: datetime = connectionTime + current_delta
+      current_moment: datetime = start + current_delta
 
       for item in self.items:
         if current_moment >= item.start and current_moment < item.disconnectTime:
           df.loc[[current_delta], ['power_kW']] += item.power_kW
           df.loc[[current_delta], ['num_cons']] += 1
 
-    return demand_data.data
+    return demand_data
 
+  def get_load_of_one_day(self, start: datetime) -> DemandData:
+    one_day: timedelta = timedelta(1)
+    return self.get_load_of_timeframe(start, start + one_day)
 
-if __name__ == "__main__":
+def get_average_day() -> DemandData:
   data_file_name = "Data/DemandData/ACN_caltech_2020-10.json"
   ev_data: ACN_DataConverter = ACN_DataConverter(data_file_name)
   ev_data.process_data()
 
-  load_df: pd.DataFrame = ev_data.get_load_of_timeframe(datetime(2020, 1, 1, 0, 0), datetime(2020, 1, 9, 0, 0))
-  print(load_df.max())
+  dates: Dict[int, int] = { # The key is the month, the entry is the last day of the month
+    1: 31, 2: 29, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 30, 9: 31
+  }
+  
+  demand: DemandData = ev_data.get_load_of_one_day(datetime(2020, 1, 1, 0, 0)) # this day has no power demand
+  load_df: pd.DataFrame = demand.data
+  num_of_days = 0
+  load_df_day: pd.DataFrame
+
+  for month in dates:
+    for day in range(1, dates[month]):
+      load_df_day = ev_data.get_load_of_one_day(datetime(2020, month, day, 0, 0)).data
+      load_df += load_df_day
+      num_of_days += 1
+
+  load_df /= num_of_days
+  return demand
+
+
+if __name__ == "__main__":
+  average_demand: DemandData = get_average_day()
+  average_demand.to_csv('acn_data.csv')
