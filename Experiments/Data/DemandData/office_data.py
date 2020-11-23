@@ -2,6 +2,7 @@
 
 
 import os
+from os import device_encoding
 from typing import List
 from matplotlib.pyplot import fill
 import numpy as np # type: ignore
@@ -48,7 +49,7 @@ def read_device(device: str) -> pd.DataFrame:
   return device_load_df
 
 
-def read_all():
+def read_all() -> pd.DataFrame:
   devices: List[str] = os.listdir(path_to_data)
 
   load_df: pd.DataFrame = pd.DataFrame(data=np.zeros([num_data_items, 1]), columns=['power_kW'])
@@ -57,9 +58,8 @@ def read_all():
     device_load_df: pd.DataFrame = read_device(device)
     load_df = load_df.add(device_load_df, fill_value=0)
 
-  load_df.plot()
-  plt.show()
-
+  return DemandData(data=load_df)
 
 if __name__ == "__main__":
-  read_all()
+  demand: DemandData = read_all()
+  demand.to_csv('office_data.csv')
