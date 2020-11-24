@@ -1,8 +1,6 @@
 #!/bin/python3.8
 
-from numpy.lib.npyio import load
 import pandas as pd # type: ignore
-import matplotlib.pyplot as plt
 from datetime import date, datetime, timedelta
 from dataclasses import dataclass
 from typing import Any, Dict, List
@@ -64,7 +62,7 @@ class ACN_DataConverter(object):
     df: pd.DataFrame = demand_data.data
 
     for i in range(df.shape[0]):
-      current_delta: timedelta = interval_minutes * i
+      current_delta: int = interval_minutes * i
       current_moment: datetime = start + timedelta(minutes=current_delta)
 
       for item in self.items:

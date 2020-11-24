@@ -2,12 +2,9 @@
 
 
 import os
-from os import device_encoding
 from typing import List
-from matplotlib.pyplot import fill
 import numpy as np # type: ignore
 import pandas as pd # type: ignore
-import matplotlib.pyplot as plt
 from Data.DemandData.demand_data import DemandData
 
 

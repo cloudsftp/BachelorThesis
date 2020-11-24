@@ -1,6 +1,6 @@
 #!/bin/python3.8
 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # type: ignore
 import pandas as pd # type: ignore
 from Data.DemandData.demand_data import DemandData
 
@@ -18,4 +18,4 @@ if __name__ == "__main__":
   plt.show()
 
   combined_demand: DemandData = DemandData(data=combined_data)
-  combined_data.to_csv('combined_data.csv')
+  combined_demand.to_csv('combined_data.csv')
