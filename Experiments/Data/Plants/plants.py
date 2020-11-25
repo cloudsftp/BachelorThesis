@@ -24,6 +24,7 @@ class Plants(object):
       raw_plants: List[Dict[str, Any]] = raw_data['plants']
       plants: List[CombustionPlant] = []
       for raw_plant in raw_plants:
+        raw_plant.pop('source', None)
         plants.append(CombustionPlant(**raw_plant))
 
       return Plants(meta, plants)

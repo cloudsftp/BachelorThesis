@@ -16,7 +16,6 @@ class CombustionPlant(object):
   AD: float
   initially_on: bool = False
   type: str = 'None'
-  source: Dict[str, Any] = field(default_factory=dict)
 
 @dataclass
 class UCP(object):
