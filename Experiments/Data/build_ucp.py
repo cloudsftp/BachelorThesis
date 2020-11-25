@@ -56,8 +56,3 @@ def get_ucp(num_loads: int, num_plants: int, offset_loads: int=0) -> UCP:
   plants: List[CombustionPlant] = select_plants(available_plants, num_plants)
 
   return UCP(loads, plants)
-
-
-if __name__ == "__main__":
-  ucp: UCP = get_ucp(100, 1)
-  print(ucp)
