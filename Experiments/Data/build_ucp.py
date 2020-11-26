@@ -1,12 +1,19 @@
 #!/bin/python3.8
 
 
+from dataclasses import dataclass
 import random
 from typing import List
 from Data.DemandData.demand_data import DemandData
 from Data.Plants.plants import Plants
 from UCP.unit_commitment_problem import CombustionPlant, UCP
 
+
+@dataclass
+class ExperimentParameters(object):
+  num_loads: int
+  num_plants: int
+  offset_loads: int = 0
 
 demand_file_file: str = 'combined_data.csv'
 plants_file_name: str = 'thermal_power_coefficients.json'
@@ -43,16 +50,16 @@ def select_plants(available_plants: List[CombustionPlant], num_plants: int) -> L
   return plants
 
 
-def get_ucp(num_loads: int, num_plants: int, offset_loads: int=0) -> UCP:
+def build_ucp(parameters: ExperimentParameters) -> UCP:
   demand_data: DemandData = DemandData.read_from_csv(demand_file_file)
   loads: List[float] = demand_data.data['power_kW'].to_list()
 
   plants_data: Plants = Plants.read_from_json(plants_file_name)
   available_plants: List[CombustionPlant] = plants_data.plants
 
-  loads = select_loads(loads, num_loads, offset_loads)
-  loads = scale_loads(loads, available_plants, num_plants)
+  loads = select_loads(loads, parameters.num_loads, parameters.offset_loads)
+  loads = scale_loads(loads, available_plants, parameters.num_plants)
 
-  plants: List[CombustionPlant] = select_plants(available_plants, num_plants)
+  plants: List[CombustionPlant] = select_plants(available_plants, parameters.num_plants)
 
   return UCP(loads, plants)

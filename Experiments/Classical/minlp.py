@@ -137,14 +137,3 @@ class UCP_MINLP(object):
     with SolverFactory(solver_command) as solver:
       results = solver.solve(self.model)
       return self.to_ucp_solution(results)
-
-
-if __name__ == "__main__":
-  ucp = UCP([0, 1, 1, 4], [
-      CombustionPlant(0, 10, 5, 1, 50, 0, 0),
-      CombustionPlant(0, 20, 1, 1, 50, 1000, 0)
-  ])
-
-  minlp = UCP_MINLP(ucp)
-  solution: UCP_Solution = minlp.optimize()
-  print(asdict(solution))

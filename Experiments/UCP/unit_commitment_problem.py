@@ -36,3 +36,9 @@ class UCP_Solution(object):
   o: float
   u: List[List[bool]]
   p: List[List[float]]
+
+  def save_to(self, file_name) -> None:
+    write_dataclass_to(self, file_name)
+
+  def load_from(file_name):
+    return read_dataclass_from(file_name, UCP)
