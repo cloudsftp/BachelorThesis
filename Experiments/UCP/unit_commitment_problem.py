@@ -1,7 +1,7 @@
 #/bin/python3.8
 
 from dataclasses import dataclass, field, asdict
-from typing import List
+from typing import Any, Dict, List
 
 from Util.json_file_handler import write_dataclass_to, read_dataclass_from
 
@@ -15,7 +15,7 @@ class CombustionPlant(object):
   AU: float
   AD: float
   initially_on: bool = False
-  
+  type: str = 'None'
 
 @dataclass
 class UCP(object):

@@ -1,20 +1,31 @@
 #!/bin/python3.8
 
+import os
 import numpy as np # type: ignore
 import pandas as pd # type: ignore
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 class DemandData:
-  def __init__(self, start: datetime, end: datetime, interval_minutes=10) -> None:
-    self.interval_minutes: float = interval_minutes
+  path: str = os.path.join('Data', 'DemandData')
 
-    period: timedelta = end - start
-    period_minutes: float = period.days * 1440 + period.seconds / 60
-    num_data_points: int = int (period_minutes / interval_minutes)
+  def __init__(self, data: pd.DataFrame=None, period: timedelta=None, interval_minutes: int=10) -> None:
+    if isinstance(data, pd.DataFrame):
+      self.data = data
 
-    self.data = pd.DataFrame(
-      np.array([[0, 0, 0] for _ in range(num_data_points)]),
-      index=[timedelta(minutes=interval_minutes) * i for i in range(num_data_points)],
-      columns=['power_kW', 'num_cons', 'num_prod'],
-      dtype=float
-    )
+    elif isinstance(period, timedelta):
+      period_minutes: float = period.days * 1440 + period.seconds / 60
+      num_data_points: int = int (period_minutes / interval_minutes)
+
+      self.data = pd.DataFrame(
+        data=np.zeros([num_data_points, 1]),
+        columns=['power_kW'],
+        dtype=float
+      )
+
+  def to_csv(self, name: str) -> None:
+    self.data.to_csv(os.path.join(self.path, name))
+
+  @staticmethod
+  def read_from_csv(name: str):
+    data: pd.DataFrame = pd.read_csv(os.path.join(DemandData.path, name), index_col=0)
+    return DemandData(data=data)
