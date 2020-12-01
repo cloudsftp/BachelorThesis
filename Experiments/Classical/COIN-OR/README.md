@@ -10,11 +10,5 @@ The build can be deleted by running `./clean_build.sh`
 
 To install the files built from source run `./install_couenne.sh`
 
-To install the precompiled files (Ubuntu 20.04) run `./install_precompiled.sh`
-
-To remove the COIN-OR binaries run `./clean_install.sh`
-
-## Install Libraries
-
-Also HSL and other libraries are required. They can be installed via `./install_hsl.sh`.
-The file `coinhsl-linux-x86_64-2015.06.23.tar.gz` has to be present. It can be obtained [here](http://www.hsl.rl.ac.uk/download/coinhsl-linux-x86_64/2015.06.23/)
+The libraries are added with the setup script `setup.sh` in the `Experiments` directory.
+Also the path to the `couenne` binary is added to the `$PATH` via that script.
