@@ -31,5 +31,6 @@ jobs:
           $(pwd)/Classical/COIN-OR/Couenne/lib:\
           $(pwd)/Classical/COIN-OR/Libgfortran
           export PATH=$(pwd)/Classical/COIN-OR/Couenne/bin:$PATH
+          chmos +c Classical/COIN-OR/Couenne/bin/couenne
           couenne
           ./run_python_verification.sh
