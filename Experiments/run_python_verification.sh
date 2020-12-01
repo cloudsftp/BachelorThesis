@@ -1,5 +1,7 @@
 #!/bin/sh
 
+source setup.sh
+
 status=0
 
 python -m unittest
