@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - feature/classical_experiments
 
 jobs:
   test_python:
@@ -13,13 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install Couenne
-        run: |
-          cd Experiments/Classical/COIN-OR
-          chmod +x *.sh
-          ./install_couenne_precompiled.sh
-          ./install_hsl.sh
-
       - name: Setup Anaconda
         uses: s-weigand/setup-conda@v1
 
@@ -28,7 +22,7 @@ jobs:
 
       - name: Run Unittests
         run: |
-          export LD_LIBRARY_PATH=/usr/local/share/hsl/lib:$LD_LIBRARY_PATH
           cd Experiments
           chmod +x *.sh
+          source setup.sh
           ./run_python_verification.sh
