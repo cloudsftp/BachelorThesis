@@ -15,7 +15,7 @@ coinhsl_dir="$coin_or_home/$coinhsl_dir_name"
 coinhsl_archive="$coinhsl_dir.tar.gz"
 
 if [ ! -d $coinhsl_dir ]; then
-  tar xfz $coinhsl_archive -C $coin_or_home
+  tar xfz $coinhsl_archive.tar.gz -C $coin_or_home
 fi
 
 libhsl_link="$coinhsl_dir/lib/libhsl.so"
