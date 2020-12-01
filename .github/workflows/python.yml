@@ -24,7 +24,7 @@ jobs:
         run: |
           cd Experiments
           chmod +x *.sh
-          tar xfz Classical/COIN-OR/coinhsl-linux-x86_64-2015.06.23 -C Classical/COIN-OR
+          tar xfz Classical/COIN-OR/coinhsl-linux-x86_64-2015.06.23.tar.gz -C Classical/COIN-OR
           ln -s libcoinhsl.so.0 Classical/COIN-OR/coinhsl-linux-x86_64-2015.06.23/lib/libhsl.so
           export LD_LIBRARY_PATH=\
           $(pwd)/Classical/COIN-OR/coinhsl-linux-x86_64-2015.06.23/lib:\
