@@ -34,7 +34,7 @@ def select_plants(available_plants: List[CombustionPlant], num_plants: int) -> L
   # initialize pseudo random number generator to get reproducable results
   random.seed(1)
   def random_plant() -> CombustionPlant:
-    rand: int = int(random.random() * len(plants))
+    rand: int = int(random.random() * len(available_plants))
     return available_plants[rand]
 
   plants: List[CombustionPlant] = []
