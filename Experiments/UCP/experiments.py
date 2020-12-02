@@ -21,7 +21,7 @@ def perform_experiment(parameters: ExperimentParameters, optimize_fun: Callable,
 
     ucp: UCP = build_ucp(parameters)
 
-    solution = optimize_fun(ucp, parameters)
+    solution = optimize_fun(ucp)
 
     write_solution(solution, parameters, path)
 

@@ -56,4 +56,4 @@ def build_ucp(parameters: ExperimentParameters) -> UCP:
 
   plants: List[CombustionPlant] = select_plants(available_plants, parameters.num_plants)
 
-  return UCP(loads, plants)
+  return UCP(parameters, loads, plants)

@@ -101,10 +101,9 @@ class UCP_MINLP(object):
 
     self.model.p_constr = Constraint(self.model.I, self.model.T, rule=power_constraint_rule)
 
-  def __init__(self, ucp: UCP, parameters: ExperimentParameters) -> None:
+  def __init__(self, ucp: UCP) -> None:
     ''' Build self.model from UCP '''
     self.ucp: UCP = ucp
-    self.parameters: ExperimentParameters = parameters
     self.model: ConcreteModel = ConcreteModel()
 
     self.model.I = range(len(ucp.plants))
@@ -131,7 +130,7 @@ class UCP_MINLP(object):
                                                         for t in self.model.T]
                                                         for i in self.model.I]
 
-    return UCP_Solution(self.parameters, self.ucp, time, optimal, o, u, p)
+    return UCP_Solution(self.ucp, time, optimal, o, u, p)
 
   def optimize(self, solver_command: str = 'couenne') -> UCP_Solution:
     ''' Optimize self.model and return the solution '''

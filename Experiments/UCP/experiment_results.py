@@ -35,7 +35,7 @@ class ExperimentResults(object):
     self.experiments_by_plants: Dict[int, List[UCP_Solution]] = {}
 
     for solution in self.solutions:
-      num_plants: int = solution.parameters.num_plants
+      num_plants: int = solution.ucp.parameters.num_plants
       solutions_list: Optional[List[UCP_Solution]] = self.experiments_by_plants.get(num_plants)
 
       if not solutions_list:
@@ -54,7 +54,7 @@ class ExperimentResults(object):
     times: Dict[int, float] = {}
 
     for solution in solutions_list:
-      times[solution.parameters.num_loads] = solution.time
+      times[solution.ucp.parameters.num_loads] = solution.time
 
     time_series: pd.Series = pd.Series(times).sort_index()
 
