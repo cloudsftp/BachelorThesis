@@ -6,14 +6,8 @@ import random
 from typing import List
 from Data.DemandData.demand_data import DemandData
 from Data.Plants.plants import Plants
-from UCP.unit_commitment_problem import CombustionPlant, UCP
+from UCP.unit_commitment_problem import CombustionPlant, UCP, ExperimentParameters
 
-
-@dataclass
-class ExperimentParameters(object):
-  num_loads: int
-  num_plants: int
-  offset_loads: int = 0
 
 demand_file_file: str = 'combined_data.csv'
 plants_file_name: str = 'thermal_power_coefficients.json'

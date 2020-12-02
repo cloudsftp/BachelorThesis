@@ -4,13 +4,12 @@
 import os
 import argparse
 from typing import Callable
-from Data.build_ucp import ExperimentParameters, build_ucp
-from UCP.unit_commitment_problem import UCP, UCP_Solution
+from Data.build_ucp import build_ucp
+from UCP.unit_commitment_problem import UCP, UCP_Solution, ExperimentParameters
 
 
 def write_solution(solution: UCP_Solution, parameters: ExperimentParameters, path: str) -> None:
-  file_name = 'classical_{:03}_{:03}.json' \
-    .format(parameters.num_loads, parameters.num_plants)
+  file_name = parameters.to_file_name('classical')
 
   solution.save_to(os.path.join(path, file_name))
 
@@ -22,7 +21,7 @@ def perform_experiment(parameters: ExperimentParameters, optimize_fun: Callable,
 
     ucp: UCP = build_ucp(parameters)
 
-    solution = optimize_fun(ucp)
+    solution = optimize_fun(ucp, parameters)
 
     write_solution(solution, parameters, path)
 

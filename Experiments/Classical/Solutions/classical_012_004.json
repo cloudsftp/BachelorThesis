@@ -1,4 +1,9 @@
 {
+    "parameters": {
+        "num_loads": 12,
+        "num_plants": 4,
+        "offset_loads": 0
+    },
     "ucp": {
         "loads": [
             400.0,
@@ -61,7 +66,7 @@
             }
         ]
     },
-    "time": 1.1483147144317627,
+    "time": 1.337343692779541,
     "optimal": true,
     "o": 51982.64438148857,
     "u": [
