@@ -12,7 +12,7 @@ The program is given a UCP object, that holds information
 about the power demands and the available power plants.
 It then creates a ''ConcreteModel'' from this information.
 This model of the MINLP formulation of the UCP
-has three two-dimensional matrices as variables.
+has three $| \mathbb{I} | \times | \mathbb{T} |$ matrices as variables.
 The first two are the variables fo the commitment $u_{i, t}$
 and the power output $p_{i, t}$ for each power plants at each time instance.
 These are the free variables of the model that will be adjusted so that the objective funtion is minimized.
@@ -25,11 +25,34 @@ These are not free but depend on the data from the UCP object.
 
 The formula (\ref{formula:minlp.obj}) is modeled using a Objective object provided by the Pyomo framework.
 It depends on the model variables for $u_{i, t}$, $p_{i, t}$ and $S_{i, t}$.
+Where $u_{i, t}$ and $p_{i, t}$ are free variables and $S_{i, t}$ are defined through the model.
 The coefficients $A_i$, $B_i$ and $C_i$ are taken from the UCP object.
 
 \todo{Include listing?}
 
-\todo{startup shotdown costs}
+The startup and shutdown costs sre defined through a method called ''disjunctive programming''.
+This method makes it possible to formulate ''either-or'' conditions
+and tie the value of one variable to the value of other variables.
+\cite{Balas1983}
+
+With this method the value of $S_{i, j}$ set to either $A^U_i$, $A^D_i$ or $0$
+depending on the values of $u_{i, t}$ and $u_{i, t-1}$.
+This relation is defined mathematically by the constraint (\ref{formula:minlp.updowncost}).
+And it is modeled by giving the model three disjunct events for each plant $i$ and time instance $t$:
+\begin{subequations}
+\begin{align}
+  & S_{i, t} = A^U_i & \land \quad & u_{i, t} < u_{i, t-1} \\
+  & S_{i, t} = A^D_i & \land \quad & u_{i, t} > u_{i, t-1} \\
+  & S_{i, t} = 0 & \land \quad & u_{i, t} = u_{i, t-1}
+\end{align}
+\end{subequations}
+If $t = 0$, $u_{i, t-1}$ is defined as the initial commitment state of the power plant $i$.
+
+For a model with disjunctive programming to be solvable by a standard solver,
+it has to be transformed.
+In this paper the Big-M transformation is used.
+\todo{Explain Big-M}
+\cite{Trespalacios2015}
 
 \subsubsection{Constraints}
 

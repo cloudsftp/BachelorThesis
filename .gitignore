@@ -8,6 +8,7 @@
 *.out
 *.pdf
 *.synctex.gz
+*.toc
 
 # python
 __pycache__
