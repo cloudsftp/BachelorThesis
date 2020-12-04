@@ -1,0 +1,16 @@
+\babel@toc {english}{}
+\babel@toc {english}{}
+\contentsline {chapter}{\numberline {1}Introduction}{5}{chapter.1}%
+\contentsline {section}{\numberline {1.1}The Unit Commitment Problem}{5}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Quantum Computing}{6}{section.1.2}%
+\contentsline {chapter}{\numberline {2}Optimization Approaches}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Classical Computer}{7}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Problem Formulation}{7}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Problem Implementation}{8}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Optimization}{8}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}Quantum Annealer}{8}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Gate-Based Quantum Computer}{8}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Comparison of Approaches}{8}{section.2.4}%
+\contentsline {chapter}{\numberline {3}Coclusion}{9}{chapter.3}%
+\contentsline {chapter}{Appendices}{10}{section*.4}%
+\contentsline {chapter}{\numberline {A}Zusammenfassung}{11}{appendix.a.A}%
