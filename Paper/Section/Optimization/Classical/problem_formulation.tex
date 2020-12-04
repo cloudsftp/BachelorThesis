@@ -30,6 +30,8 @@ The equations (\ref{formula:minlp}) represent the formulated MINLP.
 \label{formula:minlp}
 \end{subequations}
 
+\subsubsection{Objective Function}
+
 The formula (\ref{formula:minlp.obj}) represents the global cost function.
 This function has to be minimized and is called the ''objective function''.
 It is the sum of all cost functions $f_{i, t}$ of the individual power plants at every time step.
@@ -72,7 +74,8 @@ $ and $
 (u_{i, -1})_{i \in \mathbb{I}}
 $ as input.
 The free variables are chosen, such that the objective function is minimized.
-\\
+
+\subsubsection{Constraints}
 
 As the optimal inputs are computed, the optimizer has to also take the constraints into account.
 These are given as equations or inequations.

@@ -6,11 +6,15 @@
 \contentsline {chapter}{\numberline {2}Optimization Approaches}{7}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Classical Computer}{7}{section.2.1}%
 \contentsline {subsection}{\numberline {2.1.1}Problem Formulation}{7}{subsection.2.1.1}%
+\contentsline {subsubsection}{\nonumberline Objective Function}{7}{section*.4}%
+\contentsline {subsubsection}{\nonumberline Constraints}{7}{section*.5}%
 \contentsline {subsection}{\numberline {2.1.2}Problem Implementation}{8}{subsection.2.1.2}%
+\contentsline {subsubsection}{\nonumberline The Objective Function}{8}{section*.6}%
+\contentsline {subsubsection}{\nonumberline Constraints}{8}{section*.7}%
 \contentsline {subsection}{\numberline {2.1.3}Optimization}{8}{subsection.2.1.3}%
 \contentsline {section}{\numberline {2.2}Quantum Annealer}{8}{section.2.2}%
 \contentsline {section}{\numberline {2.3}Gate-Based Quantum Computer}{8}{section.2.3}%
-\contentsline {section}{\numberline {2.4}Comparison of Approaches}{8}{section.2.4}%
-\contentsline {chapter}{\numberline {3}Coclusion}{9}{chapter.3}%
-\contentsline {chapter}{Appendices}{10}{section*.4}%
-\contentsline {chapter}{\numberline {A}Zusammenfassung}{11}{appendix.a.A}%
+\contentsline {section}{\numberline {2.4}Comparison of Approaches}{9}{section.2.4}%
+\contentsline {chapter}{\numberline {3}Coclusion}{10}{chapter.3}%
+\contentsline {chapter}{Appendices}{11}{section*.8}%
+\contentsline {chapter}{\numberline {A}Zusammenfassung}{12}{appendix.a.A}%

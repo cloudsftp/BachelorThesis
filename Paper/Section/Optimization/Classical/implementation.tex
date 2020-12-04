@@ -1,3 +1,36 @@
 \subsection{Problem Implementation}
 
-\todo{Pyomo model formulation}
+For the implementation of UCPs for classical computers
+the MINLP formulation is implemented using the Python library Pyomo.
+Pyomo is open-source and supports the formulation of various optimization problems,
+particulary mixed-integer nonlinear problems.
+It also supports performing the optimization of the problems
+with standard open-source or commercial solvers.
+\cite{hart2011pyomo}
+
+The program is given a UCP object, that holds information
+about the power demands and the available power plants.
+It then creates a ''ConcreteModel'' from this information.
+This model of the MINLP formulation of the UCP
+has three two-dimensional matrices as variables.
+The first two are the variables fo the commitment $u_{i, t}$
+and the power output $p_{i, t}$ for each power plants at each time instance.
+These are the free variables of the model that will be adjusted so that the objective funtion is minimized.
+The last matrix is for $S_{i, t}$, the startup and shutdown costs.
+These are not free but depend on the data from the UCP object.
+
+\todo{Include listing?}
+
+\subsubsection{The Objective Function}
+
+The formula (\ref{formula:minlp.obj}) is modeled using a Objective object provided by the Pyomo framework.
+It depends on the model variables for $u_{i, t}$, $p_{i, t}$ and $S_{i, t}$.
+The coefficients $A_i$, $B_i$ and $C_i$ are taken from the UCP object.
+
+\todo{Include listing?}
+
+\todo{startup shotdown costs}
+
+\subsubsection{Constraints}
+
+\todo{Pyomo model constraints}
