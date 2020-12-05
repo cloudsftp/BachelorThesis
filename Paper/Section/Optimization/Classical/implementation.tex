@@ -3,7 +3,7 @@
 For the implementation of UCPs for classical computers
 the MINLP formulation is implemented using the Python library Pyomo.
 Pyomo is open-source and supports the formulation of various optimization problems,
-particulary mixed-integer nonlinear problems.
+particularly mixed-integer nonlinear problems.
 It also supports performing the optimization of the problems
 with standard open-source or commercial solvers.
 \cite{hart2011pyomo}
@@ -15,7 +15,7 @@ This model of the MINLP formulation of the UCP
 has three $| \mathbb{I} | \times | \mathbb{T} |$ matrices as variables.
 The first two are the variables fo the commitment $u_{i, t}$
 and the power output $p_{i, t}$ for each power plants at each time instance.
-These are the free variables of the model that will be adjusted so that the objective funtion is minimized.
+These are the free variables of the model that will be adjusted so that the objective function is minimized.
 The last matrix is for $S_{i, t}$, the startup and shutdown costs.
 These are not free but depend on the data from the UCP object.
 
@@ -30,7 +30,7 @@ The coefficients $A_i$, $B_i$ and $C_i$ are taken from the UCP object.
 
 \todo{Include listing?}
 
-The startup and shutdown costs sre defined through a method called ''disjunctive programming''.
+The startup and shutdown costs are defined through a method called ''disjunctive programming''.
 This method makes it possible to formulate ''either-or'' conditions
 and tie the value of one variable to the value of other variables.
 \cite{Balas1983}
@@ -41,19 +41,38 @@ This relation is defined mathematically by the constraint (\ref{formula:minlp.up
 And it is modeled by giving the model three disjunct events for each plant $i$ and time instance $t$:
 \begin{subequations}
 \begin{align}
-  & S_{i, t} = A^U_i & \land \quad & u_{i, t} < u_{i, t-1} \\
-  & S_{i, t} = A^D_i & \land \quad & u_{i, t} > u_{i, t-1} \\
-  & S_{i, t} = 0 & \land \quad & u_{i, t} = u_{i, t-1}
+  u_{i, t} < u_{i, t-1} \quad \quad & \land & S_{i, t} = A^U_i \\
+  u_{i, t} > u_{i, t-1} \quad \quad & \land & S_{i, t} = A^D_i \\
+  u_{i, t} = u_{i, t-1} \quad \quad & \land & S_{i, t} = 0
 \end{align}
 \end{subequations}
 If $t = 0$, $u_{i, t-1}$ is defined as the initial commitment state of the power plant $i$.
+The first part of the events is the condition and the second part defines the value of $S_{i, t}$.
+Since the conditions are mutually exclusive,
+only one of the events will become reality.
+This means that $S_{i, t}$ is set to the value that is conjugated with the true condition.
 
 For a model with disjunctive programming to be solvable by a standard solver,
 it has to be transformed.
-In this paper the Big-M transformation is used.
+In this paper, the Big-M transformation is used.
 \todo{Explain Big-M}
 \cite{Trespalacios2015}
 
 \subsubsection{Constraints}
 
-\todo{Pyomo model constraints}
+Now there are two constraints left to model.
+
+The first one is the constraint (\ref{formula:minlp.load}).
+It makes sure that the power demand is met by all the power plants at every time instance $t$.
+In the model a constraint list of length $|\mathbb{T}|$ is generated.
+Each element of the list makes sure that the sum of all power outputs at its corresponding time instance
+is equal to the power demand at that time instance.
+\todo{Include listing?}
+
+The last constraint is the constraint (\ref{formula:minlp.power}).
+It makes sure that the power output of every power plant is within its limits at every time instance.
+In the model a $|\mathbb{I}| \times |\mathbb{T}|$ constraint matrix is generated.
+Each element of the matrix makes sure the power output of the corresponding power plant
+at the corresponding time instance is within the limits of the power plant.
+
+\todo{Include listing?}
