@@ -1,3 +1,15 @@
 \subsection{Optimization}
 
-\todo{Couenne and optimization performance}
+For the optimization of the Pyomo model, the Pyomo library runs a standard solver.
+It formulates the problem in the mathematical modeling language AMPL
+and calls a solver to optimize it.
+The solver returns the solution which is then read by Pyomo.
+\cite{PyomoAMPL}
+
+The solver that is used in this paper is called Couenne and was built by COIN-OR.
+Couenne is short for ''Convex Over and Under ENvelopes for Nonlinear Estimation''.
+It can find global minima of nonconvex MINLPs like the one that is formulated above.
+It is a branch and bound algorithm and utilizes linearization, bound reduction, and branching methods.
+\cite{CoinorHome,CouenneRepo}
+
+\todo{optimization performance}
