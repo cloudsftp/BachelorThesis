@@ -2,6 +2,7 @@
 
 
 import os
+import argparse
 from typing import Dict, List, Optional
 
 import matplotlib.pyplot as plt # type: ignore
@@ -45,7 +46,7 @@ class ExperimentResults(object):
       solutions_list.append(solution)
 
 
-  def plot_time(self, num_plants: int) -> None:
+  def plot_time(self, num_plants: int, output_file_name: str) -> None:
     solutions_list: Optional[List[UCP_Solution]] = self.experiments_by_plants.get(num_plants)
 
     if not solutions_list:
@@ -59,9 +60,34 @@ class ExperimentResults(object):
     time_series: pd.Series = pd.Series(times).sort_index()
 
     time_series.plot()
-    plt.show()
+    plt.savefig(output_file_name)
 
 
 if __name__ == "__main__":
-  results: ExperimentResults = ExperimentResults(os.path.join('Classical', 'Solutions'))
-  results.plot_time(4)
+  parser: argparse.ArgumentParser = argparse.ArgumentParser(description='Visualize results')
+
+  parser.add_argument('-s', '--solutions-dir', type=str)
+
+  parser.add_argument('-p', '--plot', action='store_true')
+  parser.add_argument('-n', '--num', type=int)
+
+  parser.add_argument('-t', '--table', action='store_true')
+  parser.add_argument('-o', '--output', type=str)
+
+  args = parser.parse_args()
+
+  solutions_dir: str = args.solutions_dir
+  if solutions_dir == '':
+    raise argparse.ArgumentError(message='Please provide a directory where the solutions are stored')
+
+  output_file_name: str = args.output
+  if output_file_name == '':
+    raise argparse.ArgumentError(message='Please provide an output file name')
+
+  results: ExperimentResults = ExperimentResults(solutions_dir)
+
+  if args.plot:
+    results.plot_time(args.num, output_file_name)
+
+
+  # TODO: Implement table generator

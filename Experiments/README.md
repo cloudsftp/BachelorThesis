@@ -25,6 +25,13 @@ The experiment runners have the following command line options:
 - `-up --upper-plants` Upper bound of number of plants. (standard: 20)
 - `-sp --step-plants` Step size of range of number of plants. (standard: 2)
 
+The experiment result analyzer has the following command line options:
+- `-s --solutions-dir` Directory where the solutions are stored.
+- `-p --plot` Outputs plot of the time needed for optimization.
+- `-n --num` Specifies number of plants for the plot.
+- `-t --table` Outputs a table of the time needed for optimization in LaTeX-format.
+- `-o --output` Specifies output file for the table or the plot.
+
 ## Classical Solver
 
 [Couenne](https://projects.coin-or.org/Couenne) is used for solving the optimization problem as
