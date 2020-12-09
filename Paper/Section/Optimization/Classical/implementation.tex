@@ -41,9 +41,9 @@ This relation is defined mathematically by the constraint (\ref{formula:minlp.up
 And it is modeled by giving the model three disjunct events for each plant $i$ and time instance $t$:
 \begin{subequations}
 \begin{align}
-  u_{i, t} < u_{i, t-1} \quad \quad & \land & S_{i, t} = A^U_i \\
-  u_{i, t} > u_{i, t-1} \quad \quad & \land & S_{i, t} = A^D_i \\
-  u_{i, t} = u_{i, t-1} \quad \quad & \land & S_{i, t} = 0
+  u_{i, t} < u_{i, t-1} \quad & \land & \quad S_{i, t} = A^U_i \\
+  u_{i, t} > u_{i, t-1} \quad & \land & \quad S_{i, t} = A^D_i \\
+  u_{i, t} = u_{i, t-1} \quad & \land & \quad S_{i, t} = 0
 \end{align}
 \end{subequations}
 If $t = 0$, $u_{i, t-1}$ is defined as the initial commitment state of the power plant $i$.

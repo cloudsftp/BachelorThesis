@@ -1,14 +1,23 @@
 # LaTeX
+*.alg
 *.aux
 *.bbl
+*.bcf
 *.blg
+*.code
 *.fdb_latexmk
 *.fls
+*.idx
+*.lof
 *.log
+*.lot
 *.out
 *.pdf
-*.synctex.gz
+*.run.xml
+*.synctex*
+*.thm
 *.toc
+*.wrt
 
 # python
 __pycache__
