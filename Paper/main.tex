@@ -10,7 +10,7 @@
 
 \let\ifdeutsch\iffalse
 \let\ifenglisch\iftrue
-\input{Config/pre-documentclass}
+\input{90_Config/pre-documentclass}
 \documentclass[
   % fontsize=11pt is the standard
   a4paper,  % Standard format - only KOMAScript uses paper=a4 - https://tex.stackexchange.com/a/61044/9075
@@ -24,7 +24,7 @@
   %               draft    % um zu sehen, wo noch nachgebessert werden muss - wichtig, da Bindungskorrektur mit drin
   draft=false
 ]{scrbook}
-\input{Config/config}
+\input{90_Config/config}
 
 
 \usepackage[
@@ -39,7 +39,7 @@
   enddate={April 12, 2020}
 ]{scientific-thesis-cover}
 
-\input{acronyms}
+\input{90_Config/acronyms}
 
 \makeindex
 
@@ -64,7 +64,7 @@
 
 %\VerbatimFootnotes %verbatim text in Fußnoten erlauben. Geht normalerweise nicht.
 
-\input{Config/commands}
+\input{90_Config/commands}
 \pagenumbering{arabic}
 \Titelblatt
 
@@ -74,7 +74,7 @@
 \pagestyle{preamble}
 \renewcommand*{\chapterpagestyle}{preamble}
 
-\input{Preface/abstract}
+\input{00_Preface/00_abstract}
 
 \cleardoublepage
 
