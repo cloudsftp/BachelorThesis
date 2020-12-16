@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "formula": "C(p) = A + B * p + C * p²",
+    "constraint": "Pmin <= p <= Pmax",
+    "unit": {
+      "p": "MW",
+      "C(p)": "GJ"
+    }
+  },
+  "plants": [
+    {
+      "type": "coal, supercritical",
+      "A": 96.279,
+      "B": 7.592,
+      "C": 0.042,
+      "Pmin": 149.4,
+      "Pmax": 747,
+      "AU": 13.5,
+      "AD": 0
+    },
+    {
+      "type": "coal, small subcritical",
+      "A": 95.856,
+      "B": 7.374,
+      "C": 0.047,
+      "Pmin": 270.55,
+      "Pmax": 773,
+      "AU": 5.46,
+      "AD": 0
+    },
+    {
+      "type": "coal, large subcritical",
+      "A": 95.856,
+      "B": 7.374,
+      "C": 0.047,
+      "Pmin": 665,
+      "Pmax": 1900,
+      "AU": 20.14,
+      "AD": 0
+    },
+    {
+      "type": "gas, CC",
+      "A": 102.0,
+      "B": 7.9,
+      "C": 0.048,
+      "Pmin": 166,
+      "Pmax": 415,
+      "AU": 0.087,
+      "AD": 0
+    }
+  ]
+}

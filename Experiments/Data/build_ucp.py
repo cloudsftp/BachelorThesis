@@ -10,29 +10,18 @@ from UCP.unit_commitment_problem import CombustionPlant, UCP, ExperimentParamete
 
 
 demand_file_file: str = 'combined_data.csv'
-plants_file_name: str = 'thermal_power_coefficients.json'
+plants_file_name: str = 'thermal_power_plant_data.json'
 
 def select_loads(loads: List[float], num_loads: int, offset_loads: int) -> List[float]:
   # make sure indices of selected loads are inside list
   num_loads = min(num_loads, len(loads) - offset_loads)
   return loads[offset_loads : offset_loads + num_loads]
 
-def scale_loads(loads: List[float], available_plants: List[CombustionPlant], num_plants: int) -> List[float]:
-  '''
-  this function scales the loads such that the maximum load is at 100% of the maximum output
-  of num_plants of the plant with the lowest maximum output
-  '''
-  load_max = max(loads)
-  Pmax_min = min(plant.Pmax for plant in available_plants)
-
-  # this factor determines, how the loads have to scale with the number of plants
-  # it depends on the data
-  load_factor: float = Pmax_min / load_max
-  return list(map(lambda x: x * load_factor * num_plants, loads))
-
 def select_plants(available_plants: List[CombustionPlant], num_plants: int) -> List[CombustionPlant]:
   # initialize pseudo random number generator to get reproducable results
-  random.seed(1)
+  # TODO: ensure diversity
+
+  random.seed(5)
   def random_plant() -> CombustionPlant:
     rand: int = int(random.random() * len(available_plants))
     return available_plants[rand]
@@ -43,6 +32,19 @@ def select_plants(available_plants: List[CombustionPlant], num_plants: int) -> L
 
   return plants
 
+def scale_loads(loads: List[float], plants: List[CombustionPlant], num_plants: int) -> List[float]:
+  '''
+  this function scales the loads such that the maximum load is at 100% of the maximum output
+  of num_plants of the plant with the lowest maximum output
+  '''
+  load_max = max(loads)
+  Pmax_min = min(plant.Pmax for plant in plants)
+
+  # this factor determines, how the loads have to scale with the number of plants
+  # it depends on the data
+  load_factor: float = 0.9 * Pmax_min / load_max
+  return list(map(lambda x: x * load_factor * num_plants, loads))
+
 
 def build_ucp(parameters: ExperimentParameters) -> UCP:
   demand_data: DemandData = DemandData.read_from_csv(demand_file_file)
@@ -52,8 +54,7 @@ def build_ucp(parameters: ExperimentParameters) -> UCP:
   available_plants: List[CombustionPlant] = plants_data.plants
 
   loads = select_loads(loads, parameters.num_loads, parameters.offset_loads)
-  loads = scale_loads(loads, available_plants, parameters.num_plants)
-
   plants: List[CombustionPlant] = select_plants(available_plants, parameters.num_plants)
+  loads = scale_loads(loads, plants, parameters.num_plants)
 
   return UCP(parameters, loads, plants)
