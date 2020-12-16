@@ -1,6 +1,7 @@
 #!/bin/python3.8
 
 
+from datetime import datetime
 import os
 import argparse
 from typing import Callable
@@ -21,6 +22,7 @@ def perform_experiment(parameters: ExperimentParameters, optimize_fun: Callable,
 
     ucp: UCP = build_ucp(parameters)
 
+    print('Start: {}'.format(datetime.now().strftime('%H:%M:%S')))
     solution = optimize_fun(ucp)
 
     write_solution(solution, parameters, path)

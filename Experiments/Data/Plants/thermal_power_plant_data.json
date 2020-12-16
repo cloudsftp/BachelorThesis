@@ -9,43 +9,33 @@
   },
   "plants": [
     {
+      "type": "coal, subcritical",
+      "A": 96.279,
+      "B": 7.592,
+      "C": 0.042,
+      "Pmin": 261.45,
+      "Pmax": 747,
+      "AU": 5938.65,
+      "AD": 0
+    },
+    {
+      "type": "coal, supercritical",
+      "A": 95.856,
+      "B": 7.374,
+      "C": 0.047,
+      "Pmin": 145.6,
+      "Pmax": 773,
+      "AU": 8275.738,
+      "AD": 0
+    },
+    {
       "type": "coal, supercritical",
       "A": 96.279,
       "B": 7.592,
       "C": 0.042,
-      "Pmin": 149.4,
-      "Pmax": 747,
-      "AU": 13.5,
-      "AD": 0
-    },
-    {
-      "type": "coal, small subcritical",
-      "A": 95.856,
-      "B": 7.374,
-      "C": 0.047,
-      "Pmin": 270.55,
-      "Pmax": 773,
-      "AU": 5.46,
-      "AD": 0
-    },
-    {
-      "type": "coal, large subcritical",
-      "A": 95.856,
-      "B": 7.374,
-      "C": 0.047,
-      "Pmin": 665,
+      "Pmin": 380,
       "Pmax": 1900,
-      "AU": 20.14,
-      "AD": 0
-    },
-    {
-      "type": "gas, CC",
-      "A": 102.0,
-      "B": 7.9,
-      "C": 0.048,
-      "Pmin": 166,
-      "Pmax": 415,
-      "AU": 0.087,
+      "AU": 2341.4,
       "AD": 0
     }
   ]

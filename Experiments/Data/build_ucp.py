@@ -19,15 +19,14 @@ def select_loads(loads: List[float], num_loads: int, offset_loads: int) -> List[
 
 def select_plants(available_plants: List[CombustionPlant], num_plants: int) -> List[CombustionPlant]:
   # initialize pseudo random number generator to get reproducable results
-  # TODO: ensure diversity
 
-  random.seed(5)
+  random.seed(1)
   def random_plant() -> CombustionPlant:
     rand: int = int(random.random() * len(available_plants))
     return available_plants[rand]
 
-  plants: List[CombustionPlant] = []
-  for _ in range(num_plants):
+  plants: List[CombustionPlant] = available_plants * int(num_plants / len(available_plants))
+  for _ in range(num_plants - len(plants)):
     plants.append(random_plant())
 
   return plants
@@ -38,12 +37,12 @@ def scale_loads(loads: List[float], plants: List[CombustionPlant], num_plants: i
   of num_plants of the plant with the lowest maximum output
   '''
   load_max = max(loads)
-  Pmax_min = min(plant.Pmax for plant in plants)
+  Pmax_avg = sum(plant.Pmax for plant in plants) / len(plants)
 
   # this factor determines, how the loads have to scale with the number of plants
   # it depends on the data
-  load_factor: float = 0.9 * Pmax_min / load_max
-  return list(map(lambda x: x * load_factor * num_plants, loads))
+  load_factor: float = Pmax_avg / load_max
+  return list(map(lambda x: x * load_factor * num_plants * 0.5, loads))
 
 
 def build_ucp(parameters: ExperimentParameters) -> UCP:
