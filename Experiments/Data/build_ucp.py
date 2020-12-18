@@ -19,7 +19,6 @@ def select_loads(loads: List[float], num_loads: int, offset_loads: int) -> List[
 
 def select_plants(available_plants: List[CombustionPlant], num_plants: int) -> List[CombustionPlant]:
   # initialize pseudo random number generator to get reproducable results
-
   random.seed(1)
   def random_plant() -> CombustionPlant:
     rand: int = int(random.random() * len(available_plants))

@@ -10,6 +10,16 @@
   "plants": [
     {
       "type": "coal, subcritical",
+      "A": 95.856,
+      "B": 7.374,
+      "C": 0.047,
+      "Pmin": 193.55,
+      "Pmax": 553,
+      "AU": 4396.35,
+      "AD": 0
+    },
+    {
+      "type": "coal, subcritical",
       "A": 96.279,
       "B": 7.592,
       "C": 0.042,
