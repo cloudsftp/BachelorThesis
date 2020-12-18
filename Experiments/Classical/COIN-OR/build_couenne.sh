@@ -37,7 +37,7 @@ cd ..
 # Build Couenne
 
 build_dir="build"
-install_dir="/usr/local/share/coin-or"
+install_dir="$(pwd)/Couenne"
 
 mkdir $build_dir
 cd $build_dir

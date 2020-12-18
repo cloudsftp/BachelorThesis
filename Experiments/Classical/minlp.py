@@ -14,7 +14,7 @@ from pyomo.environ import NonNegativeReals, Boolean # type: ignore
 from pyomo.opt import SolverFactory # type: ignore
 from pyomo.opt.results.solver import TerminationCondition # type: ignore
 
-from UCP.unit_commitment_problem import CombustionPlant, UCP, UCP_Solution
+from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCP_Solution
 
 
 class UCP_MINLP(object):
@@ -103,8 +103,8 @@ class UCP_MINLP(object):
 
   def __init__(self, ucp: UCP) -> None:
     ''' Build self.model from UCP '''
-    self.ucp = ucp
-    self.model = ConcreteModel()
+    self.ucp: UCP = ucp
+    self.model: ConcreteModel = ConcreteModel()
 
     self.model.I = range(len(ucp.plants))
     self.model.T = range(len(ucp.loads))
@@ -114,8 +114,6 @@ class UCP_MINLP(object):
     self.build_objective()
     self.build_load_constraints()
     self.build_power_constraints()
-
-    TransformationFactory('gdp.bigm').apply_to(self.model)
 
   def to_ucp_solution(self, results) -> UCP_Solution:
     time: float = results.solver.time
@@ -137,14 +135,3 @@ class UCP_MINLP(object):
     with SolverFactory(solver_command) as solver:
       results = solver.solve(self.model)
       return self.to_ucp_solution(results)
-
-
-if __name__ == "__main__":
-  ucp = UCP([0, 1, 1, 4], [
-      CombustionPlant(0, 10, 5, 1, 50, 0, 0),
-      CombustionPlant(0, 20, 1, 1, 50, 1000, 0)
-  ])
-
-  minlp = UCP_MINLP(ucp)
-  solution: UCP_Solution = minlp.optimize()
-  print(asdict(solution))
