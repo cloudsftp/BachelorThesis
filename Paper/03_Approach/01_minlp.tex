@@ -1,4 +1,4 @@
-\section{Classical Computer}
+\section{Unit Commitment Problem as Mixed-Integer Nonlinear Problem}
 
 The UCP is formulated as a MINLP for classical computers to solve,
 as mentioned in section \ref{intro:ucp}.
@@ -29,6 +29,8 @@ The equations (\ref{formula:minlp}) represent the formulated MINLP.
 \end{align}
 \label{formula:minlp}
 \end{subequations}
+
+\subsubsection{Objective Function}
 
 The formula (\ref{formula:minlp.obj}) represents the global cost function.
 This function has to be minimized and is called the ''objective function''.
@@ -63,7 +65,7 @@ $
 (u_{i, t})_{i \in \mathbb{I}, t \in \mathbb{T}},
 (p_{i, t}')_{i \in \mathbb{I}, t \in \mathbb{T}}
 $ and the constants $
-(A_i)_{i \in \mathbb{I}}, \\
+(A_i)_{i \in \mathbb{I}},
 (A_i^U)_{i \in \mathbb{I}},
 (A_i^D)_{i \in \mathbb{I}},
 (B_i)_{i \in \mathbb{I}},
@@ -72,7 +74,8 @@ $ and $
 (u_{i, -1})_{i \in \mathbb{I}}
 $ as input.
 The free variables are chosen, such that the objective function is minimized.
-\\
+
+\subsubsection{Constraints}
 
 As the optimal inputs are computed, the optimizer has to also take the constraints into account.
 These are given as equations or inequations.
