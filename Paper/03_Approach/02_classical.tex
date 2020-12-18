@@ -19,16 +19,12 @@ These are the free variables of the model that will be adjusted so that the obje
 The last matrix is for $S_{i, t}$, the startup and shutdown costs.
 These are not free but depend on the data from the UCP object.
 
-\todo{Include listing?}
-
 \subsubsection{The Objective Function}
 
 The formula (\ref{formula:minlp.obj}) is modeled using a Objective object provided by the Pyomo framework.
 It depends on the model variables for $u_{i, t}$, $p_{i, t}$ and $S_{i, t}$.
 Where $u_{i, t}$ and $p_{i, t}$ are free variables and $S_{i, t}$ are defined through the model.
 The coefficients $A_i$, $B_i$ and $C_i$ are taken from the UCP object.
-
-\todo{Include listing?}
 
 The startup and shutdown costs are defined through a method called ''disjunctive programming''.
 This method makes it possible to formulate ''either-or'' conditions
@@ -52,8 +48,6 @@ Since the conditions are mutually exclusive,
 only one of the events will become reality.
 This means that $S_{i, t}$ is set to the value that is conjugated with the true condition.
 
-\subsubsection{Constraints}
-
 Now there are two constraints left to model.
 
 The first one is the constraint (\ref{formula:minlp.load}).
@@ -61,12 +55,9 @@ It makes sure that the power demand is met by all the power plants at every time
 In the model a constraint list of length $|\mathbb{T}|$ is generated.
 Each element of the list makes sure that the sum of all power outputs at its corresponding time instance
 is equal to the power demand at that time instance.
-\todo{Include listing?}
 
 The last constraint is the constraint (\ref{formula:minlp.power}).
 It makes sure that the power output of every power plant is within its limits at every time instance.
 In the model a $|\mathbb{I}| \times |\mathbb{T}|$ constraint matrix is generated.
 Each element of the matrix makes sure the power output of the corresponding power plant
 at the corresponding time instance is within the limits of the power plant.
-
-\todo{Include listing?}
