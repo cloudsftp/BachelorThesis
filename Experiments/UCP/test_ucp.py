@@ -5,13 +5,14 @@ import os
 from dataclasses import asdict
 import unittest
 
-from UCP.unit_commitment_problem import CombustionPlant, UCP
+from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP
 
 
 class TestUCP(unittest.TestCase):
-  ucp = UCP([1, 2, 3], [
-    CombustionPlant(1, 1, 1, 0, 100, 1, 0),
-    CombustionPlant(2, 2, 2, 0, 200, 1, 1)
+  ucp = UCP(ExperimentParameters(3, 2),
+    [1, 2, 3], [
+      CombustionPlant(1, 1, 1, 0, 100, 1, 0),
+      CombustionPlant(2, 2, 2, 0, 200, 1, 1)
   ])
 
   ucp_dict = asdict(ucp)
@@ -26,7 +27,7 @@ class TestUCP(unittest.TestCase):
     with open(self.test_file_name, 'r') as file:
       stored_dict = json.load(file)
       assert(stored_dict == self.ucp_dict)
-    
+
     os.remove(self.test_file_name)
 
   def test_load(self):

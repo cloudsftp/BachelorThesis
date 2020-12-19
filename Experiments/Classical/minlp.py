@@ -115,6 +115,8 @@ class UCP_MINLP(object):
     self.build_load_constraints()
     self.build_power_constraints()
 
+    TransformationFactory('gdp.bigm').apply_to(self.model)
+
   def to_ucp_solution(self, results) -> UCP_Solution:
     time: float = results.solver.time
     optimal: bool = results.solver.termination_condition == TerminationCondition.optimal
