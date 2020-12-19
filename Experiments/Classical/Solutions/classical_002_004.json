@@ -1,0 +1,98 @@
+{
+    "ucp": {
+        "parameters": {
+            "num_loads": 2,
+            "num_plants": 4,
+            "offset_loads": 0
+        },
+        "loads": [
+            1986.5,
+            1946.3938009280969
+        ],
+        "plants": [
+            {
+                "A": 95.856,
+                "B": 7.374,
+                "C": 0.047,
+                "Pmin": 193.55,
+                "Pmax": 553,
+                "AU": 4.39635,
+                "AD": 0,
+                "initially_on": false,
+                "type": "coal, subcritical"
+            },
+            {
+                "A": 96.279,
+                "B": 7.592,
+                "C": 0.042,
+                "Pmin": 261.45,
+                "Pmax": 747,
+                "AU": 5.93865,
+                "AD": 0,
+                "initially_on": false,
+                "type": "coal, subcritical"
+            },
+            {
+                "A": 95.856,
+                "B": 7.374,
+                "C": 0.047,
+                "Pmin": 145.6,
+                "Pmax": 773,
+                "AU": 8.275738,
+                "AD": 0,
+                "initially_on": false,
+                "type": "coal, supercritical"
+            },
+            {
+                "A": 96.279,
+                "B": 7.592,
+                "C": 0.042,
+                "Pmin": 380,
+                "Pmax": 1900,
+                "AU": 20.3414,
+                "AD": 0,
+                "initially_on": false,
+                "type": "coal, supercritical"
+            }
+        ]
+    },
+    "time": 0.36669158935546875,
+    "optimal": true,
+    "o": 116037.07351227078,
+    "u": [
+        [
+            true,
+            true
+        ],
+        [
+            true,
+            true
+        ],
+        [
+            true,
+            true
+        ],
+        [
+            true,
+            true
+        ]
+    ],
+    "p": [
+        [
+            469.94943351501354,
+            460.4861731544203
+        ],
+        [
+            523.3005565529475,
+            512.7107175779423
+        ],
+        [
+            469.9494335154214,
+            460.48617315477003
+        ],
+        [
+            523.3005565533313,
+            512.7107175783374
+        ]
+    ]
+}
