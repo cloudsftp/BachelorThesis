@@ -78,11 +78,11 @@ if __name__ == "__main__":
 
   solutions_dir: str = args.solutions_dir
   if solutions_dir == '':
-    raise argparse.ArgumentError(message='Please provide a directory where the solutions are stored')
+    raise argparse.ArgumentError(args.solutions_dir, message='Please provide a directory where the solutions are stored')
 
   output_file_name: str = args.output
   if output_file_name == '':
-    raise argparse.ArgumentError(message='Please provide an output file name')
+    raise argparse.ArgumentError(args.output, message='Please provide an output file name')
 
   results: ExperimentResults = ExperimentResults(solutions_dir)
 
