@@ -14,7 +14,7 @@ library_names='libipoptamplinterface.so.1.10.12 libipoptamplinterface.so.1 libip
 old_library=''
 
 # Libraries that this one depends upon.
-dependency_libs=' /usr/local/share/coin-or/lib/libipopt.la /usr/local/share/coin-or/lib/libcoinlapack.la /usr/local/share/coin-or/lib/libcoinblas.la -lgfortran -lquadmath /usr/local/share/coin-or/lib/libcoinasl.la -ldl'
+dependency_libs=' /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libipopt.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libcoinlapack.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libcoinblas.la -lgfortran -lquadmath /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libcoinasl.la -ldl'
 
 # Version information for libipoptamplinterface.
 current=11
@@ -32,4 +32,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/usr/local/share/coin-or/lib'
+libdir='/home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib'

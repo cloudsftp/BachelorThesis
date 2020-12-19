@@ -14,7 +14,7 @@ library_names='libcoinlapack.so.1.6.1 libcoinlapack.so.1 libcoinlapack.so'
 old_library=''
 
 # Libraries that this one depends upon.
-dependency_libs=' -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. /usr/local/share/coin-or/lib/libcoinblas.la -lgfortran -lm -lquadmath'
+dependency_libs=' /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libcoinblas.la -L/usr/lib/gcc/x86_64-redhat-linux/8 -L/usr/lib/gcc/x86_64-redhat-linux/8/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/8/../../.. -lgfortran -lm -lquadmath'
 
 # Version information for libcoinlapack.
 current=7
@@ -32,4 +32,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/usr/local/share/coin-or/lib'
+libdir='/home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib'

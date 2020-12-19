@@ -14,7 +14,7 @@ library_names='libCoinUtils.so.3.11.4 libCoinUtils.so.3 libCoinUtils.so'
 old_library=''
 
 # Libraries that this one depends upon.
-dependency_libs=' -lz /usr/local/share/coin-or/lib/libcoinlapack.la /usr/local/share/coin-or/lib/libcoinblas.la -lgfortran -lquadmath'
+dependency_libs=' /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libcoinlapack.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libcoinblas.la -lgfortran -lquadmath'
 
 # Version information for libCoinUtils.
 current=14
@@ -32,4 +32,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/usr/local/share/coin-or/lib'
+libdir='/home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib'

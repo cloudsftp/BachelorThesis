@@ -1,4 +1,4 @@
-prefix=/usr/local/share/coin-or
+prefix=/home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 
@@ -6,6 +6,6 @@ Name: Lapack
 Description: Linear algebra package
 URL: https://projects.coin-or.org/BuildTools
 Version: 1.6.1
-Libs: -L${libdir} -lcoinlapack   -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. -lgfortran -lm -lquadmath
+Libs: -L${libdir} -lcoinlapack   -L/usr/lib/gcc/x86_64-redhat-linux/8 -L/usr/lib/gcc/x86_64-redhat-linux/8/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/8/../../.. -lgfortran -lm -lquadmath
 Cflags:
 Requires: coinblas 

@@ -1,4 +1,4 @@
-prefix=/usr/local/share/coin-or
+prefix=/home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include/coin
