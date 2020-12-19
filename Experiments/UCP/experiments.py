@@ -25,7 +25,8 @@ def perform_experiment(parameters: ExperimentParameters, optimize_fun: Callable,
 
     ucp: UCP = build_ucp(parameters)
 
-    print('Start: {}'.format(datetime.now().strftime('%H:%M:%S')))
+    print('Start: {}'.format(datetime.now().strftime('%m.%d %H:%M:%S')))
+
     solution = optimize_fun(ucp)
 
     write_solution(solution, parameters, path)
