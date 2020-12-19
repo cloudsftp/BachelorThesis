@@ -12,6 +12,9 @@ from UCP.unit_commitment_problem import UCP, UCP_Solution, ExperimentParameters
 def write_solution(solution: UCP_Solution, parameters: ExperimentParameters, path: str) -> None:
   file_name = parameters.to_file_name('classical')
 
+  if not os.path.exists(path):
+    os.makedirs(path)
+
   solution.save_to(os.path.join(path, file_name))
 
 def perform_experiment(parameters: ExperimentParameters, optimize_fun: Callable, path: str) -> None:
