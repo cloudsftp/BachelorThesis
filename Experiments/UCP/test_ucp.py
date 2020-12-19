@@ -26,7 +26,7 @@ class TestUCP(unittest.TestCase):
     with open(self.test_file_name, 'r') as file:
       stored_dict = json.load(file)
       assert(stored_dict == self.ucp_dict)
-    
+
     os.remove(self.test_file_name)
 
   def test_load(self):
