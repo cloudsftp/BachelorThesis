@@ -1,3 +1,66 @@
 \section{Implementation for Annealing-based Quantum Computers}
 
-\todo{Formulation of a DQM}
+The MINLP formulation of the UCP is converted to a Discrete Quadratic Model (DQM).
+As mentioned in section (\ref{backg:annealing}), this model is the extension
+of Binary Quadratic Models (BQM) or Quadratic Unconstrained Binary Optimization model (QUBO).
+
+\subsubsection{Mapping Variables}
+
+The model, as seen in section (\ref{backg:annealing}), takes in a vector rather than a 2-dimensional matrix.
+That's why the indices of the variables $p_{i,t}$ have to be mapped, such that the result are just as many variables $p_{j}$.
+
+\todo{Mapping indices}
+
+\subsubsection{Discretizising Variables}
+
+Since the model is discrete, respectively the variables, the power levels have to be discretized.
+
+\todo{Discretizise power levels}
+
+Automaticcaly enforces constraint (\ref{formula:minlp.power}).
+
+\subsection{Formulating the DQM}
+
+The formula we start with (\ref{formula:dqm.start}) includes the objective function and every constraint of the MINLP formulation (\ref{formula:minlp}).
+Except for the constraint (\ref{formula:minlp.power}) that makes sure the output of every power plant is within its limits.
+The formula is not in the standard form (\ref{formula:dqm.form}).
+To achieve this form, every summand of the formula has to be resolved.
+
+\begin{align} \label{formula:dqm.start}
+  E(p) = \gamma_c \sum_{i, t} f_i p_{l(i, t)}
+  + \gamma_s \sum_i \sum_{t > 0} S_i p_{l(i, t-1)} p_{l(i, t)}
+  + \gamma_d \sum_t \left( \left( \sum_i P_i p_{l(i, t)} \right) - L_t \right) ^2
+\end{align}
+
+\subsubsection{Objective Function}
+
+\todo{Resolve objective function part}
+
+\subsubsection{Startup and Shutdown Costs}
+
+\todo{Resolve startup and shutdown costs part}
+
+\subsubsection{Demand}
+
+\todo{Resolve demand part}
+
+\subsubsection{Result}
+
+\begin{align}
+  &
+  E(p) = \gamma_c \sum_{i, t} f_i p_{l(i, t)}
+  + \gamma_s \sum_i \sum_{t > 0} S_i p_{l(i, t-1)} p_{l(i, t)}
+  \\
+  &
+  + \gamma_d \sum_t \left(
+    \sum_{i < j} P_i P_j p_{l(i, t)} p_{l(j, t)}
+    + \sum_i P_i^2 p_{l(i, t)} - L_t \sum_i P_i p_{l(i, t)}
+    + L_t^2
+  \right)
+\end{align}
+
+\todo{simplify}
+
+\subsection{Implementation}
+
+\todo{Inplementation of a DQM}
