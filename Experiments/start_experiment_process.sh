@@ -8,8 +8,6 @@ if [ "$1" = "--node" ]; then
   shift
 fi
 
-source setup_environment.sh
-
 output_file=experiment_node${node}_output.log
 
 numactl --physcpubind=$node --membind=$node \
