@@ -7,9 +7,26 @@ of Binary Quadratic Models (BQM) or Quadratic Unconstrained Binary Optimization 
 \subsubsection{Mapping Variables}
 
 The model, as seen in section (\ref{backg:annealing}), takes in a vector rather than a 2-dimensional matrix.
-That's why the indices of the variables $p_{i,t}$ have to be mapped, such that the result are just as many variables $p_{j}$.
+That's why the indices of the variables $p_{i,t}$ have to be mapped, such that the result are just as many variables $p_{l}$.
 
 \todo{Mapping indices}
+
+In the model below, $p_{i,t}$ is used, but this is to show, that
+
+\begin{subequations}
+\begin{align}
+  &
+  \forall i \in \mathbb{I}, \forall t, t' \in \mathbb{T}, t < t'
+  &
+  \Rightarrow l(i, t) < l(i, t')
+  \\
+  \land \quad
+  &
+  \forall t \in \mathbb{T}, \forall i, j \in \mathbb{I}, i < j
+  &
+  \Rightarrow l(i, t) < l(j, t)
+\end{align}
+\end{subequations}
 
 \subsubsection{Discretizising Variables}
 
@@ -27,9 +44,9 @@ The formula is not in the standard form (\ref{formula:dqm.form}).
 To achieve this form, every summand of the formula has to be resolved.
 
 \begin{align} \label{formula:dqm.start}
-  E(p) = \gamma_c \sum_{i, t} f_i p_{l(i, t)}
-  + \gamma_s \sum_i \sum_{t > 0} S_i p_{l(i, t-1)} p_{l(i, t)}
-  + \gamma_d \sum_t \left( \left( \sum_i P_i p_{l(i, t)} \right) - L_t \right) ^2
+  E(p) = \gamma_c \sum_{i, t} f_i p_{i, t}
+  + \gamma_s \sum_i \sum_{t > 0} S_i p_{i, t-1} p_{i, t}
+  + \gamma_d \sum_t \left( \left( \sum_i P_i p_{i, t} \right) - L_t \right) ^2
 \end{align}
 
 \subsubsection{Objective Function}
@@ -46,20 +63,32 @@ To achieve this form, every summand of the formula has to be resolved.
 
 \subsubsection{Result}
 
+\begin{subequations}
 \begin{align}
+  E(p) = \quad
   &
-  E(p) = \gamma_c \sum_{i, t} f_i p_{l(i, t)}
-  + \gamma_s \sum_i \sum_{t > 0} S_i p_{l(i, t-1)} p_{l(i, t)}
-  \\
-  &
+  \gamma_c \sum_{i, t} f_i p_{i, t}
+  + \gamma_s \sum_i \sum_{t > 0} S_i p_{i, t-1} p_{i, t}
+  \\ &
   + \gamma_d \sum_t \left(
-    \sum_{i < j} P_i P_j p_{l(i, t)} p_{l(j, t)}
-    + \sum_i P_i^2 p_{l(i, t)} - L_t \sum_i P_i p_{l(i, t)}
+    \sum_{i < j} P_i P_j p_{i, t} p_{j, t}
+    + \sum_i P_i^2 p_{i, t} - L_t \sum_i P_i p_{i, t}
     + L_t^2
-  \right)
+  \right) \\
+  = \quad
+  &
+  \sum_t \sum_{i < j} \gamma_d P_i P_j p_{i, t} p_{j, t}
+  + \sum_i \sum_{t > 0} S_i p_{i, t-1} p_{i, t}
+  \\ &
+  + \sum_{i, t} \left(
+    \gamma_c f_i + \gamma_d \left(P_i^2 - L_t P_i \right)
+  \right) p_{i, t}
+  \\ &
+  + \sum_t L_t^2
 \end{align}
+\end{subequations}
 
-\todo{simplify}
+\todo{introduce tensor and scalar products}
 
 \subsection{Implementation}
 
