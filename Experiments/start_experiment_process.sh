@@ -8,6 +8,9 @@ if [ "$1" = "--node" ]; then
   shift
 fi
 
-output_file=experiment_output.log
+source setup_environment.sh
+
+output_file=experiment_node${node}_output.log
+
 numactl --physcpubind=$node --membind=$node \
   python -m Classical.perform_experiments $@ > $output_file &
