@@ -3,7 +3,7 @@
 node="0"
 
 if [ "$1" = "--node" ]; then
-  cpu="$2"
+  node="$2"
   shift
   shift
 fi
