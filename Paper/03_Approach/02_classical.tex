@@ -16,14 +16,14 @@ has three $| \mathbb{I} | \times | \mathbb{T} |$ matrices as variables.
 The first two are the variables fo the commitment $u_{i, t}$
 and the power output $p_{i, t}$ for each power plants at each time instance.
 These are the free variables of the model that will be adjusted so that the objective function is minimized.
-The last matrix is for $S_{i, t}$, the startup and shutdown costs.
+The last matrix is for $s_{i, t}$, the startup and shutdown costs.
 These are not free but depend on the data from the UCP object.
 
 \subsubsection{The Objective Function}
 
 The formula (\ref{formula:minlp.obj}) is modeled using a Objective object provided by the Pyomo framework.
-It depends on the model variables for $u_{i, t}$, $p_{i, t}$ and $S_{i, t}$.
-Where $u_{i, t}$ and $p_{i, t}$ are free variables and $S_{i, t}$ are defined through the model.
+It depends on the model variables for $u_{i, t}$, $p_{i, t}$ and $s_{i, t}$.
+Where $u_{i, t}$ and $p_{i, t}$ are free variables and $s_{i, t}$ are defined through the model.
 The coefficients $A_i$, $B_i$ and $C_i$ are taken from the UCP object.
 
 The startup and shutdown costs are defined through a method called ''disjunctive programming''.
@@ -31,7 +31,7 @@ This method makes it possible to formulate ''either-or'' conditions
 and tie the value of one variable to the value of other variables.
 \cite{Balas1983}
 
-With this method the value of $S_{i, j}$ set to either $A^U_i$, $A^D_i$ or $0$
+With this method the value of $s_{i, j}$ set to either $A^U_i$, $A^D_i$ or $0$
 depending on the values of $u_{i, t}$ and $u_{i, t-1}$.
 This relation is defined mathematically by the constraint (\ref{formula:minlp.updowncost}).
 And it is modeled by giving the model three disjunct events for each plant $i$ and time instance $t$:
@@ -43,10 +43,10 @@ And it is modeled by giving the model three disjunct events for each plant $i$ a
 \end{align}
 \end{subequations}
 If $t = 0$, $u_{i, t-1}$ is defined as the initial commitment state of the power plant $i$.
-The first part of the events is the condition and the second part defines the value of $S_{i, t}$.
+The first part of the events is the condition and the second part defines the value of $s_{i, t}$.
 Since the conditions are mutually exclusive,
 only one of the events will become reality.
-This means that $S_{i, t}$ is set to the value that is conjugated with the true condition.
+This means that $s_{i, t}$ is set to the value that is conjugated with the true condition.
 
 Now there are two constraints left to model.
 

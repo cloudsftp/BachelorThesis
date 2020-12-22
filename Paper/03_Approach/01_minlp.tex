@@ -9,9 +9,9 @@ The equations (\ref{formula:minlp}) represent the formulated MINLP.
   \min_{u, p} \quad &
   \sum_{i \in \mathbb{I}, t \in \mathbb{T}} f_{i, t}
   = \sum_{i \in \mathbb{I}, t \in \mathbb{T}}
-    u_{i, t} (A_i + B_i p_{i, t}' + C_i (p_{i, t}')^2) + S_{i, t}
+    u_{i, t} (A_i + B_i p_{i, t}' + C_i (p_{i, t}')^2) + s_{i, t}
   \label{formula:minlp.obj} \\
-  \text{s.t.} \quad & L_t = \sum_{i \in \mathbb{I}} u_{i, t} p_{i, t}' \quad &
+  \text{s.t.} \quad & l_t = \sum_{i \in \mathbb{I}} u_{i, t} p_{i, t}' \quad &
   \forall t \in \mathbb{T}
   \label{formula:minlp.load} \\
   &
@@ -19,7 +19,7 @@ The equations (\ref{formula:minlp}) represent the formulated MINLP.
   \forall i \in \mathbb{I}, t \in \mathbb{T}
   \label{formula:minlp.power} \\
   &
-  S_{i, t} = \begin{cases}
+  s_{i, t} = \begin{cases}
     A_i^U & \text{if } u_{i, t} > u_{i, t-1} \\
     A_i^D & \text{if } u_{i, t} < u_{u, t-1} \\
     0 & \text{else}
@@ -38,7 +38,7 @@ It is the sum of all cost functions $f_{i, t}$ of the individual power plants at
 
 The individual cost funtions $f_{i, t}$ take $u_{i, t}$ and $p_{i, t}'$ as free variables.
 $A_i, B_i$ and $C_i$ are constant for every power plant.
-$f_{i, t}$ also depend on $S_{i, t}$ or equation (\ref{formula:minlp.updowncost}),
+$f_{i, t}$ also depend on $s_{i, t}$ or equation (\ref{formula:minlp.updowncost}),
 which evaluates to $A_i^U, A_i^D$ or $0$ depending on the free commitment variables $u_{i, t}$ and $u_{i, t-1}$.
 $A_i^U$ and $A_i^D$ are also constant for every power plant,
 as well as $u_{i, -1}$.
@@ -83,7 +83,7 @@ In this case there is one equation (\ref{formula:minlp.load}) and one inequation
 
 The equation (\ref{formula:minlp.load}) makes sure, that the combined power
 of all power plants equals the power demand or ''load'' at each time instance $t$.
-This is achieved by setting each constant $(L_t)_{t \in \mathbb{T}}$
+This is achieved by setting each constant $(l_t)_{t \in \mathbb{T}}$
 equal to the sum of the power of all power plants at that time $t$.
 The summands on the right-hand side are the multiplication of
 $u_{i, t}$ and $p_{i, t}'$ and not simply $p_{i, t}'$,
