@@ -9,3 +9,7 @@ then
 else
   conda env update -f $env_file
 fi
+
+conda activate opt
+
+pip install -r pip_packages.list
