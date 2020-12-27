@@ -35,7 +35,7 @@ class UCP_DQM(object):
 
     for i in range(ucp.parameters.num_plants):
       p_i: List[Any] = []
-      var_size: int = self.P[i].size
+      var_size: int = len(self.P[i])
 
       for t in range(ucp.parameters.num_loads):
         p_i.append(self.model.add_variable(var_size))

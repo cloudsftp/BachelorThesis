@@ -17,6 +17,12 @@ class TestDQMBiases(unittest.TestCase):
   def quadratic_biases(self, dqm: UCP_DQM, i0: int, t0: int, i1: int, t1: int, biases: Union[List[List[float]], np.ndarray]) -> None:
     assert_array_equal(dqm.model.get_quadratic(dqm.p[i0][t0], dqm.p[i1][t1], array=True), np.array(biases))
 
+  def no_quadratic_biases(self, dqm: UCP_DQM, i0: int, t0: int, i1: int, t1: int) -> None:
+    with self.assertRaises(ValueError) as context:
+      dqm.model.get_quadratic(dqm.p[i0][t0], dqm.p[i1][t1])
+
+    self.assertTrue('there is no interaction between given variables' in context.exception.args)
+
   ucp_instance_1: UCP = UCP(
     ExperimentParameters(3, 3),
     [1, 2, 1],
@@ -90,3 +96,13 @@ class TestDQMBiases(unittest.TestCase):
     self.quadratic_biases(dqm, 1, 0, 2, 0, P_1x2)
     self.quadratic_biases(dqm, 1, 1, 2, 1, P_1x2)
     self.quadratic_biases(dqm, 1, 2, 2, 2, P_1x2)
+
+  def test_quadratic_zeros_1(self):
+    dqm: UCP_DQM = UCP_DQM(self.ucp_instance_1)
+
+    for i0 in range(3):
+      for i1 in range(3):
+        for t0 in range(3):
+          for t1 in range(3):
+            if i0 != i1 and t0 != t1:
+              self.no_quadratic_biases(dqm, i0, t0, i1, t1)
