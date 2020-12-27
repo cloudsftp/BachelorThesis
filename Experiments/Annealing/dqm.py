@@ -4,7 +4,7 @@
 import math
 from typing import Any, List
 from dimod import DiscreteQuadraticModel # type: ignore
-import numpy as np
+import numpy as np # type: ignore
 
 from Data.build_ucp import build_ucp
 from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP
