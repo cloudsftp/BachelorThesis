@@ -21,7 +21,7 @@ jobs:
         run: conda env update --file Experiments/conda_environment.yml --name base
 
       - name: Install Pip Packages
-        run: pip install -r pip_packages.list
+        run: pip install -r Experiments/pip_packages.list
 
       - name: Run Unittests
         run: |
