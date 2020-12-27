@@ -2,7 +2,7 @@
 
 from typing import List, Union
 
-import numpy as np
+import numpy as np # type: ignore
 from numpy.testing import assert_array_equal # type: ignore
 import unittest
 
