@@ -75,8 +75,20 @@ class UCP_DQM(object):
         quadratic_biases[0, k] = plant.AU
         quadratic_biases[k, 0] = plant.AD
 
+      quadratic_biases *= y_s
+
       for t in range(1, ucp.parameters.num_loads):
         self.model.set_quadratic(self.p[i][t-1], self.p[i][t], quadratic_biases)
+
+
+  def set_quadratic_demand(self, ucp: UCP, y_d: float) -> None:
+    for j in range(1, ucp.parameters.num_plants):
+      for i in range(j):
+        quadratic_biases: np.ndarray = np.tensordot(self.P[i], self.P[j], axes=0)
+        quadratic_biases *= y_d
+
+        for t in range(ucp.parameters.num_loads):
+          self.model.set_quadratic(self.p[i][t], self.p[j][t], quadratic_biases)
 
 
   def __init__(self, ucp: UCP, y_c: float = 1, y_s: float = 1, y_d: float = 1) -> None:
@@ -87,6 +99,7 @@ class UCP_DQM(object):
 
       self.set_linear(ucp, y_c, y_d)
       self.set_quadratic_startup(ucp, y_s)
+      self.set_quadratic_demand(ucp, y_d)
 
 
 if __name__ == "__main__":
