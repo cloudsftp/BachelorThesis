@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - bugfix/*
 
 jobs:
   test_python:
@@ -18,6 +19,9 @@ jobs:
 
       - name: Install Anaconda Environment
         run: conda env update --file Experiments/conda_environment.yml --name base
+
+      - name: Install Pip Packages
+        run: pip install -r pip_packages.list
 
       - name: Run Unittests
         run: |
