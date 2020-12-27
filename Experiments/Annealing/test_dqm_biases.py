@@ -64,3 +64,29 @@ class TestDQMBiases(unittest.TestCase):
     S_2: np.ndarray = np.zeros((8, 8))
     self.quadratic_biases(dqm, 2, 0, 2, 1, S_2)
     self.quadratic_biases(dqm, 2, 1, 2, 2, S_2)
+
+  def test_quadratic_demand_1(self):
+    dqm: UCP_DQM = UCP_DQM(self.ucp_instance_1)
+
+    P_0x1: List[List[float]] = [[0,   0,   0,   0],
+                                [0, 100, 200, 300],
+                                [0, 200, 400, 600],
+                                [0, 300, 600, 900]]
+
+    self.quadratic_biases(dqm, 0, 0, 1, 0, P_0x1)
+    self.quadratic_biases(dqm, 0, 1, 1, 1, P_0x1)
+    self.quadratic_biases(dqm, 0, 2, 1, 2, P_0x1)
+
+    P_0x2: List[List[float]] = [[0,   0,   0,    0,    0,    0,    0,    0],
+                                [0, 200, 300,  400,  500,  600,  700,  800],
+                                [0, 400, 600,  800, 1000, 1200, 1400, 1600],
+                                [0, 600, 900, 1200, 1500, 1800, 2100, 2400]]
+
+    self.quadratic_biases(dqm, 0, 0, 2, 0, P_0x2)
+    self.quadratic_biases(dqm, 0, 1, 2, 1, P_0x2)
+    self.quadratic_biases(dqm, 0, 2, 2, 2, P_0x2)
+
+    P_1x2: List[List[float]] = P_0x2
+    self.quadratic_biases(dqm, 1, 0, 2, 0, P_1x2)
+    self.quadratic_biases(dqm, 1, 1, 2, 1, P_1x2)
+    self.quadratic_biases(dqm, 1, 2, 2, 2, P_1x2)
