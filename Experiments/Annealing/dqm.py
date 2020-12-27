@@ -4,16 +4,17 @@
 import math
 from typing import Any, List
 from dimod import DiscreteQuadraticModel # type: ignore
+import numpy as np
 
 from Data.build_ucp import build_ucp
-from UCP.unit_commitment_problem import ExperimentParameters, UCP
+from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP
 
 
 class UCP_DQM(object):
   model: DiscreteQuadraticModel
   p: List[List[Any]] # variables of model
 
-  P: List[List[float]] # discretizised power levels
+  P: List[np.array] # discretizised power levels
 
   def discretizise_plants(self, ucp: UCP, max_h: float = 10) -> None:
     self.P = []
@@ -27,14 +28,14 @@ class UCP_DQM(object):
       for k in range(2 ** n - 1):
         P_i.append(plant.Pmin + k * h)
 
-      self.P.append(P_i)
+      self.P.append(np.array(P_i))
 
   def init_variables(self, ucp: UCP) -> None:
     self.p = []
 
     for i in range(ucp.parameters.num_plants):
       p_i: List[Any] = []
-      var_size: int = len(self.P[i])
+      var_size: int = self.P[i].size
 
       for t in range(ucp.parameters.num_loads):
         p_i.append(self.model.add_variable(var_size))
@@ -42,13 +43,35 @@ class UCP_DQM(object):
       self.p.append(p_i)
 
 
-  def __init__(self, ucp: UCP) -> None:
+  def calculate_F_i(self, plant: CombustionPlant, i: int) -> np.array:
+    P_i: np.array = self.P[i]
+    F_i: List[float] = [0]
+
+    for k in range(1, len(P_i)):
+      F_i.append(plant.A + plant.B * P_i[k] + plant.C * (P_i[k] ** 2))
+
+    return np.array(F_i)
+
+  def set_linear(self, ucp: UCP, y_c: float, y_d: float) -> None:
+    for i in range(len(self.p)):
+      P_i: np.array = self.P[i]
+      F_i: np.array = self.calculate_F_i(ucp.plants[i], i)
+
+      for t in range(len(self.p[i])):
+        linear_biases: np.array = y_c * F_i + y_d * (
+          P_i * P_i - ucp.loads[t] * P_i
+        )
+
+        self.model.set_linear(self.p[i][t], linear_biases)
+
+
+  def __init__(self, ucp: UCP, y_c: float = 1, y_s: float = 1, y_d: float = 1) -> None:
       self.model = DiscreteQuadraticModel()
 
       self.discretizise_plants(ucp)
       self.init_variables(ucp)
 
-      print(self.model.variables.stop)
+      self.set_linear(ucp, y_c, y_d)
 
 
 if __name__ == "__main__":
