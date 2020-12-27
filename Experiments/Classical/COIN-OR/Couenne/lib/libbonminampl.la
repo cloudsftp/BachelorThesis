@@ -14,7 +14,7 @@ library_names='libbonminampl.so.4.8.8 libbonminampl.so.4 libbonminampl.so'
 old_library=''
 
 # Libraries that this one depends upon.
-dependency_libs=' /usr/local/share/coin-or/lib/libbonmin.la /usr/local/share/coin-or/lib/libCbcSolver.la /usr/local/share/coin-or/lib/libCbc.la /usr/local/share/coin-or/lib/libCgl.la /usr/local/share/coin-or/lib/libOsiClp.la /usr/local/share/coin-or/lib/libClpSolver.la /usr/local/share/coin-or/lib/libClp.la /usr/local/share/coin-or/lib/libOsi.la /usr/local/share/coin-or/lib/libCoinUtils.la -lz /usr/local/share/coin-or/lib/libipoptamplinterface.la /usr/local/share/coin-or/lib/libipopt.la /usr/local/share/coin-or/lib/libcoinlapack.la /usr/local/share/coin-or/lib/libcoinblas.la -lgfortran -lquadmath /usr/local/share/coin-or/lib/libcoinasl.la -ldl'
+dependency_libs=' /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libbonmin.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libCbcSolver.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libCbc.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libCgl.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libOsiClp.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libClpSolver.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libClp.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libOsi.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libCoinUtils.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libipoptamplinterface.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libipopt.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libcoinlapack.la /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libcoinblas.la -lgfortran -lquadmath /home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib/libcoinasl.la -ldl'
 
 # Version information for libbonminampl.
 current=12
@@ -32,4 +32,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/usr/local/share/coin-or/lib'
+libdir='/home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib'

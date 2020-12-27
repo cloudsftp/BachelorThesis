@@ -32,4 +32,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/usr/local/share/coin-or/lib'
+libdir='/home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib'
