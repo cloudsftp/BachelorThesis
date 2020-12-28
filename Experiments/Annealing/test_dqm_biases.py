@@ -36,11 +36,11 @@ class TestDQMBiases(unittest.TestCase):
   def test_linear_1(self):
     dqm: UCP_DQM = UCP_DQM(self.ucp_instance_1)
 
-    self.linear_biases(dqm, 0, 0, [0, 196, 791, 1786])
+    self.linear_biases(dqm, 0, 0, [0, 197, 792, 1787])
     self.linear_biases(dqm, 0, 1, [0, 186, 771, 1756])
     self.linear_biases(dqm, 0, 2, [0, 196, 791, 1786])
 
-    self.linear_biases(dqm, 1, 0, [0, 302, 1202, 2702])
+    self.linear_biases(dqm, 1, 0, [0, 304, 1204, 2704])
     self.linear_biases(dqm, 1, 1, [0, 292, 1182, 2672])
     self.linear_biases(dqm, 1, 2, [0, 302, 1202, 2702])
 
