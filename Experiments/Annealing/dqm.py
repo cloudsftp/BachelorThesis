@@ -55,12 +55,17 @@ class UCP_DQM(object):
   def set_linear(self, ucp: UCP, y_c: float, y_d: float) -> None:
     for i in range(len(self.p)):
       P_i: np.ndarray = self.P[i]
-      F_i: np.ndarray = self.calculate_F_i(ucp.plants[i], i)
+      plant: CombustionPlant = ucp.plants[i]
+      F_i: np.ndarray = self.calculate_F_i(plant, i)
 
       for t in range(len(self.p[i])):
         linear_biases: np.ndarray = y_c * F_i + y_d * (
           P_i * P_i - ucp.loads[t] * P_i
         )
+
+        if t == 0 and not plant.initially_on:
+          for k in range(1, len(linear_biases)):
+            linear_biases[k] += plant.AU
 
         self.model.set_linear(self.p[i][t], linear_biases)
 
