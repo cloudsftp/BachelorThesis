@@ -45,7 +45,10 @@ To achieve this form, every summand of the formula has to be resolved.
 
 \begin{align} \label{formula:dqm.start}
   E(p) = \gamma_c \sum_{i, t} F_i p_{i, t}
-  + \gamma_s \sum_i \sum_{t > 0} S_i \left( p_{i, t-1} \otimes p_{i, t} \right)
+  + \gamma_s \sum_i \left(
+      u_{i, -1} S_i^U p_{i, 0}
+      + \sum_{t > 0} S_i \left( p_{i, t-1} \otimes p_{i, t} \right)
+    \right)
   + \gamma_d \sum_t \left( \left( \sum_i P_i p_{i, t} \right) - l_t \right) ^2
 \end{align}
 
@@ -68,7 +71,10 @@ To achieve this form, every summand of the formula has to be resolved.
   E(p) = \quad
   &
   \gamma_c \sum_{i, t} F_i p_{i, t}
-  + \gamma_s \sum_i \sum_{t > 0} S_i \left( p_{i, t-1} \otimes p_{i, t} \right)
+  + \gamma_s \sum_i \left(
+      u_{i, -1} S_i^U p_{i, 0}
+      + \sum_{t > 0} S_i \left( p_{i, t-1} \otimes p_{i, t} \right)
+    \right)
   \\ &
   + \gamma_d \sum_t \left(
     L_t^2
@@ -83,6 +89,7 @@ To achieve this form, every summand of the formula has to be resolved.
   + \sum_{i, t} \left(
     \gamma_c F_i + \gamma_d \left(P_i^2 - l_t P_i \right)
   \right) p_{i, t}
+  + \sum_i u_{i, -1} S_i^U p_{i, 0}
   \\ &
   + \sum_t l_t^2
 \end{align}
