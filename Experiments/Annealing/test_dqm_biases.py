@@ -23,7 +23,7 @@ class TestDQMBiases(unittest.TestCase):
 
     self.assertTrue('there is no interaction between given variables' in context.exception.args)
 
-  ucp_instance_1: UCP = UCP(
+  ucp_instance_1: UCP = UCP( # This instance is unsolvable
     ExperimentParameters(3, 3),
     [1, 2, 1],
     [
@@ -106,3 +106,12 @@ class TestDQMBiases(unittest.TestCase):
           for t1 in range(3):
             if i0 != i1 and t0 != t1:
               self.no_quadratic_biases(dqm, i0, t0, i1, t1)
+
+  ucp_instance_2 = UCP(
+    ExperimentParameters(2, 2),
+    [10, 30],
+    [
+      CombustionPlant(),
+      CombustionPlant()
+    ]
+  )

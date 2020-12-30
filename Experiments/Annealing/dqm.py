@@ -4,7 +4,8 @@
 import math
 from typing import Any, List
 from dimod import DiscreteQuadraticModel # type: ignore
-import numpy as np # type: ignore
+import numpy as np
+from Annealing.dqm_simulator import DQMSimulator # type: ignore
 
 from Data.build_ucp import build_ucp
 from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP
@@ -108,4 +109,15 @@ class UCP_DQM(object):
 
 
 if __name__ == "__main__":
-  dqm = UCP_DQM(build_ucp(ExperimentParameters(2, 4)))
+  ucp = UCP(
+    ExperimentParameters(2, 2),
+    [10, 30],
+    [
+      CombustionPlant(1, 1, 1, 10, 30, 1, 0),
+      CombustionPlant(2, 1, 1, 10, 30, 1, 0)
+    ]
+  )
+
+  dqm_sim: DQMSimulator = DQMSimulator()
+  dqm_sim.sample(UCP_DQM(ucp).model)
+
