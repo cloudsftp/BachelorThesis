@@ -2,25 +2,34 @@
 
 
 import math
-from typing import Any, List
-from dimod import DiscreteQuadraticModel # type: ignore
-import numpy as np
+from typing import Any, List, Union
+from dimod import DiscreteQuadraticModel
+from dimod.sampleset import SampleSet
+from numpy.lib.function_base import append # type: ignore
 from Annealing.dqm_simulator import DQMSimulator # type: ignore
+from dwave.system import LeapHybridDQMSampler # type: ignore
+import numpy as np # type: ignore
 
 from Data.build_ucp import build_ucp
-from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP
+from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCP_Solution
 
 
 class UCP_DQM(object):
   model: DiscreteQuadraticModel
+  ucp: UCP
   p: List[List[Any]] # variables of model
 
   P: List[np.ndarray] # discretizised power levels
 
-  def discretizise_plants(self, ucp: UCP, max_h: float = 10) -> None:
+
+  def indices_to_index(self, i: int, t: int) -> int:
+    return i * self.ucp.parameters.num_loads + t
+
+
+  def discretizise_plants(self, max_h: float) -> None:
     self.P = []
 
-    for plant in ucp.plants:
+    for plant in self.ucp.plants:
       spectrum: float = plant.Pmax - plant.Pmin
       n: int = math.ceil(math.log(spectrum / max_h + 2, 2))
       h: float = spectrum / (2 ** n - 2)
@@ -31,18 +40,27 @@ class UCP_DQM(object):
 
       self.P.append(np.array(P_i))
 
-  def init_variables(self, ucp: UCP) -> None:
+  def init_variables(self) -> None:
     self.p = []
 
-    for i in range(ucp.parameters.num_plants):
+    for i in range(self.ucp.parameters.num_plants):
       p_i: List[Any] = []
       var_size: int = len(self.P[i])
 
-      for t in range(ucp.parameters.num_loads):
+      for t in range(self.ucp.parameters.num_loads):
         p_i.append(self.model.add_variable(var_size))
 
       self.p.append(p_i)
 
+  def calculate_c(self, y_d: float) -> float:
+    c: float = 0
+
+    for t in range(self.ucp.parameters.num_loads):
+      c += self.ucp.loads[t] ** 2
+
+    c *= y_d
+
+    return c
 
   def calculate_F_i(self, plant: CombustionPlant, i: int) -> np.array:
     P_i: np.ndarray = self.P[i]
@@ -53,16 +71,22 @@ class UCP_DQM(object):
 
     return np.array(F_i)
 
-  def set_linear(self, ucp: UCP, y_c: float, y_d: float) -> None:
+  def set_linear(self, y_c: float, y_d: float) -> None:
+    c = self.calculate_c(y_d)
+
     for i in range(len(self.p)):
       P_i: np.ndarray = self.P[i]
-      plant: CombustionPlant = ucp.plants[i]
+      plant: CombustionPlant = self.ucp.plants[i]
       F_i: np.ndarray = self.calculate_F_i(plant, i)
 
       for t in range(len(self.p[i])):
         linear_biases: np.ndarray = y_c * F_i + y_d * (
-          P_i * P_i - ucp.loads[t] * P_i
+          P_i * P_i - self.ucp.loads[t] * P_i
         )
+
+        linear_biases += c
+
+        print(linear_biases)
 
         if t == 0 and not plant.initially_on:
           for k in range(1, len(linear_biases)):
@@ -71,9 +95,9 @@ class UCP_DQM(object):
         self.model.set_linear(self.p[i][t], linear_biases)
 
 
-  def set_quadratic_startup(self, ucp: UCP, y_s: float) -> None:
+  def set_quadratic_startup(self, y_s: float) -> None:
     for i in range(ucp.parameters.num_plants):
-      plant: CombustionPlant = ucp.plants[i]
+      plant: CombustionPlant = self.ucp.plants[i]
       num_cases: int = len(self.P[i])
       quadratic_biases: np.ndarray = np.zeros((num_cases, num_cases))
 
@@ -87,8 +111,8 @@ class UCP_DQM(object):
         self.model.set_quadratic(self.p[i][t-1], self.p[i][t], quadratic_biases)
 
 
-  def set_quadratic_demand(self, ucp: UCP, y_d: float) -> None:
-    for j in range(1, ucp.parameters.num_plants):
+  def set_quadratic_demand(self, y_d: float) -> None:
+    for j in range(1, self.ucp.parameters.num_plants):
       for i in range(j):
         quadratic_biases: np.ndarray = np.tensordot(self.P[i], self.P[j], axes=0)
         quadratic_biases *= y_d
@@ -97,27 +121,47 @@ class UCP_DQM(object):
           self.model.set_quadratic(self.p[i][t], self.p[j][t], quadratic_biases)
 
 
-  def __init__(self, ucp: UCP, y_c: float = 1, y_s: float = 1, y_d: float = 1) -> None:
-      self.model = DiscreteQuadraticModel()
+  def __init__(self, ucp: UCP, y_c: float = 1, y_s: float = 1, y_d: float = 1, max_h: float = 10) -> None:
+    self.model = DiscreteQuadraticModel()
+    self.ucp = ucp
 
-      self.discretizise_plants(ucp)
-      self.init_variables(ucp)
+    self.discretizise_plants(max_h)
+    self.init_variables()
 
-      self.set_linear(ucp, y_c, y_d)
-      self.set_quadratic_startup(ucp, y_s)
-      self.set_quadratic_demand(ucp, y_d)
+    self.set_linear(y_c, y_d)
+    self.set_quadratic_startup(y_s)
+    self.set_quadratic_demand(y_d)
 
+
+  def optimize(self, sampler) -> UCP_Solution:
+    samples: SampleSet = sampler.sample_dqm(self.model)
+    sample: List[float] = samples.record[0][0]
+
+    u: List[List[bool]] = []
+    p: List[List[float]] = []
+
+    for i in range(self.ucp.parameters.num_plants):
+      u.append([])
+      p.append([])
+
+      for t in range(self.ucp.parameters.num_loads):
+        value_index: int = sample[self.indices_to_index(i, t)]
+        value: float = self.P[i][value_index]
+
+        p[i].append(value)
+        if p[i][t] > 0:
+          u[i].append(True)
+        else:
+          u[i].append(False)
+
+    solution: UCP_Solution = UCP_Solution(self.ucp, samples.info['run_time'], True, self.ucp.calculate_o(u, p), u, p)
+    return solution
 
 if __name__ == "__main__":
-  ucp = UCP(
-    ExperimentParameters(2, 2),
-    [10, 30],
-    [
-      CombustionPlant(1, 1, 1, 10, 30, 1, 0),
-      CombustionPlant(2, 1, 1, 10, 30, 1, 0)
-    ]
-  )
+  ucp = build_ucp(ExperimentParameters(2, 2))
+  print(ucp)
 
-  dqm_sim: DQMSimulator = DQMSimulator()
-  dqm_sim.sample(UCP_DQM(ucp).model)
+  ucp_dqm = UCP_DQM(ucp, max_h=100)
+  solution = ucp_dqm.optimize(DQMSimulator())
+  print(solution)
 

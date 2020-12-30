@@ -55,6 +55,22 @@ class UCP(object):
   def load_from(file_name):
     return read_dataclass_from(file_name, UCP)
 
+  def calculate_o(self, u: List[List[bool]], p: List[List[float]]) -> float:
+    o: float = 0
+
+    for i in range(self.parameters.num_plants):
+      plant: CombustionPlant = self.plants[i]
+      for t in range(self.parameters.num_loads):
+        if u[i][t]:
+          o += plant.A + plant.B * p[i][t] + plant.C * (p[i][t] ** 2)
+
+        if t > 0 and u[i][t] and not u[i][t-1]:
+          o += plant.AU
+        elif t > 0 and not u[i][t] and u[i][t-1]:
+          o += plant.AD
+
+    return o
+
 
 @dataclass
 class UCP_Solution(object):

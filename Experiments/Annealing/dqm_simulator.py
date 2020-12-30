@@ -5,6 +5,7 @@ import sys
 from typing import List
 from dimod import DiscreteQuadraticModel
 from dimod.sampleset import SampleSet
+from dimod.vartypes import DISCRETE
 import numpy as np # type: ignore
 
 
@@ -12,9 +13,10 @@ class DQMSimulator(object):
   dqm: DiscreteQuadraticModel
   v: List[int] = []
   c: List[int] = []
+  o: float
 
   def __init__(self) -> None:
-    pass
+    self.o = sys.float_info.max
 
 
   def initialize_variables(self) -> None:
@@ -69,23 +71,23 @@ class DQMSimulator(object):
 
 
   def brute_force_solution(self) -> None:
-    min_o: float = sys.float_info.max
     optimal_v: List[int] = self.v.copy()
 
     for v in self.possible_v():
       o = self.compute_o(v)
-      if o < min_o:
-        min_o = o
+      if o < self.o:
+        self.o = o
         optimal_v = v.copy()
 
     self.v = optimal_v.copy()
 
 
-  def sample(self, dqm: DiscreteQuadraticModel) -> SampleSet:
+  def sample_dqm(self, dqm: DiscreteQuadraticModel) -> SampleSet:
     self.dqm = dqm
 
     self.initialize_variables()
     self.brute_force_solution()
 
-    # TODO: return a sample set
-    print(self.v)
+    samples: SampleSet = SampleSet.from_samples(self.v, DISCRETE, self.o)
+    samples.info['run_time'] = 0
+    return samples
