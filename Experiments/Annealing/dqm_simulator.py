@@ -3,9 +3,9 @@
 
 import sys
 from typing import List
-from dimod import DiscreteQuadraticModel
-from dimod.sampleset import SampleSet
-from dimod.vartypes import DISCRETE
+from dimod import DiscreteQuadraticModel # type: ignore
+from dimod.sampleset import SampleSet # type: ignore
+from dimod.vartypes import DISCRETE # type: ignore
 import numpy as np # type: ignore
 
 

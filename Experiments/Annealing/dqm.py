@@ -2,9 +2,9 @@
 
 
 import math
-from typing import Any, List, Union
-from dimod import DiscreteQuadraticModel
-from dimod.sampleset import SampleSet
+from typing import Any, List
+from dimod import DiscreteQuadraticModel # type: ignore
+from dimod.sampleset import SampleSet # type: ignore
 from numpy.lib.function_base import append # type: ignore
 from Annealing.dqm_simulator import DQMSimulator # type: ignore
 from dwave.system import LeapHybridDQMSampler # type: ignore
@@ -86,8 +86,6 @@ class UCP_DQM(object):
 
         linear_biases += c
 
-        print(linear_biases)
-
         if t == 0 and not plant.initially_on:
           for k in range(1, len(linear_biases)):
             linear_biases[k] += plant.AU
@@ -96,7 +94,7 @@ class UCP_DQM(object):
 
 
   def set_quadratic_startup(self, y_s: float) -> None:
-    for i in range(ucp.parameters.num_plants):
+    for i in range(self.ucp.parameters.num_plants):
       plant: CombustionPlant = self.ucp.plants[i]
       num_cases: int = len(self.P[i])
       quadratic_biases: np.ndarray = np.zeros((num_cases, num_cases))
@@ -107,7 +105,7 @@ class UCP_DQM(object):
 
       quadratic_biases *= y_s
 
-      for t in range(1, ucp.parameters.num_loads):
+      for t in range(1, self.ucp.parameters.num_loads):
         self.model.set_quadratic(self.p[i][t-1], self.p[i][t], quadratic_biases)
 
 
@@ -117,7 +115,7 @@ class UCP_DQM(object):
         quadratic_biases: np.ndarray = np.tensordot(self.P[i], self.P[j], axes=0)
         quadratic_biases *= y_d
 
-        for t in range(ucp.parameters.num_loads):
+        for t in range(self.ucp.parameters.num_loads):
           self.model.set_quadratic(self.p[i][t], self.p[j][t], quadratic_biases)
 
 
@@ -133,19 +131,13 @@ class UCP_DQM(object):
     self.set_quadratic_demand(y_d)
 
 
-  def optimize(self, sampler) -> UCP_Solution:
-    samples: SampleSet = sampler.sample_dqm(self.model)
-    sample: List[float] = samples.record[0][0]
-
-    u: List[List[bool]] = []
-    p: List[List[float]] = []
-
+  def get_variables_from_sample(self, sample: List[float], u: List[List[bool]], p: List[List[float]]) -> None:
     for i in range(self.ucp.parameters.num_plants):
       u.append([])
       p.append([])
 
       for t in range(self.ucp.parameters.num_loads):
-        value_index: int = sample[self.indices_to_index(i, t)]
+        value_index: int = int(sample[self.indices_to_index(i, t)])
         value: float = self.P[i][value_index]
 
         p[i].append(value)
@@ -153,6 +145,15 @@ class UCP_DQM(object):
           u[i].append(True)
         else:
           u[i].append(False)
+
+  def optimize(self, sampler) -> UCP_Solution:
+    samples: SampleSet = sampler.sample_dqm(self.model)
+    sample: List[float] = samples.record[0][0]
+
+    u: List[List[bool]] = []
+    p: List[List[float]] = []
+
+    self.get_variables_from_sample(sample, u, p)
 
     solution: UCP_Solution = UCP_Solution(self.ucp, samples.info['run_time'], True, self.ucp.calculate_o(u, p), u, p)
     return solution
