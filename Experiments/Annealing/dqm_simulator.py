@@ -11,11 +11,13 @@ import numpy as np # type: ignore
 
 class DQMSimulator(object):
   dqm: DiscreteQuadraticModel
-  v: List[int] = []
-  c: List[int] = []
+  v: List[int]
+  c: List[int]
   o: float
 
   def __init__(self) -> None:
+    self.v = []
+    self.c = []
     self.o = sys.float_info.max
 
 
@@ -23,8 +25,6 @@ class DQMSimulator(object):
     for i in range(len(self.dqm.variables)):
       self.v.append(0)
       self.c.append(len(self.dqm.get_linear(self.dqm.variables[i])))
-
-    print(self.c)
 
 
   def possible_v(self):
