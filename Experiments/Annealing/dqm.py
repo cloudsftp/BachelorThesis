@@ -71,7 +71,7 @@ class UCP_DQM(object):
 
     return np.array(F_i)
 
-  def set_linear(self, y_c: float, y_d: float) -> None:
+  def set_linear(self, y_c: float, y_s: float, y_d: float) -> None:
     c = self.calculate_c(y_d)
 
     for i in range(len(self.p)):
@@ -86,9 +86,13 @@ class UCP_DQM(object):
 
         linear_biases += c
 
-        if t == 0 and not plant.initially_on:
-          for k in range(1, len(linear_biases)):
-            linear_biases[k] += plant.AU
+        if t == 0:
+          if plant.initially_on:
+            linear_biases[0] += y_s * plant.AD
+
+          else:
+            for k in range(1, len(linear_biases)):
+              linear_biases[k] += y_s * plant.AU
 
         self.model.set_linear(self.p[i][t], linear_biases)
 
@@ -126,7 +130,7 @@ class UCP_DQM(object):
     self.discretizise_plants(max_h)
     self.init_variables()
 
-    self.set_linear(y_c, y_d)
+    self.set_linear(y_c, y_s, y_d)
     self.set_quadratic_startup(y_s)
     self.set_quadratic_demand(y_d)
 
@@ -146,7 +150,7 @@ class UCP_DQM(object):
         else:
           u[i].append(False)
 
-  def optimize(self, sampler) -> UCP_Solution:
+  def optimize(self, sampler, adjust: bool = True) -> UCP_Solution:
     samples: SampleSet = sampler.sample_dqm(self.model)
     sample: List[float] = samples.record[0][0]
 

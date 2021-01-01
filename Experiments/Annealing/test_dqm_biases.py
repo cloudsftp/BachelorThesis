@@ -106,3 +106,94 @@ class TestDQMBiases(unittest.TestCase):
           for t1 in range(3):
             if i0 != i1 and t0 != t1:
               self.no_quadratic_biases(dqm, i0, t0, i1, t1)
+
+
+  ucp_instance_2: UCP = UCP(
+    ExperimentParameters(2, 2),
+    [30, 50],
+    [
+      CombustionPlant(0, 1, 0, 10, 30, 10, 20),
+      CombustionPlant(0, 1, 0, 10, 30, 10, 20, initially_on=True)
+    ]
+  )
+
+  def test_linear_2_all_1(self):
+    dqm: UCP_DQM = UCP_DQM(self.ucp_instance_2)
+
+    self.linear_biases(dqm, 0, 0, [3400, 3220, 3230, 3440])
+    self.linear_biases(dqm, 1, 0, [3420, 3210, 3220, 3430])
+
+    linear_biases_t_1: List[float] = [3400, 3010, 2820, 2830]
+    self.linear_biases(dqm, 0, 1, linear_biases_t_1)
+    self.linear_biases(dqm, 1, 1, linear_biases_t_1)
+
+  def test_linear_2_cost_2(self):
+    dqm: UCP_DQM = UCP_DQM(self.ucp_instance_2, y_c=2)
+
+    self.linear_biases(dqm, 0, 0, [3400, 3230, 3250, 3470])
+    self.linear_biases(dqm, 1, 0, [3420, 3220, 3240, 3460])
+
+    linear_biases_t_1: List[float] = [3400, 3020, 2840, 2860]
+    self.linear_biases(dqm, 0, 1, linear_biases_t_1)
+    self.linear_biases(dqm, 1, 1, linear_biases_t_1)
+
+  def test_linear_2_demand_2(self):
+    dqm: UCP_DQM = UCP_DQM(self.ucp_instance_2, y_d=2)
+
+    self.linear_biases(dqm, 0, 0, [6800, 6420, 6430, 6840])
+    self.linear_biases(dqm, 1, 0, [6820, 6410, 6420, 6830])
+
+    linear_biases_t_1: List[float] = [6800, 6010, 5620, 5630]
+    self.linear_biases(dqm, 0, 1, linear_biases_t_1)
+    self.linear_biases(dqm, 1, 1, linear_biases_t_1)
+
+  def test_linear_2_startup_2(self):
+    dqm: UCP_DQM = UCP_DQM(self.ucp_instance_2, y_s=2)
+
+    self.linear_biases(dqm, 0, 0, [3400, 3230, 3240, 3450])
+    self.linear_biases(dqm, 1, 0, [3440, 3210, 3220, 3430])
+
+    linear_biases_t_1: List[float] = [3400, 3010, 2820, 2830]
+    self.linear_biases(dqm, 0, 1, linear_biases_t_1)
+    self.linear_biases(dqm, 1, 1, linear_biases_t_1)
+
+  def test_quadratic_startup_2_1(self):
+    dqm: UCP_DQM = UCP_DQM(self.ucp_instance_2)
+
+    S: List[List[float]] = [[ 0, 10, 10, 10],
+                            [20,  0,  0,  0],
+                            [20,  0,  0,  0],
+                            [20,  0,  0,  0]]
+
+    for i in range(2):
+      self.quadratic_biases(dqm, i, 0, i, 1, S)
+
+  def test_quadratic_startup_2_2(self):
+    dqm: UCP_DQM = UCP_DQM(self.ucp_instance_2, y_s=2)
+
+    S: List[List[float]] = [[ 0, 20, 20, 20],
+                            [40,  0,  0,  0],
+                            [40,  0,  0,  0],
+                            [40,  0,  0,  0]]
+
+    for i in range(2):
+      self.quadratic_biases(dqm, i, 0, i, 1, S)
+
+  def test_quadratic_demand_2_1(self):
+    dqm: UCP_DQM = UCP_DQM(self.ucp_instance_2)
+
+    for t in range(2):
+      self.quadratic_biases(dqm, 0, t, 1, t, [[0,   0,   0,   0],
+                                              [0, 100, 200, 300],
+                                              [0, 200, 400, 600],
+                                              [0, 300, 600, 900]])
+
+  def test_quadratic_zeros_2(self):
+    dqm: UCP_DQM = UCP_DQM(self.ucp_instance_2)
+
+    for i0 in range(2):
+      for i1 in range(2):
+        for t0 in range(2):
+          for t1 in range(2):
+            if i0 != i1 and t0 != t1:
+              self.no_quadratic_biases(dqm, i0, t0, i1, t1)
