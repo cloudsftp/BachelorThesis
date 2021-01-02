@@ -101,3 +101,21 @@ class TestDQMAdjust(unittest.TestCase):
     dqm = UCP_DQM(ucp)
     sol_adjusted: UCP_Solution = dqm.optimize(DQMSimulator(), adjust=True)
     self.power_levels(sol_adjusted, [[30], [30]])
+
+  def test_adjust_dont_violate_pmin_single(self):
+    ucp: UCP = UCP(
+      ExperimentParameters(1, 2),
+      [70],
+      [
+        CombustionPlant(0, 1, 0, 10, 70, 0, 0),
+        CombustionPlant(0, 1, 0, 50, 70, 0, 0)
+      ]
+    )
+
+    dqm: UCP_DQM = UCP_DQM(ucp)
+    sol_unadjusted: UCP_Solution = dqm.optimize(DQMSimulator(), adjust=False)
+    self.power_levels(sol_unadjusted, [[30], [50]])
+
+    dqm = UCP_DQM(ucp)
+    sol_adjusted: UCP_Solution = dqm.optimize(DQMSimulator(), adjust=True)
+    self.power_levels(sol_adjusted, [[20], [50]])

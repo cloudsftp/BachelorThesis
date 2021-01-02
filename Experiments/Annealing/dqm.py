@@ -152,9 +152,12 @@ class UCP_DQM(object):
           u[i].append(False)
 
   def adjust_variables(self, u: List[List[bool]], p: List[List[float]]) -> None:
+    print('Adjusting UCP solution...')
     for t in range(self.ucp.parameters.num_loads):
       adjust: List[bool] = [u[i][t] for i in range(self.ucp.parameters.num_plants)]
       delta: float = self.ucp.loads[t] - sum([p[i][t] for i in range(self.ucp.parameters.num_plants)])
+
+      print('Differs by {} at time {}.'.format(delta, t))
 
       while True:
         if delta == 0 or not functools.reduce(lambda a,b: a or b, adjust):
@@ -167,10 +170,16 @@ class UCP_DQM(object):
           if adjust[i]:
             p[i][t] += adjustment
             Pmax: float = self.ucp.plants[i].Pmax
+            Pmin: float = self.ucp.plants[i].Pmin
 
             if p[i][t] > Pmax:
               delta += p[i][t] - Pmax
               p[i][t] = Pmax
+              adjust[i] = False
+
+            elif p[i][t] < Pmin:
+              delta += p[i][t] - Pmin
+              p[i][t] = Pmin
               adjust[i] = False
 
   def optimize(self, sampler, adjust: bool = True) -> UCP_Solution:
@@ -186,12 +195,3 @@ class UCP_DQM(object):
 
     solution: UCP_Solution = UCP_Solution(self.ucp, samples.info['run_time'], True, self.ucp.calculate_o(u, p), u, p)
     return solution
-
-if __name__ == "__main__":
-  ucp = build_ucp(ExperimentParameters(2, 2))
-  print(ucp)
-
-  ucp_dqm = UCP_DQM(ucp, max_h=100)
-  solution = ucp_dqm.optimize(DQMSimulator())
-  print(solution)
-
