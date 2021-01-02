@@ -1,0 +1,98 @@
+{
+    "ucp": {
+        "parameters": {
+            "num_loads": 2,
+            "num_plants": 4,
+            "offset_loads": 0
+        },
+        "loads": [
+            1986.5,
+            1946.3938009280969
+        ],
+        "plants": [
+            {
+                "A": 95.856,
+                "B": 7.374,
+                "C": 0.047,
+                "Pmin": 193.55,
+                "Pmax": 553,
+                "AU": 4.39635,
+                "AD": 0,
+                "initially_on": false,
+                "type": "coal, subcritical"
+            },
+            {
+                "A": 96.279,
+                "B": 7.592,
+                "C": 0.042,
+                "Pmin": 261.45,
+                "Pmax": 747,
+                "AU": 5.93865,
+                "AD": 0,
+                "initially_on": false,
+                "type": "coal, subcritical"
+            },
+            {
+                "A": 95.856,
+                "B": 7.374,
+                "C": 0.047,
+                "Pmin": 145.6,
+                "Pmax": 773,
+                "AU": 8.275738,
+                "AD": 0,
+                "initially_on": false,
+                "type": "coal, supercritical"
+            },
+            {
+                "A": 96.279,
+                "B": 7.592,
+                "C": 0.042,
+                "Pmin": 380,
+                "Pmax": 1900,
+                "AU": 20.3414,
+                "AD": 0,
+                "initially_on": false,
+                "type": "coal, supercritical"
+            }
+        ]
+    },
+    "time": 4.988609,
+    "optimal": true,
+    "o": 116259.19405778633,
+    "u": [
+        [
+            true,
+            true
+        ],
+        [
+            true,
+            true
+        ],
+        [
+            true,
+            true
+        ],
+        [
+            true,
+            true
+        ]
+    ],
+    "p": [
+        [
+            495.9527288423625,
+            487.52160202555007
+        ],
+        [
+            494.0720836810722,
+            483.6070858965178
+        ],
+        [
+            499.03502530933633,
+            486.442748978955
+        ],
+        [
+            497.4401621672291,
+            488.82236402707406
+        ]
+    ]
+}
