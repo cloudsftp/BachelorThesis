@@ -9,7 +9,13 @@ of Binary Quadratic Models (BQM) or Quadratic Unconstrained Binary Optimization 
 The model, as seen in section (\ref{backg:annealing}), takes in a vector rather than a 2-dimensional matrix.
 That's why the indices of the variables $p_{i,t}$ have to be mapped, such that the result are just as many variables $p_{l}$.
 
-\todo{Mapping indices}
+\begin{align}
+  k:
+  \quad
+  \mathbb{I} \times \mathbb{T} \to \mathbb{K}:
+  \quad
+  k(i, t) = i \cdot | \mathbb{T} | + t
+\end{align}
 
 In the model below, $p_{i,t}$ is used, but this is to show, that
 
@@ -28,20 +34,39 @@ In the model below, $p_{i,t}$ is used, but this is to show, that
 \end{align}
 \end{subequations}
 
+When implementing the DQM, the discrete variables $p_{i, t}$ are added in the order specified by $k(i, t)$.
+This makes sure that the quadratic biases are added in the right orientation.
+
 \subsubsection{Discretizising Variables}
 
-Since the model is discrete, respectively the variables, the power levels have to be discretized.
+The power levels have to be discretized, since the model, respectively the variables, are discrete.
+To maximize the utilization of qbits on the QPU, every variable $p_{i, t}$ can have one of $2^{n_i}$ values.
+$n_i$ is chosen so that the difference $\delta_i$ between the non-zero power levels represented by the values of $p_{i, t}$
+is $5 < \delta_i \leq 10$.
+The power levels of the discrete values are represented as $P_i$.
+Their values are:
 
-\todo{Discretizise power levels}
+\begin{align}
+  P_i =
+  \quad \begin{pmatrix}
+    0 \\
+    P_{min, i} \\
+    P_{min, i} + \delta_i \\
+    P_{min, i} + 2 \cdot \delta_i \\
+    \vdots \\
+    P_{max, i}
+  \end{pmatrix}
+\end{align}
 
-Automaticcaly enforces constraint (\ref{formula:minlp.power}).
+This automatically enforces the constraint (\ref{formula:minlp.power}) that ensures the power limits to stay inside the limits of every power plant.
+This constraint thus is not found in the energy function (\ref{formula:dqm.start}).
 
 \subsection{Formulating the DQM}
 
 The formula we start with (\ref{formula:dqm.start}) includes the objective function and every constraint of the MINLP formulation (\ref{formula:minlp}).
 Except for the constraint (\ref{formula:minlp.power}) that makes sure the output of every power plant is within its limits.
 The formula is not in the standard form (\ref{formula:dqm.form}).
-To achieve this form, every summand of the formula has to be resolved.
+To achieve this form, the last summand has to be transformed and the linear parts and quadratic parts have to be combined into groups.
 
 \begin{align} \label{formula:dqm.start}
   E(p) = \gamma_c \sum_{i, t} F_i p_{i, t}
