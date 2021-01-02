@@ -59,27 +59,50 @@ Their values are:
 \end{align}
 
 This automatically enforces the constraint (\ref{formula:minlp.power}) that ensures the power limits to stay inside the limits of every power plant.
-This constraint thus is not found in the energy function (\ref{formula:dqm.start}).
+This constraint thus is not found in the energy function (\ref{formula:dqm.start.obj}-\ref{formula:dqm.start.demand}).
 
 \subsection{Formulating the DQM}
 
-The formula we start with (\ref{formula:dqm.start}) includes the objective function and every constraint of the MINLP formulation (\ref{formula:minlp}).
+The formula we start with (\ref{formula:dqm.start.obj}-\ref{formula:dqm.start.demand})
+includes the objective function and every constraint of the MINLP formulation (\ref{formula:minlp}).
 Except for the constraint (\ref{formula:minlp.power}) that makes sure the output of every power plant is within its limits.
+This is already enforced by the discretization of the power levels.
+
 The formula is not in the standard form (\ref{formula:dqm.form}).
 To achieve this form, the last summand has to be transformed and the linear parts and quadratic parts have to be combined into groups.
 
-\begin{align} \label{formula:dqm.start}
-  E(p) = \gamma_c \sum_{i, t} F_i p_{i, t}
-  + \gamma_s \sum_i \left(
+\begin{subequations}
+\begin{align}
+  E(p) =
+  &  \quad \gamma_c \sum_{i, t} F_i p_{i, t}
+  \label{formula:dqm.start.obj} \\
+  + & \quad \gamma_s \sum_i \left(
       u_{i, -1} S_i^U p_{i, 0}
       + \sum_{t > 0} S_i \left( p_{i, t-1} \otimes p_{i, t} \right)
     \right)
-  + \gamma_d \sum_t \left( \left( \sum_i P_i p_{i, t} \right) - l_t \right) ^2
+  \label{formula:dqm.start.startup} \\
+  + & \quad \gamma_d \sum_t \left( \left( \sum_i P_i p_{i, t} \right) - l_t \right)^2
+  \label{formula:dqm.start.demand}
 \end{align}
+\end{subequations}
 
 \subsubsection{Objective Function}
 
-\todo{Resolve objective function part}
+The first summand of the energy function represents the objective function (\ref{formula:minlp.obj}) without the startup and shutdown costs.
+The objective function simply takes the sum of the costs of operating the power plants at the level they are operating at at every time instance.
+This can be modeled by a vector that holds the cost of operating a power plant at the power lavel of the corresponding value.
+It is achieved by applying the cost function used in the objective function (\ref{formula:minlp.obj}) element wise to $P_i$:
+
+\begin{align}
+  F_i = \quad \begin{pmatrix}
+    0 \\
+    A_i + B_i \cdot P_{min_i} + C_i \cdot \left( P_{min, i} \right)^2 \\
+    A_i + B_i \cdot \left( P_{min_i} + \delta_i \right) + C_i \cdot \left( P_{min, i} + \delta_i \right)^2 \\
+    A_i + B_i \cdot \left( P_{min_i} + 2 \cdot \delta_i \right) + C_i \cdot \left( P_{min, i} + 2 \cdot \delta_i \right)^2 \\
+    \vdots \\
+    A_i + B_i \cdot \left( P_{max_i} \right) + C_i \cdot \left( P_{max, i} \right)^2 \\
+  \end{pmatrix}
+\end{align}
 
 \subsubsection{Startup and Shutdown Costs}
 
