@@ -77,7 +77,7 @@ To achieve this form, the last summand has to be transformed and the linear part
   &  \quad \gamma_c \sum_{i, t} F_i p_{i, t}
   \label{formula:dqm.start.obj} \\
   + & \quad \gamma_s \sum_i \left(
-      u_{i, -1} S_i^U p_{i, 0}
+      u_{i, -1} S_i^{(0)} p_{i, 0}
       + \sum_{t > 0} S_i \left( p_{i, t-1} \otimes p_{i, t} \right)
     \right)
   \label{formula:dqm.start.startup} \\
@@ -90,7 +90,7 @@ To achieve this form, the last summand has to be transformed and the linear part
 
 The first summand of the energy function represents the objective function (\ref{formula:minlp.obj}) without the startup and shutdown costs.
 The objective function simply takes the sum of the costs of operating the power plants at the level they are operating at at every time instance.
-This can be modeled by a vector that holds the cost of operating a power plant at the power lavel of the corresponding value.
+This can be modeled by a vector that holds the cost of operating a power plant at the power level of the corresponding value.
 It is achieved by applying the cost function used in the objective function (\ref{formula:minlp.obj}) element wise to $P_i$:
 
 \begin{align}
@@ -120,7 +120,7 @@ It is achieved by applying the cost function used in the objective function (\re
   &
   \gamma_c \sum_{i, t} F_i p_{i, t}
   + \gamma_s \sum_i \left(
-      u_{i, -1} S_i^U p_{i, 0}
+      u_{i, -1} S_i^{(0)} p_{i, 0}
       + \sum_{t > 0} S_i \left( p_{i, t-1} \otimes p_{i, t} \right)
     \right)
   \\ &
@@ -137,10 +137,8 @@ It is achieved by applying the cost function used in the objective function (\re
   + \sum_{i, t} \left(
     \gamma_c F_i + \gamma_d \left(P_i^2 - l_t P_i \right)
   \right) p_{i, t}
-  + \sum_i u_{i, -1} S_i^U p_{i, 0}
+  + \sum_i u_{i, -1} S_i^{(0)} p_{i, 0}
   \\ &
   + \sum_t l_t^2
 \end{align}
 \end{subequations}
-
-\todo{Explain where scalar products are used}
