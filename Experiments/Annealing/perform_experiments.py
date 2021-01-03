@@ -11,7 +11,7 @@ from UCP.unit_commitment_problem import ExperimentParameters, UCP, UCP_Solution
 
 
 def optimize_annealing(ucp: UCP) -> UCP_Solution:
-  ucp_dqm: UCP_DQM = UCP_DQM(ucp, y_d=200)
+  ucp_dqm: UCP_DQM = UCP_DQM(ucp)
   solution: UCP_Solution = ucp_dqm.optimize(LeapHybridDQMSampler())
   return solution
 
