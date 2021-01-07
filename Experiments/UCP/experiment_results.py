@@ -2,6 +2,7 @@
 
 
 import os
+import sys
 import argparse
 from typing import Dict, List, Optional
 
@@ -17,7 +18,8 @@ class ExperimentResults(object):
     self.sort_experiment_results()
 
 
-  def load_experiment_result(self, solution_file_name: str) -> UCP_Solution:
+  @staticmethod
+  def load_experiment_result(solution_file_name: str) -> UCP_Solution:
     return UCP_Solution.load_from(solution_file_name)
 
   def load_expertiment_results(self) -> None:
@@ -26,7 +28,7 @@ class ExperimentResults(object):
 
     for solution_file_name in solution_file_names:
       self.solutions.append(
-        self.load_experiment_result(
+        ExperimentResults.load_experiment_result(
           os.path.join(self.solution_dir_name, solution_file_name)
         )
       )
@@ -46,22 +48,54 @@ class ExperimentResults(object):
       solutions_list.append(solution)
 
 
-  def plot_time(self, num_plants: int, output_file_name: str) -> None:
+  def get_experiments(self, num_plants: int) -> List[UCP_Solution]:
     solutions_list: Optional[List[UCP_Solution]] = self.experiments_by_plants.get(num_plants)
 
     if not solutions_list:
       raise RuntimeError('No experiment results with {} power plants'.format(num_plants))
 
+    return solutions_list
+
+
+  def plot_time(self, num_plants: int, max_num_loads: int, output_file_name: str) -> None:
+    solutions_list: List[UCP_Solution] = self.get_experiments(num_plants)
+
     times: Dict[int, float] = {}
 
     for solution in solutions_list:
-      times[solution.ucp.parameters.num_loads] = solution.time
+      if solution.ucp.parameters.num_loads <= max_num_loads:
+        times[solution.ucp.parameters.num_loads] = solution.time
 
     time_series: pd.Series = pd.Series(times).sort_index()
 
     time_series.plot()
+
+    plt.xlabel('number of loads')
+    plt.ylabel('t (s)')
+
+    plt.tight_layout()
     plt.savefig(output_file_name)
 
+
+  def generate_table(self, num_plants: int, max_num_loads: int, output_file_name: str) -> None:
+    solutions_list: List[UCP_Solution] = self.get_experiments(num_plants)
+
+    with open(output_file_name, 'w') as file:
+      file.write('\\begin{tabular}{| r | r | r | r |}\n')
+      file.write('  \hline \n')
+      file.write('  Number of Loads & Objective function & Time (in seconds) & Time (in hours) \\\\ \n')
+      file.write('  \hline \hline \n')
+
+      for solution in solutions_list:
+        if solution.ucp.parameters.num_loads <= max_num_loads:
+          file.write('  {} & {:.3f} & {:.3f} & {:.3f} \\\\ \hline \n'.format(
+            solution.ucp.parameters.num_loads,
+            solution.o,
+            solution.time,
+            solution.time / 3600
+          ))
+
+      file.write('\\end{tabular}\n')
 
 if __name__ == "__main__":
   parser: argparse.ArgumentParser = argparse.ArgumentParser(description='Visualize results')
@@ -70,6 +104,7 @@ if __name__ == "__main__":
 
   parser.add_argument('-p', '--plot', action='store_true')
   parser.add_argument('-n', '--num', type=int)
+  parser.add_argument('-u', '--upper-load', type=int, default=sys.maxsize)
 
   parser.add_argument('-t', '--table', action='store_true')
   parser.add_argument('-o', '--output', type=str)
@@ -87,7 +122,6 @@ if __name__ == "__main__":
   results: ExperimentResults = ExperimentResults(solutions_dir)
 
   if args.plot:
-    results.plot_time(args.num, output_file_name)
-
-
-  # TODO: Implement table generator
+    results.plot_time(args.num, args.upper_load, output_file_name)
+  elif args.table:
+    results.generate_table(args.num, args.upper_load, output_file_name)
