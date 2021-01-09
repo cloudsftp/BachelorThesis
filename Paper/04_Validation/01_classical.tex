@@ -15,16 +15,16 @@ It is a branch and bound algorithm and utilizes linearization, bound reduction, 
 The optimizations are performed on the Excess Cluster of the HLRS, Stuttgart.
 \cite{ExcessHLRS,HLRS}
 
-The optimization of the problem has a really high time complexity.
+The optimization of the problem is of high time complexity.
 In the beginning with small inputs, it is very fast.
 As listed in table \ref{table:validation.classical.performance}, the optimization of 4 power plants with 2 units of time takes about 0.5 seconds.
 But as the input size grows, the time needed by the solver grows exponentially.
-When the input size is doubled --- 4 plants over 4 time units --- the optimization takes about 3.5 seconds.
-Adding another 2 time units, the optimization the takes 15.5 seconds.
+When the input size is doubled --- 4 plants over 4 units of time --- the optimization takes about 3.5 seconds.
+Adding another 2 units of time, the optimization takes 15.5 seconds.
 
-As the number of inputs grow even larger, the optimization grows even faster than exponentially.
-With a worst-case projection of the forst 4 data points, the time needed for optimization should multiply by 7 with every additional 2 units of time.
-That means, that the optimization of 4 power plants over 14 units of time should take about $0.5s \cdot 7^6 \approx 58,824s$.
+As the number of inputs grows larger, the optimization grows even faster than exponentially.
+With a worst-case projection of the first 4 data points, the time needed for optimization should multiply by 7 with every additional 2 units of time.
+That means, that the optimization of 4 power plants over 14 units of time should take about $0.5 \cdot 7^6 \approx 58,824$ seconds.
 But the data shows that it took about $311,144.9$ seconds.
 
 \begin{table}[ht]
@@ -33,6 +33,9 @@ But the data shows that it took about $311,144.9$ seconds.
   \caption{Results of classical optimization with four power plants.}
   \label{table:validation.classical.performance}
 \end{table}
+
+The diagram \ref{figure:validation.classical.performance} highlights the exponential nature of the optimization of the problem.
+It shows the time needed for optimization dependent on the input size --- the number of units of time.
 
 \begin{figure}[ht]
   \centering
