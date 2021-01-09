@@ -193,5 +193,6 @@ class UCP_DQM(object):
     if adjust:
       self.adjust_variables(u, p)
 
-    solution: UCP_Solution = UCP_Solution(self.ucp, samples.info['run_time'], True, self.ucp.calculate_o(u, p), u, p)
+    time: float = samples.info['run_time'] / (10 ** 6)
+    solution: UCP_Solution = UCP_Solution(self.ucp, time, True, self.ucp.calculate_o(u, p), u, p)
     return solution

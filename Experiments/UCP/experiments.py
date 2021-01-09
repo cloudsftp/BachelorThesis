@@ -9,15 +9,15 @@ from Data.build_ucp import build_ucp
 from UCP.unit_commitment_problem import UCP, UCP_Solution, ExperimentParameters
 
 
-def write_solution(solution: UCP_Solution, parameters: ExperimentParameters, path: str) -> None:
-  file_name = parameters.to_file_name('classical')
+def write_solution(solution: UCP_Solution, parameters: ExperimentParameters, path: str, prefix: str) -> None:
+  file_name = parameters.to_file_name(prefix)
 
   if not os.path.exists(path):
     os.makedirs(path)
 
   solution.save_to(os.path.join(path, file_name))
 
-def perform_experiment(parameters: ExperimentParameters, optimize_fun: Callable, path: str) -> None:
+def perform_experiment(parameters: ExperimentParameters, optimize_fun: Callable, path: str, prefix: str) -> None:
     print(
       'Experiment: {:3} loads, {:3} plants'
       .format(parameters.num_loads, parameters.num_plants)
@@ -29,7 +29,7 @@ def perform_experiment(parameters: ExperimentParameters, optimize_fun: Callable,
 
     solution = optimize_fun(ucp)
 
-    write_solution(solution, parameters, path)
+    write_solution(solution, parameters, path, prefix)
 
     print(
       'Time: {:15.3f} seconds\n'
@@ -38,15 +38,15 @@ def perform_experiment(parameters: ExperimentParameters, optimize_fun: Callable,
 
 def perform_experiments(num_loads_start: int, num_loads_end: int, num_loads_step, \
                         num_plants_start: int, num_plants_end: int, num_plants_step, \
-                        optimize_fun: Callable, path: str) -> None:
+                        optimize_fun: Callable, path: str, prefix: str) -> None:
 
   for num_plants in range(num_plants_start, num_plants_end + 1, num_plants_step):
     for num_loads in range(num_loads_start, num_loads_end + 1, num_loads_step):
 
       parameters = ExperimentParameters(num_loads, num_plants)
-      perform_experiment(parameters, optimize_fun, path)
+      perform_experiment(parameters, optimize_fun, path, prefix)
 
-def experiments_main(optimize_fun: Callable, path: str, *argv) -> None:
+def experiments_main(optimize_fun: Callable, path: str, prefix: str, *argv) -> None:
   parser: argparse.ArgumentParser = argparse.ArgumentParser(description='Perform optimization experiments.')
   parser.add_argument('-o', '--one-shot', help='Perform one experiment only, range disabled. Lower bound is used.',
                       action='store_true')
@@ -75,4 +75,4 @@ def experiments_main(optimize_fun: Callable, path: str, *argv) -> None:
 
   perform_experiments(num_loads_start, num_loads_end, num_loads_step, \
                       num_plants_start, num_plants_end, num_plants_step, \
-                      optimize_fun, path)
+                      optimize_fun, path, prefix)

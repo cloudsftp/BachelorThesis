@@ -14,4 +14,4 @@ def optimize_classical(ucp: UCP) -> UCP_Solution:
 
 
 if __name__ == "__main__":
-  experiments_main(optimize_classical, os.path.join('Classical', 'Solutions'), *argv[1:])
+  experiments_main(optimize_classical, os.path.join('Classical', 'Solutions'), 'classical', *argv[1:])
