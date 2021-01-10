@@ -2,12 +2,11 @@
 
 import os
 from sys import argv
-from dwave.cloud.client import Client
-from dwave.system.samplers.leap_hybrid_sampler import LeapHybridDQMSampler
+from dwave.cloud.client import Client # type: ignore
+from dwave.system.samplers.leap_hybrid_sampler import LeapHybridDQMSampler # type: ignore
 from Annealing.dqm import UCP_DQM
-from Data.build_ucp import build_ucp
 from UCP.experiments import experiments_main
-from UCP.unit_commitment_problem import ExperimentParameters, UCP, UCP_Solution
+from UCP.unit_commitment_problem import UCP, UCP_Solution
 
 
 def optimize_annealing(ucp: UCP) -> UCP_Solution:
