@@ -57,13 +57,13 @@ class ExperimentResults(object):
     return solutions_list
 
 
-  def plot_time(self, num_plants: int, max_num_loads: int, output_file_name: str) -> None:
+  def plot_time(self, num_plants: int, loads: List[int], output_file_name: str) -> None:
     solutions_list: List[UCP_Solution] = self.get_experiments(num_plants)
 
     times: Dict[int, float] = {}
 
     for solution in solutions_list:
-      if solution.ucp.parameters.num_loads <= max_num_loads:
+      if solution.ucp.parameters.num_loads in loads:
         times[solution.ucp.parameters.num_loads] = solution.time
 
     time_series: pd.Series = pd.Series(times).sort_index()
@@ -71,28 +71,27 @@ class ExperimentResults(object):
     time_series.plot()
 
     plt.xlabel('number of loads')
-    plt.ylabel('t (s)')
+    plt.ylabel('t in seconds')
 
     plt.tight_layout()
     plt.savefig(output_file_name)
 
 
-  def generate_table(self, num_plants: int, max_num_loads: int, output_file_name: str) -> None:
+  def generate_table(self, num_plants: int, loads: List[int], output_file_name: str) -> None:
     solutions_list: List[UCP_Solution] = self.get_experiments(num_plants)
 
     with open(output_file_name, 'w') as file:
-      file.write('\\begin{tabular}{| r | r | r | r |}\n')
+      file.write('\\begin{tabular}{| r | r | r |}\n')
       file.write('  \hline \n')
-      file.write('  Number of Loads & Objective function & Time (in seconds) & Time (in hours) \\\\ \n')
+      file.write('  Number of Loads & Objective function & Time (in seconds) \\\\ \n')
       file.write('  \hline \hline \n')
 
       for solution in solutions_list:
-        if solution.ucp.parameters.num_loads <= max_num_loads:
-          file.write('  {} & {:.3f} & {:.3f} & {:.3f} \\\\ \hline \n'.format(
+        if solution.ucp.parameters.num_loads in loads:
+          file.write('  {} & {:.3f} & {:.3f} \\\\ \hline \n'.format(
             solution.ucp.parameters.num_loads,
             solution.o,
-            solution.time,
-            solution.time / 3600
+            solution.time
           ))
 
       file.write('\\end{tabular}\n')
@@ -100,11 +99,13 @@ class ExperimentResults(object):
 if __name__ == "__main__":
   parser: argparse.ArgumentParser = argparse.ArgumentParser(description='Visualize results')
 
-  parser.add_argument('-s', '--solutions-dir', type=str)
+  parser.add_argument('--solutions-dir', type=str)
 
   parser.add_argument('-p', '--plot', action='store_true')
-  parser.add_argument('-n', '--num', type=int)
-  parser.add_argument('-u', '--upper-load', type=int, default=sys.maxsize)
+  parser.add_argument('--num', type=int)
+  parser.add_argument('--lower-load', type=int, default=0)
+  parser.add_argument('--upper-load', type=int, default=500)
+  parser.add_argument('--skip-loads', type=int, default=1)
 
   parser.add_argument('-t', '--table', action='store_true')
   parser.add_argument('-o', '--output', type=str)
@@ -121,7 +122,13 @@ if __name__ == "__main__":
 
   results: ExperimentResults = ExperimentResults(solutions_dir)
 
+  index_range: List[int] = range(args.lower_load, args.upper_load + 1)
+  loads: List[int] = []
+  for i in range(len(index_range)):
+    if i % args.skip_loads == 0:
+      loads.append(index_range[i])
+
   if args.plot:
-    results.plot_time(args.num, args.upper_load, output_file_name)
+    results.plot_time(args.num, loads, output_file_name)
   elif args.table:
-    results.generate_table(args.num, args.upper_load, output_file_name)
+    results.generate_table(args.num, loads, output_file_name)
