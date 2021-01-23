@@ -1,6 +1,7 @@
 #!/bin/python3.8
 
 import math
+from os import linesep
 from typing import Dict, List, Tuple
 from qiskit.optimization import QuadraticProgram # type: ignore
 import numpy as np # type: ignore
@@ -56,6 +57,8 @@ class UCP_QUBO(object):
     index: Tuple[str, str] = (self.p[i1][t1][k1].name, self.p[i2][t2][k2].name)
     if not quadratic.get(index):
       quadratic[index] = val
+    else:
+      print('Quadratic constraint overwritten')
 
   def quadratic_startup_shutdown(self, quadratic: Dict[str, float], y_s: float) -> None:
     for i in range(self.ucp.parameters.num_plants):
@@ -92,6 +95,32 @@ class UCP_QUBO(object):
 
     return quadratic
 
+  def add_linear( self, linear: Dict[str, float],
+                  i: int, t: int, k: int,
+                  val: float) -> None:
+    index: str = self.p[i][t][k].name
+    if not linear.get(index):
+      linear[index] = val
+    else:
+      print('Linear constraint overwritten')
+
+  def get_linear(self, y_c: float, y_s: float, y_d: float, y_o: float) -> Dict[str, float]:
+    linear: Dict[str, float] = {}
+
+    for i in range(self.ucp.parameters.num_plants):
+      plant: CombustionPlant = self.ucp.plants[i]
+      for t in range(self.ucp.parameters.num_loads):
+        for k in range(len(self.P[i])):
+          value: float = 0
+
+          value += y_c * (plant.A + plant.B * self.P[i][k] + plant.C * (self.P[i][k] ** 2))
+          value += y_d * (self.P[i][k] ** 2 - self.ucp.loads[t] * self.P[i][k])
+          value -= y_o
+
+          self.add_linear(linear, i, t, k, value)
+
+    return linear
+
 
   def __init__(self, ucp, y_c: float = 1, y_s: float = 1, y_d: float = 1, y_o: float = 1, max_h: float = 10) -> None:
     self.model = QuadraticProgram()
@@ -101,7 +130,8 @@ class UCP_QUBO(object):
     self.init_variables()
 
     quadratic: Dict[Tuple[str, str], float] = self.get_quadratic(y_s, y_d, y_o)
-    self.model.minimize(quadratic=quadratic)
+    linear: Dict[str, float] = self.get_linear(y_c, y_s, y_d, y_o)
+    self.model.minimize(linear=linear, quadratic=quadratic)
 
 
 if __name__ == "__main__":
