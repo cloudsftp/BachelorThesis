@@ -1,7 +1,8 @@
 #/bin/python3.8
 
 import os
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
+import functools
 from typing import List
 
 from Util.json_file_handler import write_dataclass_to, read_dataclass_from
@@ -87,3 +88,31 @@ class UCP_Solution(object):
   @staticmethod
   def load_from(file_name):
     return read_dataclass_from(file_name, UCP_Solution)
+
+  def adjust_variables(self) -> None:
+    for t in range(self.ucp.parameters.num_loads):
+      adjust: List[bool] = [self.u[i][t] for i in range(self.ucp.parameters.num_plants)]
+      delta: float = self.ucp.loads[t] - sum([self.p[i][t] for i in range(self.ucp.parameters.num_plants)])
+
+      while True:
+        if delta == 0 or not functools.reduce(lambda a,b: a or b, adjust):
+          break
+
+        adjustment: float = delta / sum([1 if b else 0 for b in adjust])
+        delta = 0
+
+        for i in range(self.ucp.parameters.num_plants):
+          if adjust[i]:
+            self.p[i][t] += adjustment
+            Pmax: float = self.ucp.plants[i].Pmax
+            Pmin: float = self.ucp.plants[i].Pmin
+
+            if self.p[i][t] > Pmax:
+              delta += self.p[i][t] - Pmax
+              self.p[i][t] = Pmax
+              adjust[i] = False
+
+            elif self.p[i][t] < Pmin:
+              delta += self.p[i][t] - Pmin
+              self.p[i][t] = Pmin
+              adjust[i] = False

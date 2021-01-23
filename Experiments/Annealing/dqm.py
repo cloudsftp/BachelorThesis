@@ -3,7 +3,6 @@
 
 import math
 from typing import Any, List
-import functools
 from dimod import DiscreteQuadraticModel # type: ignore
 from dimod.sampleset import SampleSet # type: ignore
 from numpy.lib.function_base import append # type: ignore
@@ -50,7 +49,6 @@ class UCP_DQM(object):
 
       for t in range(self.ucp.parameters.num_loads):
         p_i.append(self.model.add_variable(var_size))
-
       self.p.append(p_i)
 
   def calculate_c(self, y_d: float) -> float:
@@ -151,36 +149,6 @@ class UCP_DQM(object):
         else:
           u[i].append(False)
 
-  def adjust_variables(self, u: List[List[bool]], p: List[List[float]]) -> None:
-    print('Adjusting UCP solution...')
-    for t in range(self.ucp.parameters.num_loads):
-      adjust: List[bool] = [u[i][t] for i in range(self.ucp.parameters.num_plants)]
-      delta: float = self.ucp.loads[t] - sum([p[i][t] for i in range(self.ucp.parameters.num_plants)])
-
-      print('Differs by {} at time {}.'.format(delta, t))
-
-      while True:
-        if delta == 0 or not functools.reduce(lambda a,b: a or b, adjust):
-          break
-
-        adjustment: float = delta / sum([1 if b else 0 for b in adjust])
-        delta = 0
-
-        for i in range(self.ucp.parameters.num_plants):
-          if adjust[i]:
-            p[i][t] += adjustment
-            Pmax: float = self.ucp.plants[i].Pmax
-            Pmin: float = self.ucp.plants[i].Pmin
-
-            if p[i][t] > Pmax:
-              delta += p[i][t] - Pmax
-              p[i][t] = Pmax
-              adjust[i] = False
-
-            elif p[i][t] < Pmin:
-              delta += p[i][t] - Pmin
-              p[i][t] = Pmin
-              adjust[i] = False
 
   def optimize(self, sampler, adjust: bool = True) -> UCP_Solution:
     samples: SampleSet = sampler.sample_dqm(self.model)
@@ -190,9 +158,11 @@ class UCP_DQM(object):
     p: List[List[float]] = []
 
     self.get_variables_from_sample(sample, u, p)
-    if adjust:
-      self.adjust_variables(u, p)
 
     time: float = samples.info['run_time'] / (10 ** 6)
     solution: UCP_Solution = UCP_Solution(self.ucp, time, True, self.ucp.calculate_o(u, p), u, p)
+
+    if adjust:
+      solution.adjust_variables()
+
     return solution
