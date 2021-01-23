@@ -121,6 +121,13 @@ class UCP_QUBO(object):
 
     return linear
 
+  def get_constant(self, y_o: float) -> float:
+    value: float = y_o
+    for t in range(self.ucp.parameters.num_loads):
+      value += self.ucp.loads[t]
+
+    return value
+
 
   def __init__(self, ucp, y_c: float = 1, y_s: float = 1, y_d: float = 1, y_o: float = 1, max_h: float = 10) -> None:
     self.model = QuadraticProgram()
@@ -131,7 +138,8 @@ class UCP_QUBO(object):
 
     quadratic: Dict[Tuple[str, str], float] = self.get_quadratic(y_s, y_d, y_o)
     linear: Dict[str, float] = self.get_linear(y_c, y_s, y_d, y_o)
-    self.model.minimize(linear=linear, quadratic=quadratic)
+    constant: float = self.get_constant(y_o)
+    self.model.minimize(constant, linear, quadratic)
 
 
 if __name__ == "__main__":
