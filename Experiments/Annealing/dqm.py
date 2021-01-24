@@ -11,7 +11,7 @@ from dwave.system import LeapHybridDQMSampler # type: ignore
 import numpy as np # type: ignore
 
 from Data.build_ucp import build_ucp
-from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCP_Solution
+from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCPSolution
 
 
 class UCP_DQM(object):
@@ -144,13 +144,9 @@ class UCP_DQM(object):
         value: float = self.P[i][value_index]
 
         p[i].append(value)
-        if p[i][t] > 0:
-          u[i].append(True)
-        else:
-          u[i].append(False)
+        u[i].append(p[i][t] > 0)
 
-
-  def optimize(self, sampler, adjust: bool = True) -> UCP_Solution:
+  def optimize(self, sampler, adjust: bool = True) -> UCPSolution:
     samples: SampleSet = sampler.sample_dqm(self.model)
     sample: List[float] = samples.record[0][0]
 
@@ -160,7 +156,7 @@ class UCP_DQM(object):
     self.get_variables_from_sample(sample, u, p)
 
     time: float = samples.info['run_time'] / (10 ** 6)
-    solution: UCP_Solution = UCP_Solution(self.ucp, time, True, self.ucp.calculate_o(u, p), u, p)
+    solution: UCPSolution = UCPSolution(self.ucp, time, True, self.ucp.calculate_o(u, p), u, p)
 
     if adjust:
       solution.adjust_variables()

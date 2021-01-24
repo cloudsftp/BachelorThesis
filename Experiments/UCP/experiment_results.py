@@ -8,7 +8,7 @@ from typing import Dict, List, Optional
 
 import matplotlib.pyplot as plt # type: ignore
 import pandas as pd # type: ignore
-from UCP.unit_commitment_problem import UCP_Solution
+from UCP.unit_commitment_problem import UCPSolution
 
 
 class ExperimentResults(object):
@@ -19,12 +19,12 @@ class ExperimentResults(object):
 
 
   @staticmethod
-  def load_experiment_result(solution_file_name: str) -> UCP_Solution:
-    return UCP_Solution.load_from(solution_file_name)
+  def load_experiment_result(solution_file_name: str) -> UCPSolution:
+    return UCPSolution.load_from(solution_file_name)
 
   def load_expertiment_results(self) -> None:
     solution_file_names: List[str] = os.listdir(self.solution_dir_name)
-    self.solutions: List[UCP_Solution] = []
+    self.solutions: List[UCPSolution] = []
 
     for solution_file_name in solution_file_names:
       self.solutions.append(
@@ -35,11 +35,11 @@ class ExperimentResults(object):
 
 
   def sort_experiment_results(self) -> None:
-    self.experiments_by_plants: Dict[int, List[UCP_Solution]] = {}
+    self.experiments_by_plants: Dict[int, List[UCPSolution]] = {}
 
     for solution in self.solutions:
       num_plants: int = solution.ucp.parameters.num_plants
-      solutions_list: Optional[List[UCP_Solution]] = self.experiments_by_plants.get(num_plants)
+      solutions_list: Optional[List[UCPSolution]] = self.experiments_by_plants.get(num_plants)
 
       if not solutions_list:
         self.experiments_by_plants[num_plants] = []
@@ -48,8 +48,8 @@ class ExperimentResults(object):
       solutions_list.append(solution)
 
 
-  def get_experiments(self, num_plants: int) -> List[UCP_Solution]:
-    solutions_list: Optional[List[UCP_Solution]] = self.experiments_by_plants.get(num_plants)
+  def get_experiments(self, num_plants: int) -> List[UCPSolution]:
+    solutions_list: Optional[List[UCPSolution]] = self.experiments_by_plants.get(num_plants)
 
     if not solutions_list:
       raise RuntimeError('No experiment results with {} power plants'.format(num_plants))
@@ -58,7 +58,7 @@ class ExperimentResults(object):
 
 
   def plot_time(self, num_plants: int, max_num_loads: int, output_file_name: str) -> None:
-    solutions_list: List[UCP_Solution] = self.get_experiments(num_plants)
+    solutions_list: List[UCPSolution] = self.get_experiments(num_plants)
 
     times: Dict[int, float] = {}
 
@@ -78,7 +78,7 @@ class ExperimentResults(object):
 
 
   def generate_table(self, num_plants: int, max_num_loads: int, output_file_name: str) -> None:
-    solutions_list: List[UCP_Solution] = self.get_experiments(num_plants)
+    solutions_list: List[UCPSolution] = self.get_experiments(num_plants)
 
     with open(output_file_name, 'w') as file:
       file.write('\\begin{tabular}{| r | r | r | r |}\n')

@@ -6,7 +6,7 @@ import unittest
 from Annealing.dqm import UCP_DQM
 from Annealing.dqm_simulator import DQMSimulator
 
-from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCP_Solution
+from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCPSolution
 
 
 class TestDQMAdjust(unittest.TestCase):
@@ -26,7 +26,7 @@ class TestDQMAdjust(unittest.TestCase):
     for i in range(len(actual)):
       self.assertFloatArrayCustomEqual(expected[i], actual[i])
 
-  def power_levels(self, ucp_solution: UCP_Solution, p: List[List[float]]):
+  def power_levels(self, ucp_solution: UCPSolution, p: List[List[float]]):
     self.assertFloat2DimArrayCustomEqual(ucp_solution.p, p)
 
 
@@ -41,11 +41,11 @@ class TestDQMAdjust(unittest.TestCase):
     )
 
     dqm: UCP_DQM = UCP_DQM(ucp)
-    sol_unadjusted: UCP_Solution = dqm.optimize(DQMSimulator(), adjust=False)
+    sol_unadjusted: UCPSolution = dqm.optimize(DQMSimulator(), adjust=False)
     self.power_levels(sol_unadjusted, [[10], [10]])
 
     dqm = UCP_DQM(ucp)
-    sol_adjusted: UCP_Solution = dqm.optimize(DQMSimulator(), adjust=True)
+    sol_adjusted: UCPSolution = dqm.optimize(DQMSimulator(), adjust=True)
     self.power_levels(sol_adjusted, [[15], [15]])
 
   def test_dont_adjust_off_plants(self):
@@ -59,11 +59,11 @@ class TestDQMAdjust(unittest.TestCase):
     )
 
     dqm: UCP_DQM = UCP_DQM(ucp)
-    sol_unadjusted: UCP_Solution = dqm.optimize(DQMSimulator(), adjust=False)
+    sol_unadjusted: UCPSolution = dqm.optimize(DQMSimulator(), adjust=False)
     self.power_levels(sol_unadjusted, [[0], [0]])
 
     dqm = UCP_DQM(ucp)
-    sol_adjusted: UCP_Solution = dqm.optimize(DQMSimulator(), adjust=True)
+    sol_adjusted: UCPSolution = dqm.optimize(DQMSimulator(), adjust=True)
     self.power_levels(sol_adjusted, [[0], [0]])
 
   def test_adjust_dont_violate_pmax_single(self):
@@ -77,11 +77,11 @@ class TestDQMAdjust(unittest.TestCase):
     )
 
     dqm: UCP_DQM = UCP_DQM(ucp)
-    sol_unadjusted: UCP_Solution = dqm.optimize(DQMSimulator(), adjust=False)
+    sol_unadjusted: UCPSolution = dqm.optimize(DQMSimulator(), adjust=False)
     self.power_levels(sol_unadjusted, [[30], [40]])
 
     dqm = UCP_DQM(ucp)
-    sol_adjusted: UCP_Solution = dqm.optimize(DQMSimulator(), adjust=True)
+    sol_adjusted: UCPSolution = dqm.optimize(DQMSimulator(), adjust=True)
     self.power_levels(sol_adjusted, [[30], [50]])
 
   def test_adjust_dont_violate_pmax_all(self):
@@ -95,11 +95,11 @@ class TestDQMAdjust(unittest.TestCase):
     )
 
     dqm: UCP_DQM = UCP_DQM(ucp)
-    sol_unadjusted: UCP_Solution = dqm.optimize(DQMSimulator(), adjust=False)
+    sol_unadjusted: UCPSolution = dqm.optimize(DQMSimulator(), adjust=False)
     self.power_levels(sol_unadjusted, [[30], [30]])
 
     dqm = UCP_DQM(ucp)
-    sol_adjusted: UCP_Solution = dqm.optimize(DQMSimulator(), adjust=True)
+    sol_adjusted: UCPSolution = dqm.optimize(DQMSimulator(), adjust=True)
     self.power_levels(sol_adjusted, [[30], [30]])
 
   def test_adjust_dont_violate_pmin_single(self):
@@ -113,9 +113,9 @@ class TestDQMAdjust(unittest.TestCase):
     )
 
     dqm: UCP_DQM = UCP_DQM(ucp)
-    sol_unadjusted: UCP_Solution = dqm.optimize(DQMSimulator(), adjust=False)
+    sol_unadjusted: UCPSolution = dqm.optimize(DQMSimulator(), adjust=False)
     self.power_levels(sol_unadjusted, [[30], [50]])
 
     dqm = UCP_DQM(ucp)
-    sol_adjusted: UCP_Solution = dqm.optimize(DQMSimulator(), adjust=True)
+    sol_adjusted: UCPSolution = dqm.optimize(DQMSimulator(), adjust=True)
     self.power_levels(sol_adjusted, [[20], [50]])

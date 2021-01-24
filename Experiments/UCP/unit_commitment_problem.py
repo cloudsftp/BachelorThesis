@@ -74,7 +74,7 @@ class UCP(object):
 
 
 @dataclass
-class UCP_Solution(object):
+class UCPSolution(object):
   ucp: UCP
   time: float
   optimal: bool
@@ -87,7 +87,7 @@ class UCP_Solution(object):
 
   @staticmethod
   def load_from(file_name):
-    return read_dataclass_from(file_name, UCP_Solution)
+    return read_dataclass_from(file_name, UCPSolution)
 
   def adjust_variables(self) -> None:
     for t in range(self.ucp.parameters.num_loads):

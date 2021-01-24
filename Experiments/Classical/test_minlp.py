@@ -6,12 +6,12 @@ import unittest
 
 from Classical.minlp import UCP_MINLP
 
-from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCP_Solution
+from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCPSolution
 
 
 class TestUCP(unittest.TestCase):
   @staticmethod
-  def optimize(ucp: UCP) -> UCP_Solution:
+  def optimize(ucp: UCP) -> UCPSolution:
     minlp: UCP_MINLP = UCP_MINLP(ucp)
     return minlp.optimize()
 
@@ -30,7 +30,7 @@ class TestUCP(unittest.TestCase):
     for i in range(len(actual)):
       self.assertFloatArrayCustomEqual(expected[i], actual[i])
 
-  def assert_solution(self, solution: UCP_Solution, \
+  def assert_solution(self, solution: UCPSolution, \
                       u: List[List[bool]] = None, p: List[List[float]] = None, o: float = None) -> None:
     self.assertTrue(solution.optimal)
 
@@ -47,7 +47,7 @@ class TestUCP(unittest.TestCase):
                   u: List[List[bool]] = None, p: List[List[float]] = None, o: float = None) -> None:
 
     ucp: UCP = UCP(parameters, load, plants)
-    solution: UCP_Solution = TestUCP.optimize(ucp)
+    solution: UCPSolution = TestUCP.optimize(ucp)
     self.assert_solution(solution, u, p, o)
 
   def single_plant(self, parameters: ExperimentParameters, load: List[float], plant: CombustionPlant, \

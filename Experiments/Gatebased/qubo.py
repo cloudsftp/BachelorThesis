@@ -1,13 +1,15 @@
 #!/bin/python3.8
 
 import math
-from os import linesep
 from typing import Dict, List, Tuple
 from qiskit.optimization import QuadraticProgram # type: ignore
 import numpy as np # type: ignore
 from qiskit.optimization.problems.variable import Variable # type: ignore
+from qiskit.optimization.algorithms import OptimizationResult # type: ignore
+from qiskit.aqua.algorithms import QAOA, NumPyMinimumEigensolver # type: ignore
+from qiskit.optimization.algorithms import MinimumEigenOptimizer, RecursiveMinimumEigenOptimizer # type: ignore
 
-from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP
+from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCPSolution
 
 
 class UCP_QUBO(object):
@@ -15,10 +17,6 @@ class UCP_QUBO(object):
   ucp: UCP
   p: List[List[List[Variable]]] # variables of model
   P: List[np.ndarray] # discretizised power levels
-
-  @staticmethod
-  def var_name(i: int, t: int, k: int) -> str:
-    return
 
   def discretizise_plants(self, max_h: float) -> None:
     self.P = []
@@ -60,7 +58,7 @@ class UCP_QUBO(object):
     else:
       print('Quadratic constraint overwritten')
 
-  def quadratic_startup_shutdown(self, quadratic: Dict[str, float], y_s: float) -> None:
+  def quadratic_startup_shutdown(self, quadratic: Dict[Tuple[str, str], float], y_s: float) -> None:
     for i in range(self.ucp.parameters.num_plants):
       AU: float = self.ucp.plants[i].AU
       AD: float = self.ucp.plants[i].AD
@@ -142,9 +140,47 @@ class UCP_QUBO(object):
     self.model.minimize(constant, linear, quadratic)
 
 
+  def get_variables_from_result(self, result: OptimizationResult, u: List[List[bool]], p: List[List[float]]) -> None:
+    for i in range(self.ucp.parameters.num_plants):
+      u.append([])
+      p.append([])
+
+      for t in range(self.ucp.parameters.num_loads):
+        value_indices: List[int] = []
+        for k in range(len(self.P[i])):
+          if result[self.p[i][t][k].name] == 1:
+            value_indices.append(k)
+
+        value: float = 0
+        num_indices: int = len(value_indices)
+        if num_indices > 0:
+          value = self.P[i][value_indices[(int) (num_indices / 2)]]
+          if num_indices > 1:
+            print('Warning: {} possible power levels for plant {} detected'.format(num_indices, i))
+
+        p[i].append(value)
+        u[i].append(p[i][t] > 0)
+
+  def optimize(self, solver, adjust: bool = True) -> UCPSolution:
+    result: OptimizationResult = solver.solve(self.model)
+
+    u: List[List[bool]] = []
+    p: List[List[float]] = []
+
+    self.get_variables_from_result(result, u, p)
+
+    time: float = -1
+    solution: UCPSolution = UCPSolution(self.ucp, time, True, self.ucp.calculate_o(u, p), u, p)
+
+    if adjust:
+      solution.adjust_variables()
+
+    return solution
+
+
 if __name__ == "__main__":
   ucp = UCP(ExperimentParameters(2, 2),
-    [5, 10],
+    [40, 50],
     [
       CombustionPlant(1, 1, 1, 10, 30, 1, 0),
       CombustionPlant(1, 1, 1, 10, 30, 0, 2)
@@ -153,3 +189,9 @@ if __name__ == "__main__":
 
   qubo = UCP_QUBO(ucp)
   qubo.model.prettyprint()
+
+  exact = NumPyMinimumEigensolver()
+  optimizer = MinimumEigenOptimizer(exact)
+  solver = RecursiveMinimumEigenOptimizer(min_eigen_optimizer=optimizer, min_num_vars=1, min_num_vars_optimizer=optimizer)
+  sol: UCPSolution = qubo.optimize(solver)
+  print(sol)

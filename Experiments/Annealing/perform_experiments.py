@@ -6,12 +6,12 @@ from dwave.cloud.client import Client # type: ignore
 from dwave.system.samplers.leap_hybrid_sampler import LeapHybridDQMSampler # type: ignore
 from Annealing.dqm import UCP_DQM
 from UCP.experiments import experiments_main
-from UCP.unit_commitment_problem import UCP, UCP_Solution
+from UCP.unit_commitment_problem import UCP, UCPSolution
 
 
-def optimize_annealing(ucp: UCP) -> UCP_Solution:
+def optimize_annealing(ucp: UCP) -> UCPSolution:
   ucp_dqm: UCP_DQM = UCP_DQM(ucp)
-  solution: UCP_Solution = ucp_dqm.optimize(LeapHybridDQMSampler())
+  solution: UCPSolution = ucp_dqm.optimize(LeapHybridDQMSampler())
   return solution
 
 if __name__ == "__main__":

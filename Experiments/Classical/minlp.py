@@ -14,7 +14,7 @@ from pyomo.environ import NonNegativeReals, Boolean # type: ignore
 from pyomo.opt import SolverFactory # type: ignore
 from pyomo.opt.results.solver import TerminationCondition # type: ignore
 
-from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCP_Solution
+from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCPSolution
 
 
 class UCP_MINLP(object):
@@ -117,7 +117,7 @@ class UCP_MINLP(object):
 
     TransformationFactory('gdp.bigm').apply_to(self.model)
 
-  def to_ucp_solution(self, results) -> UCP_Solution:
+  def to_ucp_solution(self, results) -> UCPSolution:
     time: float = results.solver.time
     optimal: bool = results.solver.termination_condition == TerminationCondition.optimal
 
@@ -130,9 +130,9 @@ class UCP_MINLP(object):
                                                         for t in self.model.T]
                                                         for i in self.model.I]
 
-    return UCP_Solution(self.ucp, time, optimal, o, u, p)
+    return UCPSolution(self.ucp, time, optimal, o, u, p)
 
-  def optimize(self, solver_command: str = 'couenne') -> UCP_Solution:
+  def optimize(self, solver_command: str = 'couenne') -> UCPSolution:
     ''' Optimize self.model and return the solution '''
     with SolverFactory(solver_command) as solver:
       results = solver.solve(self.model)

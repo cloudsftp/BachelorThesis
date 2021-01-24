@@ -6,10 +6,10 @@ import os
 import argparse
 from typing import Callable
 from Data.build_ucp import build_ucp
-from UCP.unit_commitment_problem import UCP, UCP_Solution, ExperimentParameters
+from UCP.unit_commitment_problem import UCP, UCPSolution, ExperimentParameters
 
 
-def write_solution(solution: UCP_Solution, parameters: ExperimentParameters, path: str, prefix: str) -> None:
+def write_solution(solution: UCPSolution, parameters: ExperimentParameters, path: str, prefix: str) -> None:
   file_name = parameters.to_file_name(prefix)
 
   if not os.path.exists(path):
