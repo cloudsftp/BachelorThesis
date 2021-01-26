@@ -2,14 +2,12 @@
 
 import math
 from typing import Dict, List, Tuple
-from qiskit.optimization import QuadraticProgram # type: ignore
 import numpy as np # type: ignore
+from qiskit.optimization import QuadraticProgram # type: ignore
 from qiskit.optimization.problems.variable import Variable # type: ignore
 from qiskit.optimization.algorithms import OptimizationResult # type: ignore
-from qiskit.aqua.algorithms import QAOA, NumPyMinimumEigensolver # type: ignore
-from qiskit.optimization.algorithms import MinimumEigenOptimizer, RecursiveMinimumEigenOptimizer # type: ignore
 
-from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCPSolution
+from UCP.unit_commitment_problem import CombustionPlant, UCP, UCPSolution
 
 
 class UCP_QUBO(object):
@@ -176,22 +174,3 @@ class UCP_QUBO(object):
       solution.adjust_variables()
 
     return solution
-
-
-if __name__ == "__main__":
-  ucp = UCP(ExperimentParameters(2, 2),
-    [40, 50],
-    [
-      CombustionPlant(1, 1, 1, 10, 30, 1, 0),
-      CombustionPlant(1, 1, 1, 10, 30, 0, 2)
-    ]
-  )
-
-  qubo = UCP_QUBO(ucp)
-  qubo.model.prettyprint()
-
-  exact = NumPyMinimumEigensolver()
-  optimizer = MinimumEigenOptimizer(exact)
-  solver = RecursiveMinimumEigenOptimizer(min_eigen_optimizer=optimizer, min_num_vars=1, min_num_vars_optimizer=optimizer)
-  sol: UCPSolution = qubo.optimize(solver)
-  print(sol)
