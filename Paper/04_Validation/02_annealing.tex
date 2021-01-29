@@ -1,13 +1,26 @@
 \section{Performance of Annealing-based Quantum Computers}
 
-\todo{Show prformance of Annealing-based QC}
+For the optimization using the Quantum Annealing hardware, the formulated DQM is sent to a hybrid solver at D-Wave.
+The hybrid solver does not put the DQM on quantum hardware directly.
+It classically searches the solution space.
+The hybrid solver speeds up this process by using quantum hardware to determine promising regions to explore next.
+\cite{DQMHybrid2020}
 
-\begin{table}
+The optimization of the DQM using the hybrid solver for small problems seems to have linear time complexity.
+Every time $10$ time instances are added to the problem size, the optimization takes about $0.1$ seconds longer.
+The results of the optimization and the time needed for the optimization are listed in table \ref{table:validation.annealing.performance}.
+The optimization of these problems takes no longer than $5.6$ seconds each.
+
+\begin{table}[ht]
   \centering
   \input{81_Tables/04_Validation/performance_annealing_p4.tex}
   \caption{Results of annealing optimization with four power plants.}
   \label{table:validation.annealing.performance}
 \end{table}
+
+In figure \ref{figure:validation.annealing.performance} the time complexity is displayed clearer.
+The time needed for optimizing problems with less than $15$ time instances also seems to be constant.
+After that, the linear time complexity is clearly visible.
 
 \begin{figure}[ht]
   \centering
@@ -15,3 +28,9 @@
   \caption{Time complexity of annealing optimization with four power plants.}
   \label{figure:validation.annealing.performance}
 \end{figure}
+
+This approach does not produce optimal solutions for the UCP.
+The summed power output of the single power plants does not meet the power demand because the DQM underestimates the demand part of the UCP.
+After retrieving the optimal DQM solution and translating it to a UCP solution, the program adjusts the power outputs of the power plants.
+It does so as described in section \ref{approach:annealing.implementation.adjust}.
+This leads to a non-optimal solution of the UCP.
