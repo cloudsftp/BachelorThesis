@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
   results: ExperimentResults = ExperimentResults(solutions_dir)
 
-  index_range: List[int] = range(args.lower_load, args.upper_load + 1)
+  index_range: range = range(args.lower_load, args.upper_load + 1)
   loads: List[int] = []
   for i in range(len(index_range)):
     if i % args.skip_loads == 0:
