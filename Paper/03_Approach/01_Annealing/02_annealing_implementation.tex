@@ -59,6 +59,8 @@ The sum of the power outputs at every time instance don't satisfy the demand.
 The program therefore raises the power outputs of all plants at every time instance uniformly.
 While doing so it also avoids violating the power limits of the individual plants.
 
+\todo{Replace with final code}
+
 \begin{lstlisting}[caption={Adjusting the UCP Solution}, language=Python]
 for t in range(self.ucp.parameters.num_loads):
   adjust: List[bool] = [u[i][t] for i in range(self.ucp.parameters.num_plants)]
