@@ -50,5 +50,40 @@ The class \texttt{DiscreteQuadraticModel} does not have an interface for adding 
 So the program adds the constant bias to every entry of every linear bias.
 The constant bias only has to be calculated once.
 
-\subsection{Adjustment of Solution}
+\subsection{Adjusting Solution}
 \label{approach:annealing.implementation.adjust}
+
+The program translates the optimal solution of the DQM to a solution for the UCP.
+This solution however is not legal.
+The sum of the power outputs at every time instance don't satisfy the demand.
+The program therefore raises the power outputs of all plants at every time instance uniformly.
+While doing so it also avoids violating the power limits of the individual plants.
+
+\begin{lstlisting}[caption={Adjusting the UCP Solution}, language=Python]
+for t in range(self.ucp.parameters.num_loads):
+  adjust: List[bool] = [u[i][t] for i in range(self.ucp.parameters.num_plants)]
+  delta: float = self.ucp.loads[t] - sum([p[i][t] for i in range(self.ucp.parameters.num_plants)])
+
+  while True:
+    if delta == 0 or not functools.reduce(lambda a,b: a or b, adjust):
+      break
+
+    adjustment: float = delta / sum([1 if b else 0 for b in adjust])
+    delta = 0
+
+    for i in range(self.ucp.parameters.num_plants):
+      if adjust[i]:
+        p[i][t] += adjustment
+        Pmax: float = self.ucp.plants[i].Pmax
+        Pmin: float = self.ucp.plants[i].Pmin
+
+        if p[i][t] > Pmax:
+          delta += p[i][t] - Pmax
+          p[i][t] = Pmax
+          adjust[i] = False
+
+        elif p[i][t] < Pmin:
+          delta += p[i][t] - Pmin
+          p[i][t] = Pmin
+          adjust[i] = False
+\end{lstlisting}
