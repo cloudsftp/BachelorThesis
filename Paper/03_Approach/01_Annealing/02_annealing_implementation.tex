@@ -1,6 +1,36 @@
 \section{Implementation for Annealing-based Quantum Computers}
 
-\todo{Implementation of DQM}
+The implementation of the DQM uses D-Waves \texttt{dwave-ocean-sdk}.
+\cite{OceanSDKDoc}
+To be more specific, it uses the class \texttt{DiscreteQuadraticModel} that is part of the \texttt{dimod} package.
+\cite{DQMDoc}
+The source code of the SDK is available online.
+\cite{OceanSDKGit}
+
+\subsection*{Variables}
+
+The first step is to instantiate a DQM with discrete variables.
+One discrete variable is added to the model for every $p_{i, t}$ of the DQM defined in section \ref{approach:annealing.formulate}.
+The size of the discrete variable $p_{i, t}$ --- the number of possible values --- is $| P_i |$.
+
+\subsection*{Quadratic Biases}
+
+There are two types of quadratic biases.
+One category is the startup and shutdown biases, and the other is the biases resulting from the demand constraints.
+
+The startup and shutdown biases are different for every plant but do not change over time.
+The program computes them once for every plant.
+Then it applies them to variables that correspond to the same plant but correspond to adjacent time instances.
+So $S_i$ is computed and then applied to variables $p_{i, t-1}$ and $p_{i, t}$ for all $t > 0$.
+
+The demand biases are different for every pair of plants targeted by the bias but do not change over time.
+The program computes them once for every pair of plants.
+Then it applies them to the variables that correspond to the same time instance but correspond to each one of the targeted plants.
+So $P_i \otimes P_j$ is computed and then applied to the variables $p_{i, t}$ and $p_{j, t}$ for all $i < j$.
+
+The two categories of quadratic biases do not overlap.
+This is because the startup and shutdown biases are applied along the time axes,
+and the demand biases are applied along the plant axes, which is orthogonal to the time axes.
 
 \subsection{Adjustment of Solution}
 \label{approach:annealing.implementation.adjust}
