@@ -32,5 +32,23 @@ The two categories of quadratic biases do not overlap.
 This is because the startup and shutdown biases are applied along the time axes,
 and the demand biases are applied along the plant axes, which is orthogonal to the time axes.
 
+\subsection*{Linear Biases}
+
+The linear biases are different for every plant and every time instance.
+They depend on the fuel cost, the possible power levels, and the demand at that time instance.
+If the variable is of the form $p_{i, 0}$ --- meaning it corresponds to the first time instance --- the linear bias of that variable is also dependent on the startup or shutdown costs and the initial state of the plant.
+The formula (\ref{formula:dqm.result.linear}) captures the computation of the linear biases.
+
+The program iterates over all discrete variables $p_{i, t}$.
+For every variable it calculates the linear bias as specified in formula (\ref{formula:dqm.result.linear}).
+Then it applies the calculated linear bias to the variable $p_{i, t}$.
+
+\subsection*{Constant Bias}
+
+The constant bias is defined by the fromula (\ref{formula:dqm.result.constant}).
+The class \texttt{DiscreteQuadraticModel} does not have an interface for adding a constant bias.
+So the program adds the constant bias to every entry of every linear bias.
+The constant bias only has to be calculated once.
+
 \subsection{Adjustment of Solution}
 \label{approach:annealing.implementation.adjust}

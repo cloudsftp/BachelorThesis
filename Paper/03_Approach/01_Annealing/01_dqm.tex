@@ -197,7 +197,7 @@ Thus they form linear biases.
 The biases for the second summand of (\ref{formula:dqm.demand.multiplied_out}) can be modeled by squaring $P_i$ element-wise.
 
 \begin{align}
-  P_i^2 = \quad \begin{pmatrix}
+  P_i^{\odot 2} = \quad \begin{pmatrix}
     0 \\
     P_{min, i}^2 \\
     \left( P_{min, i} + \delta_i \right)^2 \\
@@ -212,7 +212,7 @@ Toghether thay are
 
 \begin{align}
   \qquad
-  \gamma_d \sum_{i, t} \left( P_i^2 - l_t P_i \right) p_{i, t}
+  \gamma_d \sum_{i, t} \left( P_i^{\odot 2} - l_t P_i \right) p_{i, t}
 \end{align}
 
 The last summand of the multiplied out term (\ref{formula:dqm.demand.multiplied_out}) is dependent on two variables.
@@ -259,7 +259,7 @@ This could be removed without changing the nature of the solution, that minimize
   \\ &
   + \gamma_d \sum_t \left(
     L_t^2
-    + \sum_i \left( P_i^2 - l_t P_i \right)i p_{i, t}
+    + \sum_i \left( P_i^{\odot 2} - l_t P_i \right)i p_{i, t}
     + \sum_{i < j} \left( P_i \otimes P_j \right) \left( p_{i, t} \otimes p_{j, t} \right)
   \right) \\
   = \quad
@@ -270,7 +270,7 @@ This could be removed without changing the nature of the solution, that minimize
   \label{formula:dqm.result.quadratic}
   \\ &
   + \sum_{i, t} \left(
-    \gamma_c F_i + \gamma_d \left(P_i^2 - l_t P_i \right)
+    \gamma_c F_i + \gamma_d \left(P_i^{\odot 2} - l_t P_i \right)
   \right) p_{i, t}
   + \sum_i S_i^{(0)} p_{i, 0}
   & \text{(linear)}
