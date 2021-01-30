@@ -8,6 +8,7 @@ from qiskit.optimization.problems.variable import Variable # type: ignore
 from qiskit.optimization.algorithms import OptimizationResult # type: ignore
 
 from UCP.unit_commitment_problem import CombustionPlant, UCP, UCPSolution
+from Util.logging import debug_msg
 
 
 class UCP_QUBO(object):
@@ -54,7 +55,7 @@ class UCP_QUBO(object):
     if not quadratic.get(index):
       quadratic[index] = val
     else:
-      print('Quadratic constraint overwritten')
+      debug_msg('Quadratic constraint overwritten')
 
   def quadratic_startup_shutdown(self, quadratic: Dict[Tuple[str, str], float], y_s: float) -> None:
     for i in range(self.ucp.parameters.num_plants):
@@ -98,7 +99,7 @@ class UCP_QUBO(object):
     if not linear.get(index):
       linear[index] = val
     else:
-      print('Linear constraint overwritten')
+      debug_msg('Linear constraint overwritten')
 
   def get_linear(self, y_c: float, y_s: float, y_d: float, y_o: float) -> Dict[str, float]:
     linear: Dict[str, float] = {}
@@ -154,7 +155,7 @@ class UCP_QUBO(object):
         if num_indices > 0:
           value = self.P[i][value_indices[(int) (num_indices / 2)]]
           if num_indices > 1:
-            print('Warning: {} possible power levels for plant {} detected'.format(num_indices, i))
+            debug_msg('Warning: {} possible power levels for plant {} detected'.format(num_indices, i))
 
         p[i].append(value)
         u[i].append(p[i][t] > 0)

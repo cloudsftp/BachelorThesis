@@ -6,6 +6,7 @@ import functools
 from typing import List
 
 from Util.json_file_handler import write_dataclass_to, read_dataclass_from
+from Util.logging import debug_msg_time, debug_msg
 
 
 @dataclass
@@ -89,6 +90,33 @@ class UCPSolution(object):
   def load_from(file_name):
     return read_dataclass_from(file_name, UCPSolution)
 
+
+  def check_validity(self) -> None:
+    debug_msg_time('Start Checking Validity of Solution\n')
+
+    quality: float = 0
+
+    for t in range(self.ucp.parameters.num_loads):
+      combined_output: float = 0
+
+      for i in range(self.ucp.parameters.num_plants):
+        p: float = self.p[i][t]
+        Pmin: float = self.ucp.plants[i].Pmin
+        Pmax: float = self.ucp.plants[i].Pmax
+
+        if not Pmin <= p <= Pmax:
+          quality += p - Pmin if p < Pmin else Pmax - p
+          debug_msg('p {:3d}, {:3d}:\t{:4.2f} <= {:4.2f} <= {:4.2f}'.format(i, t, Pmin, p, Pmax))
+
+        combined_output += p
+
+      l = self.ucp.loads[t]
+      if not l <= combined_output:
+        quality += combined_output - l
+        debug_msg('sum p {:3d}:\t{:4.2f} <= {:4.2f} - off {:4.2f}'.format(t, l, combined_output, combined_output - l))
+
+    debug_msg('Quality:\t{:12.2f}'.format(quality))
+
   def adjust_variables(self) -> None:
     for t in range(self.ucp.parameters.num_loads):
       adjust: List[bool] = [self.u[i][t] for i in range(self.ucp.parameters.num_plants)]
@@ -116,3 +144,5 @@ class UCPSolution(object):
               delta += self.p[i][t] - Pmin
               self.p[i][t] = Pmin
               adjust[i] = False
+
+    self.o = self.ucp.calculate_o(self.u, self.p)

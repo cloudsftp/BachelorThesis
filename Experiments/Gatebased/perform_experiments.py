@@ -4,9 +4,10 @@ from qiskit import IBMQ # type: ignore
 from qiskit.optimization.algorithms import GroverOptimizer # type: ignore
 
 
-from UCP.unit_commitment_problem import UCP, ExperimentParameters, CombustionPlant, UCPSolution
+from UCP.unit_commitment_problem import UCP, ExperimentParameters, UCPSolution
 from Data.build_ucp import build_ucp
 from Gatebased.qubo import UCP_QUBO
+from Util.logging import debug_msg
 
 
 
@@ -14,7 +15,7 @@ def grover_opt(qubo: UCP_QUBO, backend) -> None:
   grover_optimizer = GroverOptimizer(1, num_iterations=5, quantum_instance=backend)
 
   sol: UCPSolution = qubo.optimize(grover_optimizer)
-  print(sol)
+  debug_msg(sol)
 
 if __name__ == "__main__":
   param: ExperimentParameters = ExperimentParameters(2, 4)

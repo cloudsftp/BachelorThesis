@@ -12,6 +12,7 @@ import numpy as np # type: ignore
 
 from Data.build_ucp import build_ucp
 from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCPSolution
+from Util.logging import debug_msg_time
 
 
 class UCP_DQM(object):
@@ -144,11 +145,13 @@ class UCP_DQM(object):
         value: float = self.P[i][value_index]
 
         p[i].append(value)
-        u[i].append(p[i][t] > 0)
+        u[i].append((bool) (p[i][t] > 0))
 
   def optimize(self, sampler, adjust: bool = True) -> UCPSolution:
+    debug_msg_time('Start Solver')
     samples: SampleSet = sampler.sample_dqm(self.model)
     sample: List[float] = samples.record[0][0]
+    debug_msg_time('Solver Finished')
 
     u: List[List[bool]] = []
     p: List[List[float]] = []

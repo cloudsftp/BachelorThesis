@@ -1,12 +1,12 @@
 #!/bin/python3.8
 
 
-from datetime import datetime
 import os
 import argparse
 from typing import Callable
 from Data.build_ucp import build_ucp
 from UCP.unit_commitment_problem import UCP, UCPSolution, ExperimentParameters
+from Util.logging import debug_msg_time
 
 
 def write_solution(solution: UCPSolution, parameters: ExperimentParameters, path: str, prefix: str) -> None:
@@ -18,21 +18,18 @@ def write_solution(solution: UCPSolution, parameters: ExperimentParameters, path
   solution.save_to(os.path.join(path, file_name))
 
 def perform_experiment(parameters: ExperimentParameters, optimize_fun: Callable, path: str, prefix: str) -> None:
-    print(
+    debug_msg_time(
       'Experiment: {:3} loads, {:3} plants'
       .format(parameters.num_loads, parameters.num_plants)
     )
-
     ucp: UCP = build_ucp(parameters)
-
-    print('Start: {}'.format(datetime.now().strftime('%m.%d %H:%M:%S')))
 
     solution = optimize_fun(ucp)
 
     write_solution(solution, parameters, path, prefix)
 
-    print(
-      'Time: {:15.3f} seconds\n'
+    debug_msg_time(
+      'Optimization Time: {:15.3f} seconds\n'
       .format(solution.time)
     )
 
