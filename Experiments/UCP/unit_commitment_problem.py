@@ -104,14 +104,14 @@ class UCPSolution(object):
         Pmin: float = self.ucp.plants[i].Pmin
         Pmax: float = self.ucp.plants[i].Pmax
 
-        if not Pmin <= p <= Pmax:
+        if not Pmin <= p <= Pmax and p != 0:
           quality += p - Pmin if p < Pmin else Pmax - p
           debug_msg('p {:3d}, {:3d}:\t{:4.2f} <= {:4.2f} <= {:4.2f}'.format(i, t, Pmin, p, Pmax))
 
         combined_output += p
 
       l = self.ucp.loads[t]
-      if not l <= combined_output:
+      if l > combined_output:
         quality += combined_output - l
         debug_msg('sum p {:3d}:\t{:4.2f} <= {:4.2f} - off {:4.2f}'.format(t, l, combined_output, combined_output - l))
 
