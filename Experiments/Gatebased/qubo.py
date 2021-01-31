@@ -158,7 +158,7 @@ class UCP_QUBO(object):
             debug_msg('Warning: {} possible power levels for plant {} detected'.format(num_indices, i))
 
         p[i].append(value)
-        u[i].append(p[i][t] > 0)
+        u[i].append((bool) (p[i][t] > 0))
 
   def optimize(self, solver, adjust: bool = True) -> UCPSolution:
     result: OptimizationResult = solver.solve(self.model)
