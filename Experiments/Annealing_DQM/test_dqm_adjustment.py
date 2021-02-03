@@ -3,8 +3,8 @@
 
 from typing import List
 import unittest
-from Annealing.dqm import UCP_DQM
-from Annealing.dqm_simulator import DQMSimulator
+from Annealing_DQM.dqm import UCP_DQM
+from Annealing_DQM.dqm_simulator import DQMSimulator
 
 from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCPSolution
 

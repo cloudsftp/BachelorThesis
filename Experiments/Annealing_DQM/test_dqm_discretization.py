@@ -4,7 +4,7 @@ from typing import List
 import unittest
 
 from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP
-from Annealing.dqm import UCP_DQM
+from Annealing_DQM.dqm import UCP_DQM
 
 class TestDQMDiscretization(unittest.TestCase):
 

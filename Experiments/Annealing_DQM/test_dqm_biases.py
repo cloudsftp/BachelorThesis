@@ -7,7 +7,7 @@ from numpy.testing import assert_array_equal # type: ignore
 import unittest
 
 from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP
-from Annealing.dqm import UCP_DQM
+from Annealing_DQM.dqm import UCP_DQM
 
 class TestDQMBiases(unittest.TestCase):
 

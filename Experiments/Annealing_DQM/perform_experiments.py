@@ -5,7 +5,7 @@ import logging
 from sys import argv
 from dwave.cloud.client import Client # type: ignore
 from dwave.system.samplers.leap_hybrid_sampler import LeapHybridDQMSampler # type: ignore
-from Annealing.dqm import UCP_DQM
+from Annealing_DQM.dqm import UCP_DQM
 from UCP.experiments import experiments_main
 from UCP.unit_commitment_problem import UCP, UCPSolution
 from Util.logging import debug_msg_time
@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
   experiments_main(
     optimize_annealing,
-    os.path.join('Annealing', 'Solutions'),
+    os.path.join('Annealing_DQM', 'Solutions'),
     'annealing',
     *argv[1:]
   )

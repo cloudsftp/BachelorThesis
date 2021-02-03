@@ -4,6 +4,8 @@ import os
 from dataclasses import dataclass, field
 import functools
 from typing import List
+import numpy as np # type: ignore
+import math
 
 from Util.json_file_handler import write_dataclass_to, read_dataclass_from
 from Util.logging import debug_msg_time, debug_msg
@@ -56,6 +58,22 @@ class UCP(object):
   @staticmethod
   def load_from(file_name):
     return read_dataclass_from(file_name, UCP)
+
+  def get_discretized_power_levels(self, max_h: float = 10) -> List[np.ndarray]:
+    P = []
+
+    for plant in self.plants:
+      spectrum: float = plant.Pmax - plant.Pmin
+      n: int = math.ceil(math.log(spectrum / max_h + 2, 2))
+      h: float = spectrum / (2 ** n - 2)
+
+      P_i: List[float] = [0]
+      for k in range(2 ** n - 1):
+        P_i.append(plant.Pmin + k * h)
+
+      P.append(np.array(P_i))
+
+    return P
 
   def calculate_o(self, u: List[List[bool]], p: List[List[float]]) -> float:
     o: float = 0

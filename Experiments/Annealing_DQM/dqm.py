@@ -1,17 +1,12 @@
 #!/bin/python3.8
 
 
-import math
 from typing import Any, List
 from dimod import DiscreteQuadraticModel # type: ignore
 from dimod.sampleset import SampleSet # type: ignore
-from numpy.lib.function_base import append # type: ignore
-from Annealing.dqm_simulator import DQMSimulator # type: ignore
-from dwave.system import LeapHybridDQMSampler # type: ignore
 import numpy as np # type: ignore
 
-from Data.build_ucp import build_ucp
-from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCPSolution
+from UCP.unit_commitment_problem import CombustionPlant, UCP, UCPSolution
 from Util.logging import debug_msg_time
 
 
@@ -28,18 +23,7 @@ class UCP_DQM(object):
 
 
   def discretizise_plants(self, max_h: float) -> None:
-    self.P = []
-
-    for plant in self.ucp.plants:
-      spectrum: float = plant.Pmax - plant.Pmin
-      n: int = math.ceil(math.log(spectrum / max_h + 2, 2))
-      h: float = spectrum / (2 ** n - 2)
-
-      P_i: List[float] = [0]
-      for k in range(2 ** n - 1):
-        P_i.append(plant.Pmin + k * h)
-
-      self.P.append(np.array(P_i))
+    self.P = self.ucp.get_discretized_power_levels()
 
   def init_variables(self) -> None:
     self.p = []

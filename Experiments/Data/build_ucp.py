@@ -4,7 +4,6 @@
 import random
 from typing import List
 
-from numpy.lib.function_base import copy
 from Data.DemandData.demand_data import DemandData
 from Data.Plants.plants import Plants
 from UCP.unit_commitment_problem import CombustionPlant, UCP, ExperimentParameters

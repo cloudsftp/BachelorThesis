@@ -18,18 +18,7 @@ class UCP_QUBO(object):
   P: List[np.ndarray] # discretizised power levels
 
   def discretizise_plants(self, max_h: float) -> None:
-    self.P = []
-
-    for plant in self.ucp.plants:
-      spectrum: float = plant.Pmax - plant.Pmin
-      n: int = math.ceil(math.log(spectrum / max_h + 2, 2))
-      h: float = spectrum / (2 ** n - 2)
-
-      P_i: List[float] = [0]
-      for k in range(2 ** n - 1):
-        P_i.append(plant.Pmin + k * h)
-
-      self.P.append(np.array(P_i))
+    self.P = self.ucp.get_discretized_power_levels(max_h)
 
   def init_variables(self) -> None:
     self.p = []
@@ -76,19 +65,19 @@ class UCP_QUBO(object):
             for t in range(self.ucp.parameters.num_loads):
               self.add_quadratic(quadratic, i, t, k, j, t, l, value * y_d)
 
-  def quadratic_discretized(self, quadratic: Dict[Tuple[str, str], float], y_o: float) -> None:
+  def quadratic_discretized(self, quadratic: Dict[Tuple[str, str], float], y_d: float) -> None:
     for i in range(self.ucp.parameters.num_plants):
       for t in range(self.ucp.parameters.num_loads):
         for l in range(len(self.P[i])):
           for k in range(l):
-            self.add_quadratic(quadratic, i, t, k, i, t, l, y_o)
+            self.add_quadratic(quadratic, i, t, k, i, t, l, y_d)
 
-  def get_quadratic(self, y_s: float, y_d: float, y_o: float) -> Dict[Tuple[str, str], float]:
+  def get_quadratic(self, y_s: float, y_d: float, y_p: float) -> Dict[Tuple[str, str], float]:
     quadratic: Dict[Tuple[str, str], float] = {}
 
     self.quadratic_startup_shutdown(quadratic, y_s)
     self.quadratic_demand(quadratic, y_d)
-    self.quadratic_discretized(quadratic, y_o)
+    self.quadratic_discretized(quadratic, y_p)
 
     return quadratic
 
@@ -101,7 +90,7 @@ class UCP_QUBO(object):
     else:
       debug_msg('Linear constraint overwritten')
 
-  def get_linear(self, y_c: float, y_s: float, y_d: float, y_o: float) -> Dict[str, float]:
+  def get_linear(self, y_c: float, y_s: float, y_d: float, y_p: float) -> Dict[str, float]:
     linear: Dict[str, float] = {}
 
     for i in range(self.ucp.parameters.num_plants):
@@ -112,30 +101,30 @@ class UCP_QUBO(object):
 
           value += y_c * (plant.A + plant.B * self.P[i][k] + plant.C * (self.P[i][k] ** 2))
           value += y_d * (self.P[i][k] ** 2 - self.ucp.loads[t] * self.P[i][k])
-          value -= y_o
+          value -= y_p
 
           self.add_linear(linear, i, t, k, value)
 
     return linear
 
-  def get_constant(self, y_o: float) -> float:
-    value: float = y_o
+  def get_constant(self, y_d: float) -> float:
+    value: float = y_d
     for t in range(self.ucp.parameters.num_loads):
       value += self.ucp.loads[t]
 
     return value
 
 
-  def __init__(self, ucp, y_c: float = 1, y_s: float = 1, y_d: float = 1, y_o: float = 1, max_h: float = 10) -> None:
+  def __init__(self, ucp, y_c: float = 1, y_s: float = 1, y_d: float = 1, y_p: float = 1, max_h: float = 10) -> None:
     self.model = QuadraticProgram()
     self.ucp = ucp
 
     self.discretizise_plants(max_h)
     self.init_variables()
 
-    quadratic: Dict[Tuple[str, str], float] = self.get_quadratic(y_s, y_d, y_o)
-    linear: Dict[str, float] = self.get_linear(y_c, y_s, y_d, y_o)
-    constant: float = self.get_constant(y_o)
+    quadratic: Dict[Tuple[str, str], float] = self.get_quadratic(y_s, y_d, y_p)
+    linear: Dict[str, float] = self.get_linear(y_c, y_s, y_d, y_p)
+    constant: float = self.get_constant(y_p)
     self.model.minimize(constant, linear, quadratic)
 
 
