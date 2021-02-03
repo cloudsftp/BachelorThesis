@@ -50,7 +50,7 @@ When adding a quadratic bias, the first argument is always a variable of lower o
 \subsubsection{Discretizising Power Levels}
 
 This approach discretizes the power levels just like in section \ref{approach:annealing.discretize}.
-But this time the values are not a array but single values.
+But this time, the values are not an array but single values.
 They are defined as
 
 \begin{align}
@@ -64,5 +64,92 @@ $P_{i, k}$ is defined for all $i \in \mathbb{I}, k \in \mathbb{N}, k < 2^{n_i}$.
 Where $n_i$ is chosen as in section \ref{approach:annealing.discretize}.
 Thus $P_{i, 2^{n_i} - 1} = P_{max, i}$.
 
-This automatically enforces the constraint (\ref{formula:minlp.power}) that ensures the power limits to stay inside the limits of every power plant.
+This automatically enforces the constraint (\ref{formula:minlp.power}) that ensures that the power outputs stay inside the limits of every power plant.
 This constraint thus is not found in the energy function (\todo{link parts of function}).
+
+\section{Formulating the QUBO}
+
+The starting point is the DQM (\ref{formula:qubo.dqm.result.quadratic}-\ref{formula:qubo.dqm.result.constant}).
+The approach transforms the formula in a way that it uses binary variables instead of discrete variables.
+
+\begin{subequations}
+\begin{align}
+  E(p) = \quad
+  &
+  \gamma_s \sum_i \sum_{t > 0} S_i \left( p_{i, t-1} \otimes p_{i, t} \right)
+  + \gamma_d \sum_t \sum_{i < j} \left( P_i \otimes P_j \right) \left( p_{i, t} \otimes p_{j, t} \right)
+  & \text{(quadratic)}
+  \label{formula:qubo.dqm.result.quadratic}
+  \\ &
+  + \sum_{i, t} \left(
+    \gamma_c F_i + \gamma_d \left(P_i^{\odot 2} - l_t P_i \right)
+  \right) p_{i, t}
+  + \sum_i S_i^{(0)} p_{i, 0}
+  & \text{(linear)}
+  \label{formula:qubo.dqm.result.linear}
+  \\ &
+  + \sum_t l_t^2
+  & \text{(constant)}
+  \label{formula:qubo.dqm.result.constant}
+\end{align}
+\end{subequations}
+
+\subsubsection{Quadratic Biases}
+
+The transformation of the quadratic biases has two parts.
+The first part is the transformation of the startup and shutdown costs.
+
+\begin{align}
+  \gamma_s \sum_i \sum_{t > 0} S_i \left( p_{i, t-1} \otimes p_{i, t} \right)
+  = \gamma_s \sum_i \sum_{t, k > 0} \left(
+    A_i^D p_{i, t-1, k} p_{i, t, 0}
+    + A_i^U p_{i, t-1, 0} p_{i, t, k}
+  \right)
+\end{align}
+
+Penalties $A_i^U$ and $A_i^D$ apply if the power level of the plant $i$ is $0$ at time $t-1$ and non-zero at time $t$ respectively non-zero at time $t-1$ and $0$ at time $t$.
+
+The second part is the transformation of the quadratic biases connected to the demand.
+
+\begin{align}
+  \gamma_d \sum_t \sum_{i < j} \left( P_i \otimes P_j \right) \left( p_{i, t} \otimes p_{j, t} \right)
+  = \gamma_d \sum_{i, k, l} \sum_{i < j} \left( P_{i,k} \cdot P_{j,l} \cdot p_{i, t, k} \cdot p_{j, t, l} \right)
+\end{align}
+
+It is more straightforward and shows the meaning of the tensor products and the Frobenius inner product used in the DQM.
+
+\subsubsection{Linear biases}
+
+The transformation of the linear biases has two parts.
+The first part is the transformation of the objective and demand related biases.
+
+\begin{align}
+  \sum_{i, t} \left(
+    \gamma_c F_i + \gamma_d \left(P_i^{\odot 2} - l_t \cdot P_i \right)
+  \right) p_{i, t}
+  =
+  \sum_{i, t, k} \left(
+    \gamma_c F_{i, k} + \gamma_d \left( P_{i, k}^2 - l_t \cdot P_{i, t} \right)
+  \right)
+\end{align}
+
+Where $F_{i, k}$ is defined as follows:
+
+\begin{align}
+  F_{i, k} = \begin{cases}
+    0 & , k = 0 \\
+    A_i + B_i \cdot P_{i, k} + C_i \cdot P_{i, k}^2 & , else
+  \end{cases}
+\end{align}
+
+The second part of the transformation is the startup and shutdown costs of the first time instance.
+
+\begin{align}
+  \sum_{i, k} S_{i, k}^{(0)} p_{i, 0, k}
+  & & \text{where }
+  S_{i, k}^{(0)} = \begin{cases}
+    A_i^U & , u_{i, -1} = 0 \land k > 0 \\
+    A_i^D & , u_{i, -1} = 1 \land k = 0 \\
+    0 & , else
+  \end{cases}
+\end{align}
