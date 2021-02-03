@@ -11,32 +11,33 @@ The model, as seen in section (\ref{backg:annealing}), takes in a vector rather 
 That's why the indices of the variables $p_{i,t}$ have to be mapped, such that the result are just as many variables $p_{l}$.
 
 \begin{align}
-  k:
+  m:
   \quad
   \mathbb{I} \times \mathbb{T} \to \mathbb{K}:
   \quad
-  k(i, t) = i \cdot | \mathbb{T} | + t
+  m(i, t) = i \cdot | \mathbb{T} | + t
 \end{align}
 
-In the model below, $p_{i,t}$ is used, but this is to show, that
+In the model below, $p_{i,t}$ is used, but this is to show that
 
 \begin{subequations}
 \begin{align}
   &
-  \forall i \in \mathbb{I}, \forall t, t' \in \mathbb{T}, t < t'
+  \forall i \in \mathbb{I}, t, t' \in \mathbb{T}, t < t':
   &
-  \Rightarrow k(i, t) < k(i, t')
+  \Rightarrow m(i, t) < m(i, t')
   \\
   \land \quad
   &
-  \forall t \in \mathbb{T}, \forall i, j \in \mathbb{I}, i < j
+  \forall i, j \in \mathbb{I}, t \in \mathbb{T}, i < j:
   &
-  \Rightarrow k(i, t) < k(j, t)
+  \Rightarrow m(i, t) < m(j, t)
 \end{align}
 \end{subequations}
 
-When implementing the DQM, the discrete variables $p_{i, t}$ are added in the order specified by $k(i, t)$.
-This makes sure that the quadratic biases are added in the right orientation.
+When implementing the DQM, the discrete variables $p_{i, t}$ are added in the order specified by $m(i, t)$.
+This order ensures that the applying of quadratic biases does not violate the form of the DQM.
+When adding a quadratic bias, the first argument is always a variable of lower order.
 
 \subsubsection{Discretizising Variables}
 
@@ -70,7 +71,8 @@ Except for the constraint (\ref{formula:minlp.power}) that makes sure the output
 This is already enforced by the discretization of the power levels.
 
 The formula is not in the standard form (\ref{formula:dqm.form}).
-To achieve this form, the last summand has to be transformed and the linear parts and quadratic parts have to be combined into groups.
+The approach to achieve this form transforms the last summand.
+As well as grouping the linear biases and the quadratic biases.
 
 \begin{subequations}
 \begin{align}
@@ -170,7 +172,7 @@ $S_i$ is called quadratic bias.
 The third summand of the energy function (\ref{formula:dqm.start.demand}) represents the demand constraints (\ref{formula:minlp.load}).
 It is formulated in such a way, that its value is the sum of the squared differences of the required power and the power output of all power plants at time $t$.
 So it gets bigger as the plants put out more or put out less of the required power.
-This formula has to transformed so linear and quadratic biases for the variables can be formulated.
+This formula has to be transformed so linear and quadratic biases for the variables can be formulated.
 
 \begin{subequations}
 \begin{align}
@@ -184,7 +186,7 @@ This formula has to transformed so linear and quadratic biases for the variables
 \end{align}
 \end{subequations}
 
-After multiplying out the product, respectively the square, everything that is not multiplied with a variable forms the constant bias.
+After multiplying out the product, respectively, the square, everything that is not multiplied with any variables forms the constant bias.
 In this case it is
 
 \begin{align}
@@ -192,7 +194,7 @@ In this case it is
   \gamma_d \sum_t l_t^2
 \end{align}
 
-The second and third summand of the multiplied out term (\ref{formula:dqm.demand.multiplied_out}) are only dependent on one variable.
+The second and third summand of the multiplied out term (\ref{formula:dqm.demand.multiplied_out}) only depend on one variable.
 Thus they form linear biases.
 The biases for the second summand of (\ref{formula:dqm.demand.multiplied_out}) can be modeled by squaring $P_i$ element-wise.
 
@@ -233,19 +235,19 @@ This behaves exactly as the last summand of (\ref{formula:dqm.demand.multiplied_
 
 \subsubsection{Result}
 
-The parts are added toghether again.
+The result is the formulas added together.
 Then the biases are ordered by their degree.
 
 In the first summand of the result (\ref{formula:dqm.result.quadratic}) the quadratic biases are grouped.
-They do not interfere with each other, since the demand biases are situated along the $i$-axes and the startup biases are situated along the $t$-axes.
+They do not interfere with each other since the demand biases are situated along the $i$-axes, and the startup biases are situated along the $t$-axes.
 
 In the second summand of the result (\ref{formula:dqm.result.linear}) the linear biases are grouped.
-They overlap for every variable so they are added toghether.
+They overlap for every variable, so they are added together.
 The linear biases $S_i^{(0)}$ are only relevant to the variables of the first time instance $t = 0$ so they are added in a seperate sum.
 
 In the last summand of the result (\ref{formula:dqm.result.constant}) the constant biases are grouped.
 This is simply a constant summand.
-This could be removed without changing the nature of the solution, that minimizes the energy function.
+This could be removed without changing the nature of the solution that minimizes the energy function.
 
 \begin{subequations}
 \begin{align}

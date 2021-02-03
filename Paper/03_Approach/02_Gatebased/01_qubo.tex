@@ -1,3 +1,48 @@
 \section{Unit Commitment Problem as Quadratic Unconstrained Binary Model}
 
-\todo{Explain formulation od QUBO}
+The formulation of the Quadratic Unconstrained Binary Model (QUBO) is based on the DQM formulated in section \ref{approach:annealing.formulate}.
+Instead of a single discrete variable for every power plant $i$ and time instance $t$, the QUBO has an array of binary variables for every possible power level in $P_i$ for every power plant $i$ and time instance $t$.
+
+\subsection*{Mapping Variables}
+
+As before in section \ref{approach:annealing.formulate}, the variable indices are mapped to a single index to make sure the form of the QUBO is correct.
+The mapping is extended by a third index $k$ corresponding to the power level.
+
+\begin{align}
+  m':
+  \quad
+  \mathbb{I}
+  \times \mathbb{T}
+  \times \{k \in \mathbb{N} | k \leq |P_i|\} \to \mathbb{K}':
+  \quad
+  m'(i, t, k) = \left( |\mathbb{T}| \sum_{j=0}^{i-1} |P_j| \right)
+  + t \cdot |P_i|
+  + k
+\end{align}
+
+In the model below, $p_{i,t,k}$ is used, but this is to show that
+
+\begin{subequations}
+\begin{align}
+  &
+  \forall i \in \mathbb{I}, t \in \mathbb{T}, k, l \in \mathbb{N}, k < l < |P_i|:
+  &
+  m'(i, t, k) < m'(i, t, l)
+  \\
+  \land \quad
+  &
+  \forall i \in \mathbb{I}, t, t' \in \mathbb{T}, k \in \mathbb{N}, k < |P_i|, t < t':
+  &
+  m'(i, t, k) < m'(i, t', k)
+  \\
+  \land \quad
+  &
+  \forall i, j \in \mathbb{I}, t  \in \mathbb{T}, k, l \in \mathbb{N}, k < |P_i|, l < |P_j|, i < j:
+  &
+  m'(i, t, k) < m'(j, t, l)
+\end{align}
+\end{subequations}
+
+When implementing the BQM, the discrete variables $p_{i, t, k}$ are added in the order specified by $m'(i, t, k)$.
+This order ensures that the applying of quadratic biases does not violate the form of the BQM.
+When adding a quadratic bias, the first argument is always a variable of lower order.
