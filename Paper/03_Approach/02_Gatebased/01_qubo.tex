@@ -3,7 +3,7 @@
 The formulation of the Quadratic Unconstrained Binary Model (QUBO) is based on the DQM formulated in section \ref{approach:annealing.formulate}.
 Instead of a single discrete variable for every power plant $i$ and time instance $t$, the QUBO has an array of binary variables for every possible power level in $P_i$ for every power plant $i$ and time instance $t$.
 
-\subsection*{Mapping Variables}
+\subsubsection{Mapping Variables}
 
 As before in section \ref{approach:annealing.formulate}, the variable indices are mapped to a single index to make sure the form of the QUBO is correct.
 The mapping is extended by a third index $k$ corresponding to the power level.
@@ -46,3 +46,23 @@ In the model below, $p_{i,t,k}$ is used, but this is to show that
 When implementing the BQM, the discrete variables $p_{i, t, k}$ are added in the order specified by $m'(i, t, k)$.
 This order ensures that the applying of quadratic biases does not violate the form of the BQM.
 When adding a quadratic bias, the first argument is always a variable of lower order.
+
+\subsubsection{Discretizising Power Levels}
+
+This approach discretizes the power levels just like in section \ref{approach:annealing.discretize}.
+But this time the values are not a array but single values.
+They are defined as
+
+\begin{align}
+  P_{i, k} = \begin{cases}
+    0 & , k = 0 \\
+    P_{min, i} + (k - 1) \cdot \delta_i & , else
+  \end{cases}
+\end{align}
+
+$P_{i, k}$ is defined for all $i \in \mathbb{I}, k \in \mathbb{N}, k < 2^{n_i}$.
+Where $n_i$ is chosen as in section \ref{approach:annealing.discretize}.
+Thus $P_{i, 2^{n_i} - 1} = P_{max, i}$.
+
+This automatically enforces the constraint (\ref{formula:minlp.power}) that ensures the power limits to stay inside the limits of every power plant.
+This constraint thus is not found in the energy function (\todo{link parts of function}).

@@ -8,7 +8,7 @@ of Binary Quadratic Models (BQM) or Quadratic Unconstrained Binary Optimization 
 \subsubsection{Mapping Variables}
 
 The model, as seen in section (\ref{backg:annealing}), takes in a vector rather than a 2-dimensional matrix.
-That's why the indices of the variables $p_{i,t}$ have to be mapped, such that the result are just as many variables $p_{l}$.
+That's why the indices of the variables $p_{i,t}$ are mapped, such that the result is just as many variables $p_{l}$.
 
 \begin{align}
   m:
@@ -39,10 +39,11 @@ When implementing the DQM, the discrete variables $p_{i, t}$ are added in the or
 This order ensures that the applying of quadratic biases does not violate the form of the DQM.
 When adding a quadratic bias, the first argument is always a variable of lower order.
 
-\subsubsection{Discretizising Variables}
+\subsubsection{Discretizising Power Levels}
+\label{approach:annealing.discretize}
 
-The power levels have to be discretized, since the model, respectively the variables, are discrete.
-To maximize the utilization of qbits on the QPU, every variable $p_{i, t}$ can have one of $2^{n_i}$ values.
+The approach discretizises the power levels, since the model, respectively the variables, are discrete.
+Every variable $p_{i, t}$ can have one of $2^{n_i}$ values.
 $n_i$ is chosen so that the difference $\delta_i$ between the non-zero power levels represented by the values of $p_{i, t}$
 is $5 < \delta_i \leq 10$.
 The power levels of the discrete values are represented as $P_i$.
