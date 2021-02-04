@@ -47,17 +47,17 @@ class TestQUBOBiases(unittest.TestCase):
   def test_linear_1(self):
     qubo: UCP_QUBO = UCP_QUBO(self.ucp_instance_1)
 
-    self.linear_biases(qubo, 0, 0, [0, 196, 791, 1786])
-    self.linear_biases(qubo, 0, 1, [0, 186, 771, 1756])
-    self.linear_biases(qubo, 0, 2, [0, 196, 791, 1786])
+    self.linear_biases(qubo, 0, 0, [1, 198, 793, 1788])
+    self.linear_biases(qubo, 0, 1, [1, 187, 772, 1757])
+    self.linear_biases(qubo, 0, 2, [1, 197, 792, 1787])
 
-    self.linear_biases(qubo, 1, 0, [0, 302, 1202, 2702])
-    self.linear_biases(qubo, 1, 1, [0, 292, 1182, 2672])
-    self.linear_biases(qubo, 1, 2, [0, 302, 1202, 2702])
+    self.linear_biases(qubo, 1, 0, [1, 305, 1205, 2705])
+    self.linear_biases(qubo, 1, 1, [1, 293, 1183, 2673])
+    self.linear_biases(qubo, 1, 2, [1, 303, 1203, 2703])
 
-    self.linear_biases(qubo, 2, 0, [0, 1623, 3633, 6443, 10053, 14463, 19673, 25683])
-    self.linear_biases(qubo, 2, 1, [0, 1603, 3603, 6403, 10003, 14403, 19603, 25603])
-    self.linear_biases(qubo, 2, 2, [0, 1623, 3633, 6443, 10053, 14463, 19673, 25683])
+    self.linear_biases(qubo, 2, 0, [1, 1624, 3634, 6444, 10054, 14464, 19674, 25684])
+    self.linear_biases(qubo, 2, 1, [1, 1604, 3604, 6404, 10004, 14404, 19604, 25604])
+    self.linear_biases(qubo, 2, 2, [1, 1624, 3634, 6444, 10054, 14464, 19674, 25684])
 
   def test_quadratic_start_1(self):
     qubo: UCP_QUBO = UCP_QUBO(self.ucp_instance_1)
@@ -131,40 +131,50 @@ class TestQUBOBiases(unittest.TestCase):
   def test_linear_2_all_1(self):
     qubo: UCP_QUBO = UCP_QUBO(self.ucp_instance_2)
 
-    self.linear_biases(qubo, 0, 0, [3400, 3220, 3230, 3440])
-    self.linear_biases(qubo, 1, 0, [3420, 3210, 3220, 3430])
+    self.linear_biases(qubo, 0, 0, [1, -179, -169, 41])
+    self.linear_biases(qubo, 1, 0, [21, -189, -179, 31])
 
-    linear_biases_t_1: List[float] = [3400, 3010, 2820, 2830]
+    linear_biases_t_1: List[float] = [1, -389, -579, -569]
     self.linear_biases(qubo, 0, 1, linear_biases_t_1)
     self.linear_biases(qubo, 1, 1, linear_biases_t_1)
 
   def test_linear_2_cost_2(self):
     qubo: UCP_QUBO = UCP_QUBO(self.ucp_instance_2, y_c=2)
 
-    self.linear_biases(qubo, 0, 0, [3400, 3230, 3250, 3470])
-    self.linear_biases(qubo, 1, 0, [3420, 3220, 3240, 3460])
+    self.linear_biases(qubo, 0, 0, [1, -169, -149, 71])
+    self.linear_biases(qubo, 1, 0, [21, -179, -159, 61])
 
-    linear_biases_t_1: List[float] = [3400, 3020, 2840, 2860]
+    linear_biases_t_1: List[float] = [1, -379, -559, -539]
     self.linear_biases(qubo, 0, 1, linear_biases_t_1)
     self.linear_biases(qubo, 1, 1, linear_biases_t_1)
 
   def test_linear_2_demand_2(self):
     qubo: UCP_QUBO = UCP_QUBO(self.ucp_instance_2, y_d=2)
 
-    self.linear_biases(qubo, 0, 0, [6800, 6420, 6430, 6840])
-    self.linear_biases(qubo, 1, 0, [6820, 6410, 6420, 6830])
+    self.linear_biases(qubo, 0, 0, [1, -379, -369, 41])
+    self.linear_biases(qubo, 1, 0, [21, -389, -379, 31])
 
-    linear_biases_t_1: List[float] = [6800, 6010, 5620, 5630]
+    linear_biases_t_1: List[float] = [1, -789, -1179, -1169]
     self.linear_biases(qubo, 0, 1, linear_biases_t_1)
     self.linear_biases(qubo, 1, 1, linear_biases_t_1)
 
   def test_linear_2_startup_2(self):
     qubo: UCP_QUBO = UCP_QUBO(self.ucp_instance_2, y_s=2)
 
-    self.linear_biases(qubo, 0, 0, [3400, 3230, 3240, 3450])
-    self.linear_biases(qubo, 1, 0, [3440, 3210, 3220, 3430])
+    self.linear_biases(qubo, 0, 0, [1, -169, -159, 51])
+    self.linear_biases(qubo, 1, 0, [41, -189, -179, 31])
 
-    linear_biases_t_1: List[float] = [3400, 3010, 2820, 2830]
+    linear_biases_t_1: List[float] = [1, -389, -579, -569]
+    self.linear_biases(qubo, 0, 1, linear_biases_t_1)
+    self.linear_biases(qubo, 1, 1, linear_biases_t_1)
+
+  def test_linear_2_power_2(self):
+    qubo: UCP_QUBO = UCP_QUBO(self.ucp_instance_2, y_p=2)
+
+    self.linear_biases(qubo, 0, 0, [2, -178, -168, 42])
+    self.linear_biases(qubo, 1, 0, [22, -188, -178, 32])
+
+    linear_biases_t_1: List[float] = [2, -388, -578, -568]
     self.linear_biases(qubo, 0, 1, linear_biases_t_1)
     self.linear_biases(qubo, 1, 1, linear_biases_t_1)
 
@@ -198,6 +208,18 @@ class TestQUBOBiases(unittest.TestCase):
                                               [0, 100, 200, 300],
                                               [0, 200, 400, 600],
                                               [0, 300, 600, 900]])
+
+  def test_quadratic_power_2(self):
+    qubo: UCP_QUBO = UCP_QUBO(self.ucp_instance_2)
+
+    for i in range(2):
+      for t in range(2):
+        for l in range(4):
+          for k in range(l):
+            m0: int = qubo.m[i, t, k]
+            m1: int = qubo.m[i, t, l]
+
+            assert_equal(qubo.model[m0, m1], 1)
 
   def test_quadratic_zeros_2(self):
     qubo: UCP_QUBO = UCP_QUBO(self.ucp_instance_2)
