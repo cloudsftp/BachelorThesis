@@ -5,7 +5,7 @@ from typing import List, Union
 import numpy as np # type: ignore
 import unittest
 
-from numpy.testing._private.utils import assert_equal
+from numpy.testing._private.utils import assert_equal # type: ignore
 
 from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP
 from Annealing_QUBO.qubo import UCP_QUBO

@@ -5,8 +5,9 @@ from typing import Dict, List, Tuple
 import numpy as np # type: ignore
 
 from UCP.unit_commitment_problem import CombustionPlant, UCP, UCPSolution
-from uqo import Problem, Response
-from uqo.client.connection import Connection
+from uqo.Problem import Qubo # type: ignore
+from uqo.Response import Response # type: ignore
+from uqo.client.connection import Connection # type: ignore
 from Util.logging import debug_msg, debug_msg_time
 
 
@@ -148,11 +149,11 @@ class UCP_QUBO(object):
 
   def optimize(self, connection: Connection, solver: str, shots: int = 1, adjust: bool = True):
     debug_msg_time('Start Solver')
-    problem: Problem = Problem.Qubo(connection, self.model).with_platform('dwave').with_solver(solver)
+    problem: Qubo = Qubo(connection, self.model).with_platform('dwave').with_solver(solver)
     answer: Response = problem.solve(shots)
     debug_msg_time('Solver finished')
 
-    sample: List[bool] = answer.solutions[0]
+    sample: List[int] = answer.solutions[0]
 
     u: List[List[bool]] = []
     p: List[List[float]] = []

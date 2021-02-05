@@ -5,8 +5,8 @@ from sys import argv
 from Annealing_QUBO.qubo import UCP_QUBO
 from UCP.unit_commitment_problem import UCP, UCPSolution
 from UCP.experiments import experiments_main
-from uqo.client.config import Config
-from uqo.client.connection import Connection
+from uqo.client.config import Config # type: ignore
+from uqo.client.connection import Connection # type: ignore
 
 def optimize_annealing_qubo_uqo(ucp: UCP) -> UCPSolution:
   config: Config = Config(configpath='uqo_config.json')
