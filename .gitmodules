@@ -1,0 +1,3 @@
+[submodule "Experiments/uqo"]
+	path = Experiments/uqo
+	url = git@github.com:cloudsftp/uqoclient.git
