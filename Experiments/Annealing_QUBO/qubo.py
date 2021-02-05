@@ -4,7 +4,10 @@
 from typing import Dict, List, Tuple
 import numpy as np # type: ignore
 
-from UCP.unit_commitment_problem import CombustionPlant, UCP
+from UCP.unit_commitment_problem import CombustionPlant, UCP, UCPSolution
+from uqo import Problem, Response
+from uqo.client.connection import Connection
+from Util.logging import debug_msg, debug_msg_time
 
 
 class UCP_QUBO(object):
@@ -119,3 +122,47 @@ class UCP_QUBO(object):
 
     self.add_linear(y_c, y_d, y_p)
     self.add_linear_startup_shutdown(y_s)
+
+  ''' Optimization '''
+
+  def get_variables_from_result(self, result: List[int], u: List[List[bool]], p: List[List[float]]) -> None:
+    for i in range(self.ucp.parameters.num_plants):
+      u.append([])
+      p.append([])
+
+      for t in range(self.ucp.parameters.num_loads):
+        value_indices: List[int] = []
+        for k in range(len(self.P[i])):
+          if result[self.m[i, t, k]] == 1:
+            value_indices.append(k)
+
+        value: float = 0
+        num_indices: int = len(value_indices)
+        if num_indices > 0:
+          value = self.P[i][value_indices[(int) (num_indices / 2)]]
+          if num_indices > 1:
+            debug_msg('Warning: {} possible power levels for plant {} detected'.format(num_indices, i))
+
+        p[i].append(value)
+        u[i].append((bool) (p[i][t] > 0))
+
+  def optimize(self, connection: Connection, solver: str, shots: int = 1, adjust: bool = True):
+    debug_msg_time('Start Solver')
+    problem: Problem = Problem.Qubo(connection, self.model).with_platform('dwave').with_solver(solver)
+    answer: Response = problem.solve(shots)
+    debug_msg_time('Solver finished')
+
+    sample: List[bool] = answer.solutions[0]
+
+    u: List[List[bool]] = []
+    p: List[List[float]] = []
+
+    self.get_variables_from_result(sample, u, p)
+
+    time: float = answer.timing / (10 ** 6)
+    solution: UCPSolution = UCPSolution(self.ucp, time, True, self.ucp.calculate_o(u, p), u, p)
+
+    if adjust:
+      solution.adjust_variables()
+
+    return solution
