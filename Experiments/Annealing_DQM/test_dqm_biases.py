@@ -36,17 +36,17 @@ class TestDQMBiases(unittest.TestCase):
   def test_linear_1(self):
     dqm: UCP_DQM = UCP_DQM(self.ucp_instance_1)
 
-    self.linear_biases(dqm, 0, 0, [6, 203, 798, 1793])
-    self.linear_biases(dqm, 0, 1, [6, 192, 777, 1762])
-    self.linear_biases(dqm, 0, 2, [6, 202, 797, 1792])
+    self.linear_biases(dqm, 0, 0, [0, 197, 792, 1787])
+    self.linear_biases(dqm, 0, 1, [0, 186, 771, 1756])
+    self.linear_biases(dqm, 0, 2, [0, 196, 791, 1786])
 
-    self.linear_biases(dqm, 1, 0, [6, 310, 1210, 2710])
-    self.linear_biases(dqm, 1, 1, [6, 298, 1188, 2678])
-    self.linear_biases(dqm, 1, 2, [6, 308, 1208, 2708])
+    self.linear_biases(dqm, 1, 0, [0, 304, 1204, 2704])
+    self.linear_biases(dqm, 1, 1, [0, 292, 1182, 2672])
+    self.linear_biases(dqm, 1, 2, [0, 302, 1202, 2702])
 
-    self.linear_biases(dqm, 2, 0, [6, 1629, 3639, 6449, 10059, 14469, 19679, 25689])
-    self.linear_biases(dqm, 2, 1, [6, 1609, 3609, 6409, 10009, 14409, 19609, 25609])
-    self.linear_biases(dqm, 2, 2, [6, 1629, 3639, 6449, 10059, 14469, 19679, 25689])
+    self.linear_biases(dqm, 2, 0, [0, 1623, 3633, 6443, 10053, 14463, 19673, 25683])
+    self.linear_biases(dqm, 2, 1, [0, 1603, 3603, 6403, 10003, 14403, 19603, 25603])
+    self.linear_biases(dqm, 2, 2, [0, 1623, 3633, 6443, 10053, 14463, 19673, 25683])
 
   def test_quadratic_start_1(self):
     dqm: UCP_DQM = UCP_DQM(self.ucp_instance_1)
@@ -120,40 +120,40 @@ class TestDQMBiases(unittest.TestCase):
   def test_linear_2_all_1(self):
     dqm: UCP_DQM = UCP_DQM(self.ucp_instance_2)
 
-    self.linear_biases(dqm, 0, 0, [3400, 3220, 3230, 3440])
-    self.linear_biases(dqm, 1, 0, [3420, 3210, 3220, 3430])
+    self.linear_biases(dqm, 0, 0, [0, -180, -170, 40])
+    self.linear_biases(dqm, 1, 0, [20, -190, -180, 30])
 
-    linear_biases_t_1: List[float] = [3400, 3010, 2820, 2830]
+    linear_biases_t_1: List[float] = [0, -390, -580, -570]
     self.linear_biases(dqm, 0, 1, linear_biases_t_1)
     self.linear_biases(dqm, 1, 1, linear_biases_t_1)
 
   def test_linear_2_cost_2(self):
     dqm: UCP_DQM = UCP_DQM(self.ucp_instance_2, y_c=2)
 
-    self.linear_biases(dqm, 0, 0, [3400, 3230, 3250, 3470])
-    self.linear_biases(dqm, 1, 0, [3420, 3220, 3240, 3460])
+    self.linear_biases(dqm, 0, 0, [0, -170, -150, 70])
+    self.linear_biases(dqm, 1, 0, [20, -180, -160, 60])
 
-    linear_biases_t_1: List[float] = [3400, 3020, 2840, 2860]
+    linear_biases_t_1: List[float] = [0, -380, -560, -540]
     self.linear_biases(dqm, 0, 1, linear_biases_t_1)
     self.linear_biases(dqm, 1, 1, linear_biases_t_1)
 
   def test_linear_2_demand_2(self):
     dqm: UCP_DQM = UCP_DQM(self.ucp_instance_2, y_d=2)
 
-    self.linear_biases(dqm, 0, 0, [6800, 6420, 6430, 6840])
-    self.linear_biases(dqm, 1, 0, [6820, 6410, 6420, 6830])
+    self.linear_biases(dqm, 0, 0, [0, -380, -370, 40])
+    self.linear_biases(dqm, 1, 0, [20, -390, -380, 30])
 
-    linear_biases_t_1: List[float] = [6800, 6010, 5620, 5630]
+    linear_biases_t_1: List[float] = [0, -790, -1180, -1170]
     self.linear_biases(dqm, 0, 1, linear_biases_t_1)
     self.linear_biases(dqm, 1, 1, linear_biases_t_1)
 
   def test_linear_2_startup_2(self):
     dqm: UCP_DQM = UCP_DQM(self.ucp_instance_2, y_s=2)
 
-    self.linear_biases(dqm, 0, 0, [3400, 3230, 3240, 3450])
-    self.linear_biases(dqm, 1, 0, [3440, 3210, 3220, 3430])
+    self.linear_biases(dqm, 0, 0, [0, -170, -160, 50])
+    self.linear_biases(dqm, 1, 0, [40, -190, -180, 30])
 
-    linear_biases_t_1: List[float] = [3400, 3010, 2820, 2830]
+    linear_biases_t_1: List[float] = [0, -390, -580, -570]
     self.linear_biases(dqm, 0, 1, linear_biases_t_1)
     self.linear_biases(dqm, 1, 1, linear_biases_t_1)
 

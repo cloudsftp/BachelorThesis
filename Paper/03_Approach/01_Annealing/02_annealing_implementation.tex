@@ -47,17 +47,16 @@ Then it applies the calculated linear bias to the variable $p_{i, t}$.
 
 The constant bias is defined by the fromula (\ref{formula:dqm.result.constant}).
 The class \texttt{DiscreteQuadraticModel} does not have an interface for adding a constant bias.
-So the program adds the constant bias to every entry of every linear bias.
-The constant bias only has to be calculated once.
+Because a constant bias does not change the optimal input value, the implementation ignores it.
 
 \subsection{Adjusting Solution}
 \label{approach:annealing.implementation.adjust}
 
 The program translates the optimal solution of the DQM to a solution for the UCP.
-This solution however is not legal.
-The sum of the power outputs at every time instance don't satisfy the demand.
-The program therefore raises the power outputs of all plants at every time instance uniformly.
-While doing so it also avoids violating the power limits of the individual plants.
+This solution, however, is not legal.
+The sum of the power outputs at every time instance does not satisfy the demand.
+The program, therefore, raises the power outputs of all plants at every time instance uniformly.
+While doing so, it also avoids violating the power limits of the individual plants.
 For this the algortihm \ref{approach:annealing.implementation.adjust.algorithm} is used.
 
 \todo{Replace with final code}

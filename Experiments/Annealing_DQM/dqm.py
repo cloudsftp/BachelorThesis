@@ -36,16 +36,6 @@ class UCP_DQM(object):
         p_i.append(self.model.add_variable(var_size))
       self.p.append(p_i)
 
-  def calculate_c(self, y_d: float) -> float:
-    c: float = 0
-
-    for t in range(self.ucp.parameters.num_loads):
-      c += self.ucp.loads[t] ** 2
-
-    c *= y_d
-
-    return c
-
   def calculate_F_i(self, plant: CombustionPlant, i: int) -> np.array:
     P_i: np.ndarray = self.P[i]
     F_i: List[float] = [0]
@@ -56,8 +46,6 @@ class UCP_DQM(object):
     return np.array(F_i)
 
   def set_linear(self, y_c: float, y_s: float, y_d: float) -> None:
-    c = self.calculate_c(y_d)
-
     for i in range(len(self.p)):
       P_i: np.ndarray = self.P[i]
       plant: CombustionPlant = self.ucp.plants[i]
@@ -67,8 +55,6 @@ class UCP_DQM(object):
         linear_biases: np.ndarray = y_c * F_i + y_d * (
           P_i * P_i - self.ucp.loads[t] * P_i
         )
-
-        linear_biases += c
 
         if t == 0:
           if plant.initially_on:
