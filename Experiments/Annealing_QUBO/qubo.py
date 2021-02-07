@@ -84,14 +84,11 @@ class UCP_QUBO(object):
     for i in range(self.ucp.parameters.num_plants):
       plant: CombustionPlant = self.ucp.plants[i]
       for t in range(self.ucp.parameters.num_loads):
-        for k in range(len(self.P[i])):
+        for k in range(1, len(self.P[i])):
           value: float = 0
 
-          if k > 0:
-            value += y_c * (plant.A + plant.B * self.P[i][k] + plant.C * (self.P[i][k] ** 2))
-            value += y_d * (self.P[i][k] ** 2 - self.ucp.loads[t] * self.P[i][k])
-
-          value += y_p
+          value += y_c * (plant.A + plant.B * self.P[i][k] + plant.C * (self.P[i][k] ** 2))
+          value += y_d * (self.P[i][k] ** 2 - self.ucp.loads[t] * self.P[i][k])
 
           self.add_linear_bias(i, t, k, value)
 

@@ -1,11 +1,13 @@
 \section{Unit Commitment Problem as Discrete Quadratic Model}
-\label{approach:annealing.formulate}
+
+\subsection{Preparations}
 
 The MINLP formulation of the UCP is converted to a Discrete Quadratic Model (DQM).
 As mentioned in section (\ref{backg:annealing}), this model is the extension
 of Binary Quadratic Models (BQM) or Quadratic Unconstrained Binary Optimization model (QUBO).
 
 \subsubsection{Mapping Variables}
+\label{approach:annealing.prepare.map}
 
 The model, as seen in section (\ref{backg:annealing}), takes in a vector rather than a 2-dimensional matrix.
 That's why the indices of the variables $p_{i,t}$ are mapped, such that the result is just as many variables $p_{l}$.
@@ -40,7 +42,7 @@ This order ensures that the applying of quadratic biases does not violate the fo
 When adding a quadratic bias, the first argument is always a variable of lower order.
 
 \subsubsection{Discretizising Power Levels}
-\label{approach:annealing.discretize}
+\label{approach:annealing.prepare.discretize}
 
 The approach discretizises the power levels, since the model, respectively the variables, are discrete.
 Every variable $p_{i, t}$ can have one of $2^{n_i}$ values.
@@ -65,6 +67,7 @@ This automatically enforces the constraint (\ref{formula:minlp.power}) that ensu
 This constraint thus is not found in the energy function (\ref{formula:dqm.start.obj}-\ref{formula:dqm.start.demand}).
 
 \subsection{Formulating the DQM}
+\label{approach:annealing.formulate}
 
 The formula we start with (\ref{formula:dqm.start.obj}-\ref{formula:dqm.start.demand})
 includes the objective function and every constraint of the MINLP formulation (\ref{formula:minlp}).
@@ -259,8 +262,8 @@ This could be removed without changing the nature of the solution that minimizes
       S_i^{(0)} p_{i, 0}
       + \sum_{t > 0} S_i \left( p_{i, t-1} \otimes p_{i, t} \right)
     \right)
-  \\ &
-  + \gamma_d \sum_t \left(
+  \\ + \quad &
+  \gamma_d \sum_t \left(
     L_t^2
     + \sum_i \left( P_i^{\odot 2} - l_t P_i \right)i p_{i, t}
     + \sum_{i < j} \left( P_i \otimes P_j \right) \left( p_{i, t} \otimes p_{j, t} \right)
@@ -271,15 +274,15 @@ This could be removed without changing the nature of the solution that minimizes
   + \gamma_d \sum_t \sum_{i < j} \left( P_i \otimes P_j \right) \left( p_{i, t} \otimes p_{j, t} \right)
   & \text{(quadratic)}
   \label{formula:dqm.result.quadratic}
-  \\ &
-  + \sum_{i, t} \left(
+  \\ + \quad &
+  \sum_{i, t} \left(
     \gamma_c F_i + \gamma_d \left(P_i^{\odot 2} - l_t P_i \right)
   \right) p_{i, t}
   + \sum_i S_i^{(0)} p_{i, 0}
   & \text{(linear)}
   \label{formula:dqm.result.linear}
-  \\ &
-  + \sum_t l_t^2
+  \\ + \quad &
+  \sum_t l_t^2
   & \text{(constant)}
   \label{formula:dqm.result.constant}
 \end{align}
