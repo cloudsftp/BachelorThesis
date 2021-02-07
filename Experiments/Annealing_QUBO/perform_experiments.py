@@ -13,7 +13,7 @@ def optimize_annealing_qubo_uqo(ucp: UCP) -> UCPSolution:
   connection: Connection = config.create_connection()
 
   ucp_qubo: UCP_QUBO = UCP_QUBO(ucp)
-  solution: UCPSolution = ucp_qubo.optimize(connection, 'Advantage_system1.1')
+  solution: UCPSolution = ucp_qubo.optimize(config, 'Advantage_system1.1')
   solution.check_validity()
 
   return solution

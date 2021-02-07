@@ -7,7 +7,7 @@ import numpy as np # type: ignore
 from UCP.unit_commitment_problem import CombustionPlant, UCP, UCPSolution
 from uqo.Problem import Qubo # type: ignore
 from uqo.Response import Response # type: ignore
-from uqo.client.connection import Connection # type: ignore
+from uqo.client.config import Config # type: ignore
 from Util.logging import debug_msg, debug_msg_time
 
 
@@ -147,23 +147,31 @@ class UCP_QUBO(object):
         p[i].append(value)
         u[i].append((bool) (p[i][t] > 0))
 
-  def optimize(self, connection: Connection, solver: str, shots: int = 1, adjust: bool = True):
+  def optimize(self, config: Config, solver: str, shots: int = 1, adjust: bool = True):
+    problem: Qubo = Qubo(config, self.model).with_platform('dwave').with_solver(solver)
+    print(problem.find_pegasus_embedding())
     debug_msg_time('Start Solver')
-    problem: Qubo = Qubo(connection, self.model).with_platform('dwave').with_solver(solver)
-    answer: Response = problem.solve(shots)
+    self.answer: Response = problem.solve(shots)
     debug_msg_time('Solver finished')
 
-    sample: List[int] = answer.solutions[0]
+    sample: List[int] = self.answer.solutions[0]
 
     u: List[List[bool]] = []
     p: List[List[float]] = []
 
     self.get_variables_from_result(sample, u, p)
 
-    time: float = answer.timing / (10 ** 6)
+    time: float = -1 #answer.timing / (10 ** 6)
     solution: UCPSolution = UCPSolution(self.ucp, time, True, self.ucp.calculate_o(u, p), u, p)
 
     if adjust:
+      solution.check_validity()
       solution.adjust_variables()
 
     return solution
+
+  def find_embedding(self, config: Config) -> None:
+    problem: Qubo = Qubo(config, self.model).with_platform('dwave').with_solver('Advantage_system1.1')
+    debug_msg_time('Sending embedding request')
+    embedding = problem.find_pegasus_embedding()
+    print(embedding)
