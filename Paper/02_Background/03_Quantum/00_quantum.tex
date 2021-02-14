@@ -1,0 +1,23 @@
+\section{Quantum Computing}
+
+Quantum computers use quantum bits (qubits) instead of normal bits that classical computers use.
+While a bit can be either in the state $0$ or $1$, a qubit can be in a so-called superposition of two states.
+States of qubits are generally written using the Dirac-Notation, also known as the Bra-Ket-Notation
+The two states, the superposition is a combination of, are called the basis.
+The most basic basis is the basis $\{ \ket{0}, \ket{1} \}$.
+The formula (\ref{formula:quantum.superposition}) describes such a superposition.
+When one measures the state of the qubit, it collapses into one of the base states, which is the result of the measurement.
+The probability of either basis state being measured is the square of the the complex amplitude of the basis state in the superposition.
+\cite{Vedral1998}
+\begin{subequations}
+\begin{align}
+  \label{formula:quantum.superposition}
+  & \ket{\phi} = \alpha \cdot \ket{0} + \beta \cdot \ket{1}
+  & \text{with } \alpha, \beta \in \mathbb{C}, \alpha^2 + \beta^2 = 1
+  \\
+  & P(\ket{0}) = \alpha^2
+\end{align}
+\end{subequations}
+
+\input{02_Background/03_Quantum/01_annealing}
+\input{02_Background/03_Quantum/02_gatebased}
