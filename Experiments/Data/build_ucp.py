@@ -1,9 +1,9 @@
 #!/bin/python3.8
 
 
-from dataclasses import dataclass
 import random
 from typing import List
+
 from Data.DemandData.demand_data import DemandData
 from Data.Plants.plants import Plants
 from UCP.unit_commitment_problem import CombustionPlant, UCP, ExperimentParameters
@@ -14,8 +14,19 @@ plants_file_name: str = 'thermal_power_plant_data.json'
 
 def select_loads(loads: List[float], num_loads: int, offset_loads: int) -> List[float]:
   # make sure indices of selected loads are inside list
-  num_loads = min(num_loads, len(loads) - offset_loads)
-  return loads[offset_loads : offset_loads + num_loads]
+  result: List[float] = []
+
+  result += loads[offset_loads:]
+  if len(result) > num_loads:
+    result = result[:num_loads]
+  elif len(result) < num_loads:
+    loads_factor: int = (int) ((num_loads - len(result)) / len(loads))
+    result += loads_factor * loads
+
+    remainder: int = num_loads - len(result)
+    result += loads[:remainder]
+
+  return result
 
 def select_plants(available_plants: List[CombustionPlant], num_plants: int) -> List[CombustionPlant]:
   # initialize pseudo random number generator to get reproducable results

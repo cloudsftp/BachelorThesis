@@ -1,0 +1,72 @@
+\section{Converting QUBO and DQM Solutions}
+\label{approach:quantum.read.solution}
+
+\subsection{Choosing Power Levels}
+
+For QUBOs, it can happen that for a single power plant at a single time instance, multiple binary variables for different power levels are $1$.
+The program then has to choose one of the possible power levels where the binary variable is $1$.
+For this the algorithm \ref{approach:quantum.read.solution.qubo.algorithm} is used.
+
+\begin{lstlisting}[
+  caption={Choosing Power Levels from the QUBO},
+  label={approach:quantum.read.solution.qubo.algorithm},
+  language=Python
+]
+value_indices: List[int] = []
+for k in range(len(self.P[i])):
+  if result[self.p[i][t][k].name] == 1:
+    value_indices.append(k)
+
+value: float = 0
+num_indices: int = len(value_indices)
+if num_indices > 0:
+  value = self.P[i][value_indices[(int) (num_indices / 2)]]
+  if num_indices > 1:
+    debug_msg('Warning: {} possible power levels for plant {} detected'.format(num_indices, i))
+\end{lstlisting}
+
+The program always chooses the median value.
+
+\subsection{Adjusting Power Levels}
+
+The program translates the optimal solution of the DQM or QUBO to a solution for the UCP.
+This solution, however, is not legal.
+The sum of the power outputs at every time instance does not satisfy the demand.
+The program, therefore, raises the power outputs of all plants at every time instance uniformly.
+While doing so, it also avoids violating the power limits of the individual plants.
+For this the algortihm \ref{approach:quantum.read.solution.algorithm} is used.
+
+\todo{Replace with final code}
+
+\begin{lstlisting}[
+  caption={Adjusting the UCP Solution},
+  label={approach:quantum.read.solution.algorithm},
+  language=Python
+]
+for t in range(self.ucp.parameters.num_loads):
+  adjust: List[bool] = [u[i][t] for i in range(self.ucp.parameters.num_plants)]
+  delta: float = self.ucp.loads[t] - sum([p[i][t] for i in range(self.ucp.parameters.num_plants)])
+
+  while True:
+    if delta == 0 or not functools.reduce(lambda a,b: a or b, adjust):
+      break
+
+    adjustment: float = delta / sum([1 if b else 0 for b in adjust])
+    delta = 0
+
+    for i in range(self.ucp.parameters.num_plants):
+      if adjust[i]:
+        p[i][t] += adjustment
+        Pmax: float = self.ucp.plants[i].Pmax
+        Pmin: float = self.ucp.plants[i].Pmin
+
+        if p[i][t] > Pmax:
+          delta += p[i][t] - Pmax
+          p[i][t] = Pmax
+          adjust[i] = False
+
+        elif p[i][t] < Pmin:
+          delta += p[i][t] - Pmin
+          p[i][t] = Pmin
+          adjust[i] = False
+\end{lstlisting}

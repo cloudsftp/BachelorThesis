@@ -1,5 +1,7 @@
 \section{Performance of Annealing-based Quantum Computers}
 
+\subsection{Implementation using DQM}
+
 For the optimization using the Quantum Annealing hardware, the formulated DQM is sent to a hybrid solver at D-Wave.
 The hybrid solver does not put the DQM on quantum hardware directly.
 It classically searches the solution space.
@@ -10,8 +12,6 @@ The optimization of the DQM using the hybrid solver for small problems seems to 
 Every time $10$ time instances are added to the problem size, the optimization takes about $0.1$ seconds longer.
 The results of the optimization and the time needed for the optimization are listed in table \ref{table:validation.annealing.performance}.
 The optimization of these problems takes no longer than $5.6$ seconds each.
-
-\todo{redo table. remove 25}
 
 \begin{table}[ht]
   \centering
@@ -31,8 +31,25 @@ After that, the linear time complexity is clearly visible.
   \label{figure:validation.annealing.performance}
 \end{figure}
 
+When the problem size increases, the time complexity seems to be worse than linear.
+This becomes clear in figure \ref{figure:validation.annealin.performance.extended}.
+The time taken by the hybrid solver to optimize the problem grows linearly, but at a higher rate starting from $80$ time instances.
+After this increase of slope, the slope stays the same until the problem size reaches $200$ in the time dimension.
+I did not test the optimization of problems with more than $200$ time instances on the D-Wave hardware.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75 \textwidth]{04_Validation/performance_annealing_p4_extended.png}
+  \caption{Time complexity of annealing optimization with four power plants and more time instances.}
+  \label{figure:validation.annealin.performance.extended}
+\end{figure}
+
 This approach does not produce optimal solutions for the UCP.
 The summed power output of the single power plants does not meet the power demand because the DQM underestimates the demand part of the UCP.
 After retrieving the optimal DQM solution and translating it to a UCP solution, the program adjusts the power outputs of the power plants.
-It does so as described in section \ref{approach:annealing.implementation.adjust}.
+It does so as described in section \ref{approach:quantum.read.solution}.
 This leads to a non-optimal solution of the UCP.
+
+\subsubsection{Implementation using QUBO}
+
+\todo{List performance results of QUBO on hybrid dwave solver}

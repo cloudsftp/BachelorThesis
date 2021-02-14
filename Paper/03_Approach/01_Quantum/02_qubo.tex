@@ -1,0 +1,209 @@
+\section{Unit Commitment Problem as Quadratic Unconstrained Binary Model}
+
+\subsection{Preparations}
+
+The formulation of the Quadratic Unconstrained Binary Model (QUBO) is based on the DQM formulated in section \ref{approach:annealing.formulate}.
+Instead of a single discrete variable for every power plant $i$ and time instance $t$, the QUBO has an array of binary variables for every possible power level in $P_i$ for every power plant $i$ and time instance $t$.
+
+\subsubsection{Mapping Variables}
+
+As before in section \ref{approach:annealing.prepare.map}, the variable indices are mapped to a single index to make sure the form of the QUBO is correct.
+The mapping is extended by a third index $k$ corresponding to the power level.
+
+\begin{align}
+  m':
+  \quad
+  \mathbb{I}
+  \times \mathbb{T}
+  \times \{k \in \mathbb{N} | k \leq |P_i|\} \to \mathbb{K}':
+  \quad
+  m'(i, t, k) = \left( |\mathbb{T}| \sum_{j=0}^{i-1} |P_j| \right)
+  + t \cdot |P_i|
+  + k
+\end{align}
+
+In the model below, $p_{i,t,k}$ is used, but this is to show that
+
+\begin{subequations}
+\begin{align}
+  &
+  \forall i \in \mathbb{I}, t \in \mathbb{T}, k, l \in \mathbb{N}, k < l < |P_i|:
+  &
+  m'(i, t, k) < m'(i, t, l)
+  \\
+  \land \quad
+  &
+  \forall i \in \mathbb{I}, t, t' \in \mathbb{T}, k \in \mathbb{N}, k < |P_i|, t < t':
+  &
+  m'(i, t, k) < m'(i, t', k)
+  \\
+  \land \quad
+  &
+  \forall i, j \in \mathbb{I}, t  \in \mathbb{T}, k, l \in \mathbb{N}, k < |P_i|, l < |P_j|, i < j:
+  &
+  m'(i, t, k) < m'(j, t, l)
+\end{align}
+\end{subequations}
+
+When implementing the BQM, the discrete variables $p_{i, t, k}$ are added in the order specified by $m'(i, t, k)$.
+This order ensures that the applying of quadratic biases does not violate the form of the BQM.
+When adding a quadratic bias, the first argument is always a variable of lower order.
+
+\subsubsection{Discretizising Power Levels}
+
+This approach discretizes the power levels just like in section \ref{approach:annealing.prepare.discretize}.
+But this time, the values are not an array but single values.
+They are defined as
+
+\begin{align}
+  P_{i, k} = \begin{cases}
+    0 & , k = 0 \\
+    P_{min, i} + (k - 1) \cdot \delta_i & , else
+  \end{cases}
+\end{align}
+
+$P_{i, k}$ is defined for all $i \in \mathbb{I}, k \in \mathbb{N}, k < 2^{n_i}$.
+Where $n_i$ is chosen as in section \ref{approach:annealing.prepare.discretize}.
+Thus $P_{i, 2^{n_i} - 1} = P_{max, i}$.
+
+This automatically enforces the constraint (\ref{formula:minlp.power}) that ensures that the power outputs stay inside the limits of every power plant.
+This constraint thus is not found in the energy function (\todo{link parts of function}).
+
+\subsection{Formulating the QUBO}
+
+The starting point is the DQM (\ref{formula:qubo.dqm.result.quadratic}-\ref{formula:qubo.dqm.result.constant}).
+The approach transforms the formula in a way that it uses binary variables instead of discrete variables.
+
+\begin{subequations}
+\begin{align}
+  E(p) = \quad
+  &
+  \gamma_s \sum_i \sum_{t > 0} S_i \left( p_{i, t-1} \otimes p_{i, t} \right)
+  + \gamma_d \sum_t \sum_{i < j} \left( P_i \otimes P_j \right) \left( p_{i, t} \otimes p_{j, t} \right)
+  & \text{(quadratic)}
+  \label{formula:qubo.dqm.result.quadratic}
+  \\ + \quad &
+  \sum_{i, t} \left(
+    \gamma_c \cdot F_i + \gamma_d \left(P_i^{\odot 2} - l_t \cdot P_i \right)
+  \right) p_{i, t}
+  + \sum_i S_i^{(0)} \cdot p_{i, 0}
+  & \text{(linear)}
+  \label{formula:qubo.dqm.result.linear}
+  \\ + \quad &
+  \sum_t l_t^2
+  & \text{(constant)}
+  \label{formula:qubo.dqm.result.constant}
+\end{align}
+\end{subequations}
+
+\subsubsection{Quadratic Biases}
+
+The transformation of the quadratic biases has two parts.
+The first part is the transformation of the startup and shutdown costs.
+
+\begin{align}
+  \gamma_s \sum_i \sum_{t > 0} S_i \left( p_{i, t-1} \otimes p_{i, t} \right)
+  = \gamma_s \sum_i \sum_{t, k > 0} \left(
+    A_i^D \cdot p_{i, t-1, k} \cdot p_{i, t, 0}
+    + A_i^U \cdot p_{i, t-1, 0} \cdot p_{i, t, k}
+  \right)
+\end{align}
+
+Penalties $A_i^U$ and $A_i^D$ apply if the power level of the plant $i$ is $0$ at time $t-1$ and non-zero at time $t$ respectively non-zero at time $t-1$ and $0$ at time $t$.
+
+The second part is the transformation of the quadratic biases connected to the demand.
+
+\begin{align}
+  \gamma_d \sum_t \sum_{i < j} \left( P_i \otimes P_j \right) \left( p_{i, t} \otimes p_{j, t} \right)
+  = \gamma_d \sum_{i, k, l} \sum_{i < j} \left( P_{i,k} \cdot P_{j,l} \cdot p_{i, t, k} \cdot p_{j, t, l} \right)
+\end{align}
+
+It is more straightforward and shows the meaning of the tensor products and the Frobenius inner product used in the DQM.
+
+\subsubsection{Linear biases}
+
+The transformation of the linear biases has two parts.
+The first part is the transformation of the objective and demand related biases.
+
+\begin{align}
+  \sum_{i, t} \left(
+    \gamma_c \cdot F_i + \gamma_d \left( P_i^{\odot 2} - l_t \cdot P_i \right)
+  \right) p_{i, t}
+  =
+  \sum_{i, t, k} \left(
+    \gamma_c \cdot F_{i, k} + \gamma_d \left( P_{i, k}^2 - l_t \cdot P_{i, t} \right)
+  \right)
+\end{align}
+
+Where $F_{i, k}$ is defined as follows:
+
+\begin{align}
+  F_{i, k} = \begin{cases}
+    0 & , k = 0 \\
+    A_i + B_i \cdot P_{i, k} + C_i \cdot P_{i, k}^2 & , else
+  \end{cases}
+\end{align}
+
+The second part of the transformation is the startup and shutdown costs of the first time instance.
+
+\begin{align}
+  \sum_{i, k} S_{i, k}^{(0)} \cdot p_{i, 0, k}
+  & & \text{where }
+  S_{i, k}^{(0)} = \begin{cases}
+    A_i^U & , u_{i, -1} = 0 \land k > 0 \\
+    A_i^D & , u_{i, -1} = 1 \land k = 0 \\
+    0 & , else
+  \end{cases}
+\end{align}
+
+\subsubsection{Discretizing $p$}
+
+Since the variables in the QUBO are binary, each represents a single possible power level $k$ of power plant $i$ at time $t$.
+Each power plant $i$ may only have one output level at each time instance $t$.
+So the QUBO should avoid that multiple binary variables for different power levels $k$ and $l$ are $1$ for the same power plant $i$ at the same time $t$.
+Penalizing multiple possible power output values for each plant at every time avoids this.
+
+\begin{subequations}
+\begin{align}
+  & \gamma_p \sum_{i, t} \left( \left( \sum_k p_{i, t, k} \right) - 1 \right)^2
+  \\ = \quad &
+  \gamma_p \sum_{i, t} \left(
+    1
+    + \sum_k \left( p_{i, t, k} \right)^2
+    - \sum_k \left( p_{i, t, k} \right)
+    + \sum_{k < l} \left( p_{i, t, k} \cdot p_{i, t, l} \right)
+  \right)
+  \\ = \quad &
+  \gamma_p \sum_{i, t} \left(
+    1
+    + \sum_{k < l} \left( p_{i, t, k} \cdot p_{i, t, l} \right)
+  \right)
+\end{align}
+\end{subequations}
+
+\subsubsection{Result}
+
+After adding all parts together again, we obtain the following QUBO.
+
+\begin{align}
+  E(p)
+  = \quad & \gamma_s \sum_i \sum_{t, k > 0} \left(
+      A_i^D \cdot p_{i, t-1, k} \cdot p_{i, t, 0}
+      + A_i^U \cdot p_{i, t-1, 0} \cdot p_{i, t, k}
+    \right) \\
+  + \quad & \gamma_d \sum_{i, k, l} \sum_{i < j} \left(
+      P_{i,k} \cdot P_{j,l} \cdot p_{i, t, k} \cdot p_{j, t, l}
+    \right)
+  + \gamma_p \sum_{i, t} \sum_{k < l} \left( p_{i, t, k} \cdot p_{i, t, l} \right)
+  & \text{(quadratic)}
+  \\ + \quad &
+  \sum_{i, t, k} \left(
+    \gamma_c \cdot F_{i, k}
+    + \gamma_d \left( P_{i, k}^2 - l_t \cdot P_{i, k} \right)
+  \right) p_{i, t, k}
+  + \sum_{i, k} \left( S_{i, k}^{(0)} \cdot p_{i, 0, k} \right)
+  & \text{(linear)}
+  \\ + \quad &
+  1 + \sum_t l_t^2
+  & \text{(constant)}
+\end{align}

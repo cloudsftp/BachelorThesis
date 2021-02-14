@@ -7,6 +7,7 @@ dependencies:
   - _libgcc_mutex=0.1=main
   - amply=0.1.4=py_0
   - appdirs=1.4.3=py_1
+  - backcall=0.2.0=py_0
   - blas=1.0=mkl
   - ca-certificates=2020.10.14=0
   - certifi=2020.6.20=pyhd3eb1b0_3
@@ -14,6 +15,7 @@ dependencies:
   - cycler=0.10.0=py38_0
   - cython=0.29.21=py38he6710b0_0
   - dbus=1.13.18=hb2f20db_0
+  - decorator=4.4.2=py_0
   - docutils=0.16=py38h924ce5b_2
   - expat=2.2.10=he6710b0_2
   - fontconfig=2.13.0=h9420a91_0
@@ -25,7 +27,13 @@ dependencies:
   - icu=58.2=he6710b0_3
   - intel-openmp=2020.2=254
   - ipopt=3.13.2=hc6e8484_0
+  - ipykernel=5.3.4=py38h5ca1d4c_0
+  - ipython=7.19.0=py38hb070fc8_0
+  - ipython_genutils=0.2.0=py38_0
+  - jedi=0.17.2=py38_0
   - jpeg=9b=h024ee3a_2
+  - jupyter_client=6.1.7=py_0
+  - jupyter_core=4.6.3=py38_0
   - kiwisolver=1.3.0=py38h2531618_0
   - lcms2=2.11=h396b838_0
   - ld_impl_linux-64=2.33.1=h53a641e_7
@@ -37,6 +45,7 @@ dependencies:
   - libgfortran-ng=7.3.0=hdf63c60_0
   - liblapack=3.8.0=16_mkl
   - libpng=1.6.37=hbc83047_0
+  - libsodium=1.0.18=h7b6447c_0
   - libstdcxx-ng=9.1.0=hdf63c60_0
   - libtiff=4.1.0=h2733197_1
   - libuuid=1.0.3=h1bed415_2
@@ -60,12 +69,18 @@ dependencies:
   - olefile=0.46=py_0
   - openssl=1.1.1h=h7b6447c_0
   - pandas=1.1.3=py38he6710b0_0
+  - parso=0.7.0=py_0
   - pcre=8.44=he6710b0_0
+  - pexpect=4.8.0=py38_0
+  - pickleshare=0.7.5=py38_1000
   - pillow=8.0.1=py38he98fc37_0
   - pip=20.2.3=py38_0
   - ply=3.11=py_1
+  - prompt-toolkit=3.0.8=py_0
   - psutil=5.7.2=py38h7b6447c_0
+  - ptyprocess=0.6.0=py38_0
   - pulp=2.3=py38h32f6830_1
+  - pygments=2.7.2=pyhd3eb1b0_0
   - pyomo=5.7.1=py38h950e882_1
   - pyparsing=2.4.7=pyh9f0ad1d_0
   - pyqt=5.9.2=py38h05f1152_4
@@ -84,10 +99,91 @@ dependencies:
   - tk=8.6.10=hbc83047_0
   - tornado=6.0.4=py38h7b6447c_1
   - traceback2=1.4.0=py38_0
+  - traitlets=5.0.5=py_0
   - typed-ast=1.4.1=py38h7b6447c_0
   - typing_extensions=3.7.4.3=py_0
   - unittest2=1.1.0=py38_0
+  - wcwidth=0.2.5=py_0
   - wheel=0.35.1=py_0
   - xz=5.2.5=h7b6447c_0
+  - zeromq=4.3.3=he6710b0_3
   - zlib=1.2.11=h7b6447c_3
   - zstd=1.4.5=h9ceee32_0
+  - pip:
+    - absl-py==0.11.0
+    - attrs==20.3.0
+    - cffi==1.14.4
+    - chardet==4.0.0
+    - click==7.1.2
+    - cryptography==3.3.1
+    - deprecated==1.2.10
+    - dill==0.3.3
+    - dimod==0.9.13
+    - dlx==1.0.4
+    - docplex==2.19.202
+    - dwave-cloud-client==0.8.2
+    - dwave-greedy==0.1.2
+    - dwave-hybrid==0.6.1
+    - dwave-inspector==0.2.4
+    - dwave-neal==0.5.7
+    - dwave-networkx==0.8.8
+    - dwave-ocean-sdk==3.2.0
+    - dwave-qbsolv==0.3.2
+    - dwave-qiskit-plugin==0.1.0
+    - dwave-system==1.3.0
+    - dwave-tabu==0.3.1
+    - dwavebinarycsp==0.1.2
+    - fastdtw==0.3.4
+    - fasteners==0.16
+    - fastjsonschema==2.14.5
+    - flask==1.1.2
+    - h5py==3.1.0
+    - homebase==1.0.1
+    - idna==2.10
+    - inflection==0.5.1
+    - itsdangerous==1.1.0
+    - jinja2==2.11.2
+    - joblib==1.0.0
+    - jsonschema==3.2.0
+    - lxml==4.6.2
+    - markupsafe==1.1.1
+    - minorminer==0.2.5
+    - more-itertools==8.6.0
+    - mpmath==1.1.0
+    - multitasking==0.0.9
+    - nest-asyncio==1.4.3
+    - networkx==2.5
+    - ntlm-auth==1.5.0
+    - ortools==8.1.8487
+    - penaltymodel==0.16.4
+    - penaltymodel-cache==0.4.3
+    - penaltymodel-lp==0.1.4
+    - penaltymodel-mip==0.2.4
+    - plucky==0.4.3
+    - prettytable==2.0.0
+    - protobuf==3.14.0
+    - pybind11==2.6.1
+    - pycparser==2.20
+    - pyqubo==1.0.7
+    - pyrsistent==0.17.3
+    - pysocks==1.7.1
+    - python-constraint==1.4.0
+    - pyzmq==22.0.2
+    - qiskit==0.23.2
+    - qiskit-aer==0.7.2
+    - qiskit-aqua==0.8.1
+    - qiskit-ibmq-provider==0.11.1
+    - qiskit-ignis==0.5.1
+    - qiskit-terra==0.16.1
+    - quandl==3.6.0
+    - requests==2.25.1
+    - requests-ntlm==1.1.0
+    - retworkx==0.7.2
+    - scikit-learn==0.24.1
+    - sympy==1.7.1
+    - threadpoolctl==2.1.0
+    - urllib3==1.26.2
+    - websockets==8.1
+    - werkzeug==1.0.1
+    - wrapt==1.12.1
+    - yfinance==0.1.55

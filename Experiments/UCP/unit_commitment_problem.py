@@ -1,10 +1,14 @@
 #/bin/python3.8
 
 import os
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
+import functools
 from typing import List
+import numpy as np # type: ignore
+import math
 
 from Util.json_file_handler import write_dataclass_to, read_dataclass_from
+from Util.logging import debug_msg_time, debug_msg
 
 
 @dataclass
@@ -55,6 +59,22 @@ class UCP(object):
   def load_from(file_name):
     return read_dataclass_from(file_name, UCP)
 
+  def get_discretized_power_levels(self, max_h: float = 10) -> List[np.ndarray]:
+    P = []
+
+    for plant in self.plants:
+      spectrum: float = plant.Pmax - plant.Pmin
+      n: int = math.ceil(math.log(spectrum / max_h + 2, 2))
+      h: float = spectrum / (2 ** n - 2)
+
+      P_i: List[float] = [0]
+      for k in range(2 ** n - 1):
+        P_i.append(plant.Pmin + k * h)
+
+      P.append(np.array(P_i))
+
+    return P
+
   def calculate_o(self, u: List[List[bool]], p: List[List[float]]) -> float:
     o: float = 0
 
@@ -73,7 +93,7 @@ class UCP(object):
 
 
 @dataclass
-class UCP_Solution(object):
+class UCPSolution(object):
   ucp: UCP
   time: float
   optimal: bool
@@ -86,4 +106,61 @@ class UCP_Solution(object):
 
   @staticmethod
   def load_from(file_name):
-    return read_dataclass_from(file_name, UCP_Solution)
+    return read_dataclass_from(file_name, UCPSolution)
+
+
+  def check_validity(self) -> None:
+    debug_msg_time('Start Checking Validity of Solution\n')
+
+    quality: float = 0
+
+    for t in range(self.ucp.parameters.num_loads):
+      combined_output: float = 0
+
+      for i in range(self.ucp.parameters.num_plants):
+        p: float = self.p[i][t]
+        Pmin: float = self.ucp.plants[i].Pmin
+        Pmax: float = self.ucp.plants[i].Pmax
+
+        if not Pmin <= p <= Pmax and p != 0:
+          quality += p - Pmin if p < Pmin else Pmax - p
+          debug_msg('p {:3d}, {:3d}:\t{:4.2f} <= {:4.2f} <= {:4.2f}'.format(i, t, Pmin, p, Pmax))
+
+        combined_output += p
+
+      l = self.ucp.loads[t]
+      if l > combined_output:
+        quality += combined_output - l
+        debug_msg('sum p {:3d}:\t{:4.2f} <= {:4.2f} - off {:4.2f}'.format(t, l, combined_output, combined_output - l))
+
+    debug_msg('Quality:\t{:12.2f}'.format(quality))
+
+  def adjust_variables(self) -> None:
+    for t in range(self.ucp.parameters.num_loads):
+      adjust: List[bool] = [self.u[i][t] for i in range(self.ucp.parameters.num_plants)]
+      delta: float = self.ucp.loads[t] - sum([self.p[i][t] for i in range(self.ucp.parameters.num_plants)])
+
+      while True:
+        if delta == 0 or not functools.reduce(lambda a,b: a or b, adjust):
+          break
+
+        adjustment: float = delta / sum([1 if b else 0 for b in adjust])
+        delta = 0
+
+        for i in range(self.ucp.parameters.num_plants):
+          if adjust[i]:
+            self.p[i][t] += adjustment
+            Pmax: float = self.ucp.plants[i].Pmax
+            Pmin: float = self.ucp.plants[i].Pmin
+
+            if self.p[i][t] > Pmax:
+              delta += self.p[i][t] - Pmax
+              self.p[i][t] = Pmax
+              adjust[i] = False
+
+            elif self.p[i][t] < Pmin:
+              delta += self.p[i][t] - Pmin
+              self.p[i][t] = Pmin
+              adjust[i] = False
+
+    self.o = self.ucp.calculate_o(self.u, self.p)
