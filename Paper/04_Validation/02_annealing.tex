@@ -1,5 +1,7 @@
 \section{Performance of Annealing-based Quantum Computers}
 
+\subsection{Implementation using DQM}
+
 For the optimization using the Quantum Annealing hardware, the formulated DQM is sent to a hybrid solver at D-Wave.
 The hybrid solver does not put the DQM on quantum hardware directly.
 It classically searches the solution space.
@@ -45,5 +47,9 @@ I did not test the optimization of problems with more than $200$ time instances 
 This approach does not produce optimal solutions for the UCP.
 The summed power output of the single power plants does not meet the power demand because the DQM underestimates the demand part of the UCP.
 After retrieving the optimal DQM solution and translating it to a UCP solution, the program adjusts the power outputs of the power plants.
-It does so as described in section \ref{approach:annealing.implementation.adjust}.
+It does so as described in section \ref{approach:quantum.read.solution}.
 This leads to a non-optimal solution of the UCP.
+
+\subsubsection{Implementation using QUBO}
+
+\todo{List performance results of QUBO on hybrid dwave solver}
