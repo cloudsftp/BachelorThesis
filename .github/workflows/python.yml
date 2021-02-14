@@ -12,15 +12,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
 
       - name: Setup Anaconda
         uses: s-weigand/setup-conda@v1
 
       - name: Install Anaconda Environment
         run: conda env update --file Experiments/conda_environment.yml --name base
-
-      - name: Install Pip Packages
-        run: pip install -r Experiments/pip_packages.list
 
       - name: Run Unittests
         run: |
