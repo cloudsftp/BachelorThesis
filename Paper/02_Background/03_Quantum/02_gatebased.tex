@@ -1,3 +1,32 @@
 \subsection{Gate-based Quantum Computing}
 
+In the gate-based model of quantum computers, gates represent the mainuplation of qubits.
+The qubits and quantum gates form a quantum circuit.
+
+Single qubit gates manipulate only one qubit at a time.
+Double qubit gates manipulate two qubits and can entangle two qubits.
+The formula (\ref{formula:gate.single.qbit.gate.example}) shows an example of a single qubit gate.
+It swaps the amplitudes of the two basis states $\ket{0}$ and $\ket{1}$.
+The formula (\ref{formula:gate.double.qbit.gate.example}) shows an example of a double qubit gate.
+It applies the $X$-gate to the second qubit if the first qubit is in the base state $\ket{1}$.
+This entangles both qubits with each other.
+\begin{subequations}
+\begin{align}
+  \label{formula:gate.single.qbit.gate.example}
+  X & = \ket{0} \bra{1} + \ket{1} \bra{0}
+  & = \begin{pmatrix}
+    0 & 1 \\ 1 & 0
+  \end{pmatrix}
+  \\
+  \label{formula:gate.double.qbit.gate.example}
+  CNOT & = \ket{00} \bra{00} + \ket{01} \bra{01} + \ket{10} \bra{11} + \ket{11} \bra{10}
+  & = \begin{pmatrix}
+    1 & 0 & 0 & 0 \\
+    0 & 1 & 0 & 0 \\
+    0 & 0 & 0 & 1 \\
+    0 & 0 & 1 & 0
+  \end{pmatrix}
+\end{align}
+\end{subequations}
+
 \todo{Explain gate model}
