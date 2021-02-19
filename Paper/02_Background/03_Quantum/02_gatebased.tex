@@ -40,7 +40,7 @@ This entangles both qubits with each other.
 
 A quantum circuit consists of one or more quantum gates that are operating on one or more qubits.
 The quantum circuit \ref{figure:gate.deutsch.circuit} depicts the Deutsch algorithm for the function $f: x \mapsto x$.
-The dot with the line to the circeled plus stands for the $CNOT$ gate and the $H$ gates stand for hadamard gates.
+The dot with the line to the circled plus stands for the $CNOT$ gate, and the $H$ gates stand for Hadamard gates.
 A Hadamard gate puts qubits that are in a basis state into a superposition where both outcomes of the measurement are equally likely.
 It is described by the formula (\ref{formula:gate.hadamard}).
 The last gate stands for a measurement.
@@ -53,4 +53,8 @@ In this case only the first qubit gets measured.
   \label{figure:gate.deutsch.circuit}
 \end{figure}
 
-\todo{Explain gate model}
+A quantum computer that implements this model of computing would be more powerful than any Turing machine.
+It can simulate any finite physical system in polynomial time complexity, including systems with quantum effects.
+The complexity class is called Bounded-error Quantum Polynomial-time (BQP).
+There exists no algorithm for Turing machines to accomplish this.
+%\cite{Shor1998}
