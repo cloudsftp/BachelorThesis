@@ -27,6 +27,12 @@ This entangles both qubits with each other.
     1 & 1 \\ 1 & -1
   \end{pmatrix}
   \\
+  \label{formula:gate.z}
+  Z & = \ket{0} \bra{0} - \ket{1} \bra{1}
+  & = \begin{pmatrix}
+    1 & 0 \\ 0 & -1
+  \end{pmatrix}
+  \\
   \label{formula:gate.cnot}
   CNOT & = \ket{00} \bra{00} + \ket{01} \bra{01} + \ket{10} \bra{11} + \ket{11} \bra{10}
   & = \begin{pmatrix}
@@ -54,7 +60,41 @@ In this case only the first qubit gets measured.
 \end{figure}
 
 A quantum computer that implements this model of computing would be more powerful than any Turing machine.
-It can simulate any finite physical system in polynomial time complexity, including systems with quantum effects.
+It can simulate any finite physical system with polynomial time complexity, including systems with quantum effects.
 The complexity class is called Bounded-error Quantum Polynomial-time (BQP).
-There exists no algorithm for Turing machines to accomplish this.
-%\cite{Shor1998}
+There exists no known algorithm for Turing machines to accomplish this.
+\cite{Deutsch1985, Shor1998}
+
+\subsubsection{Grover Algorithm}
+
+The Grover Algorithm is a quantum algorithm for unstructured search.
+It can find an element that satisfies some condition $C$ in an unstructured list with the time complexity of $O(\sqrt{n})$.
+\cite{Grover1996}
+If multiple elements satisfy the condition, only one of those elements can be found in one execution of the algorithm.
+\cite{Boyer1998}
+
+The algorithm consists on 3 parts:
+\begin{enumerate}
+  \item Initialize the input register with the equal superposition $\ket{\Phi} = \frac{1}{\sqrt{N}} \sum_{x=0}^N \ket{x}$
+  \item \label{backg:quantum.grover.iteration}
+  Repeat the following steps $O(\sqrt{N})$ times:
+  \begin{enumerate}[label=\alph*)]
+    \item Rotate all states that satisfy $C$ by $\pi$.
+    The rotation is implemented by applying $Z$ (see formula (\ref{formula:gate.z})) to one qubit of the register.
+    \item Apply the diffusion operator $D$.
+    It is defined as \begin{align}
+      D_{i, j} = \begin{cases}
+        \frac{2}{N} & i \neq j\\
+        \frac{2}{N} - 1 & else
+      \end{cases}
+    \end{align}
+  \end{enumerate}
+  \item \label{backg:quantum.grover.sampling}
+  Sample the input register.
+\end{enumerate}
+
+Step \ref{backg:quantum.grover.iteration} is called the Grover-iteration.
+Its first part that rotates desired states is called an oracle.
+The Grover-iteration amplifies the amplitudes of desired states.
+This increases the probability of measuring those states in step \ref{backg:quantum.grover.sampling}.
+\cite{Grover1996}
