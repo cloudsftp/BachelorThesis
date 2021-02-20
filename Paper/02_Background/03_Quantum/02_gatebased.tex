@@ -98,3 +98,21 @@ Its first part that rotates desired states is called an oracle.
 The Grover-iteration amplifies the amplitudes of desired states.
 This increases the probability of measuring those states in step \ref{backg:quantum.grover.sampling}.
 \cite{Grover1996}
+
+\subsubsection{Optimization}
+
+Optimizing QUBOs on gate-based quantum computers is possible by iteratively searching for better values of the QUBO variables.
+The Grover algorithm is utilized for the search.
+Two quantum registers are used to represent the variables of the QUBO ($\ket{x}$) and the energy value of the QUBO ($\ket{z}$).
+\cite{Gilliam2019}
+
+The oracle consists of multiple rotations of qubits of $\ket{z}$.
+The qubits of $\ket{x}$ control the rotations.
+The rotations add the biases of the QUBO to the value of the quantum register in the Fourier-domain.
+Then the oracle subtracts the current minimum energy value $y$ from the value of $\ket{z}$.
+The most significant bit after the inverse Fourier-transformation controls the $Z$-operator rotating the state.
+\cite{Gilliam2019}
+
+This way, the measurement of $\ket{x}$ yields values for the QUBO variables that correspond to an lower energy value than the minimum found before.
+By repeating this process, the algorithm identifies the values for the QUBO variables that minimize the energy.
+\cite{Gilliam2019}
