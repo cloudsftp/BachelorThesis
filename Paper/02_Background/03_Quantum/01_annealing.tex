@@ -1,7 +1,30 @@
 \subsection{Annealing-based Quantum Computing}
 \label{backg:annealing}
 
-\todo{Explain concept of Annealing-based QC}
+Annealing-based quantum computers are designed to tackle optimization problems well.
+The quantum processing unit takes an Ising as input and embeds the biases on itself.
+For this, it uses couplers between its qubits.
+Then quantum tunneling is exploited to find a state of the qubits where the energy of the QPU is minimal.
+This is also the state of the Ising model variables that minimize the model.
+\cite{Boixo2013}
+
+Ising models and QUBOs are equivalent, and the conversion is computationally inexpensive.
+The difference is the domain of the variables.
+\cite{Bian2010}
+In Ising models, the domain is $\{-1, 1\}$, and in QUBOs, it is $\{0, 1\}$.
+This work considers QUBOs rather than Ising models.
+The formula \ref{formula:qubo.form} shows the structure of a QUBO.
+$a$ are called linear biases because they depend on one variable, and $b$ are called quadratic biases because they depend on two variables.
+
+\begin{align}
+  \label{formula:qubo.form}
+  E(v) = & \quad
+  \sum_i a_i \cdot v_i
+  + \sum_{i < j} b_{i, j} \cdot v_i \cdot v_j
+  + c
+\end{align}
+
+\subsection{Discrete Optimization}
 
 \begin{subequations}
 \begin{align}
