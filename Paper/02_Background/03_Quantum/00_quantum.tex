@@ -1,0 +1,47 @@
+\section{Quantum Computing}
+
+Quantum computers use quantum bits (qubits) instead of normal bits that classical computers use.
+While a bit can be either in the state $0$ or $1$, a qubit can be in a so-called superposition of two states.
+States of qubits are generally written using the Dirac-Notation, also known as the Bra-Ket-Notation
+The two states, the superposition is a combination of, are called the basis.
+The most basic basis is the basis $\{ \ket{0}, \ket{1} \}$.
+The formula (\ref{formula:quantum.superposition}) describes such a superposition.
+When one measures the state of the qubit, it collapses into one of the base states, which is the result of the measurement.
+The probability of either basis state being measured is the square of the the complex amplitude of the basis state in the superposition.
+\cite{Vedral1998}
+\begin{subequations}
+\begin{align}
+  \label{formula:quantum.superposition}
+  \ket{\phi} & = \alpha \cdot \ket{0} + \beta \cdot \ket{1}
+  = \begin{pmatrix}
+    \alpha \\ \beta
+  \end{pmatrix}
+  & \text{with } \alpha, \beta \in \mathbb{C}, \alpha^2 + \beta^2 = 1
+  \\
+  p_0 & = \alpha^2
+\end{align}
+\end{subequations}
+
+Multiple qubits chained together form a quantum register.
+In such a register, the measurement results of one qubit might depend on the measurement results of other qubits.
+This is called entanglement.
+The formula (\ref{formula:quantum.superposition.register}) describes a quantum register with $n$ qubits.
+If one can't separate the formula into single qubits, the state is entangled.
+The probability of measuring a specific state of the quantum register is given by the amplitude of that state squared.
+\cite{Vedral1998}
+\begin{subequations}
+\begin{align}
+  \label{formula:quantum.superposition.register}
+  \ket{\Phi} & = \sum_{x \in \{0, 1\}^n} \alpha_x \cdot \ket{x}
+  = \begin{pmatrix}
+    \alpha_{0 \ldots 00} \\ \alpha_{0 \ldots 01} \\ \alpha_{0 \ldots 10} \\ \ldots \\ \alpha_{1 \ldots 11}
+  \end{pmatrix}
+  & \text{with } \forall x \in \{0, 1\}^n: \alpha_x \in \mathbb{C},
+  \sum_{x \in \{0, 1\}^n} \alpha_x^2 = 1
+  \\
+  p_x & = \alpha_x^2
+\end{align}
+\end{subequations}
+
+\input{02_Background/03_Quantum/01_annealing}
+\input{02_Background/03_Quantum/02_gatebased}
