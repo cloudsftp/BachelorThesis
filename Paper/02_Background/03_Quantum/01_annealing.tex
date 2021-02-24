@@ -24,7 +24,28 @@ $a$ are called linear biases because they depend on one variable, and $b$ are ca
   + c
 \end{align}
 
-\subsection{Discrete Optimization}
+\subsubsection{Hybrid Quantum-annealing}
+
+The number of qubits on a QPU is limited, and so are the couplings between them that the QPU uses to embed quadratic biases.
+When a problem has too many variables or quadratic biases, finding an embedding for the QPU is impossible.
+Hybrid Solvers can solve such problems faster than purely classical computers.
+\cite{Bernoudy2020}
+
+A Hybrid Solver is an algorithm that runs on a classical computer and a quantum computer.
+The classical computer receives the problem and attempts to solve it.
+It uses the quantum computer for subproblems that the quantum computer can solve faster.
+\cite{Zhang2016}
+
+D-Waves Advantage system has more than $5000$ qubits with $15$-way connectivity.
+\cite{D-Wave2020}
+It can solve problems with up to $5000$ binary variables, if the quadratic biases are $\leq 15$ for every variable.
+If there are some variables with more quadratic biases, they can be distributed onto different qubits.
+At some point this is not possible anymore and the Hybrid Solver has to be utilized.
+D-Waves Hybrid Solver can handle fully connected QUBOs of up to $20, 000$ variables.
+It can handle non-fully connected QUBOs of up to $1, 000, 000$ variables, but the number of weights has to be smaller than $2, 000, 000$.
+\cite{Bernoudy2020}
+
+\subsubsection{Discrete Optimization}
 
 \begin{subequations}
 \begin{align}
