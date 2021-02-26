@@ -27,7 +27,7 @@ $a$ are called linear biases because they depend on one variable, and $b$ are ca
 \subsubsection{Hybrid Quantum-annealing}
 
 The number of qubits on a QPU is limited, and so are the couplings between them that the QPU uses to embed quadratic biases.
-When a problem has too many variables or quadratic biases, finding an embedding for the QPU is impossible.
+When a problem has too many variables or quadratic biases, it's impossible to find an embedding for the QPU.
 Hybrid Solvers can solve such problems faster than purely classical computers.
 \cite{Bernoudy2020}
 
@@ -38,9 +38,9 @@ It uses the quantum computer for subproblems that the quantum computer can solve
 
 D-Waves Advantage system has more than $5, 000$ qubits with $15$-way connectivity.
 \cite{D-Wave2020}
-It can solve problems with up to $5, 000$ binary variables, if the quadratic biases are $\leq 15$ for every variable.
+It can solve problems with up to $5, 000$ binary variables if the quadratic biases are $\leq 15$ for every variable.
 If there are some variables with more quadratic biases, they can be distributed onto different qubits.
-At some point this is not possible anymore and the Hybrid Solver has to be utilized.
+At some point, this is not possible anymore, and the Hybrid Solver has to be utilized.
 D-Waves Hybrid Solver can handle fully connected QUBOs of up to $20, 000$ variables.
 It can handle non-fully connected QUBOs of up to $1, 000, 000$ variables, but the number of weights has to be smaller than $2, 000, 000$.
 \cite{Bernoudy2020}
@@ -48,7 +48,7 @@ It can handle non-fully connected QUBOs of up to $1, 000, 000$ variables, but th
 \subsubsection{Discrete Optimization}
 
 D-Wave also has a Hybrid Solver that can handle problems with discrete variables instead of binary as in QUBOs.
-These problems have to be a Discrete Quadratic Model (DQM) which can be written as shown in the formula (\ref{formula:dqm.form}).
+These problems have to be a Discrete Quadratic Model (DQM), which can be written as shown in the formula (\ref{formula:dqm.form}).
 The solver can handle a maximum of $5, 000$ variables with up to $10, 000$ cases per variable.
 The maximum number of biases is $2, 000, 000, 000$.
 \cite{DQMHybrid2020}
@@ -61,5 +61,5 @@ The maximum number of biases is $2, 000, 000, 000$.
 
 Note that in the formula (\ref{formula:dqm.form}), $a_i$ is a vector that holds the linear biases for the variable $i$.
 $a_i \cdot v_i$ is the scalar product of the linear biases with the value of variable $i$.
-$b_{i, j}$ on the other hand is a matrix that holds the quadratic biases of the variable $i$ and $j$.
+$b_{i, j}$, on the other hand, is a matrix that holds the quadratic biases of the variable $i$ and $j$.
 $b_{i, j} \cdot \left( v_i \otimes v_j \right)$ is the Frobenius Inner Product $\langle b_{i, j}, v_i \otimes v_j \rangle_F$ that is defined as the sum of all elements of both matrices multiplied element-wise.
