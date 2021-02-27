@@ -53,17 +53,32 @@ The probability of measuring a specific state of the quantum register is given b
 D-Wave is the leading manufacturer of Quantum Annealers.
 Their newest model, ''Advantage'', has over $5, 000$ qubits and over $35, 000$ couplers.
 The connectors connect the qubits in a $P_{16}$-Graph, also called ''Pegasus''.
-This graph has dregree $16$, which means that every qubit has a connection with $16$ other qubits.
+This graph has the degree $16$, which means that every qubit has a connection with $16$ other qubits.
 D-Wave released this model in 2020.
 \cite{D-Wave2020, Zbinden2020}
 
 The model before this, ''2000Q'', has over $2, 000$ qubits and over $6, 000$ couplers.
 The connectors connect the qubits in a $C_{16}$-Graph, also called ''Chimera''.
-This graph has degree $6$, which means that every qubit has a connection with $6$ other qubits.
+This graph has the degree $6$, which means that every qubit has a connection with $6$ other qubits.
 D-wave released that model in 2017.
 \cite{D-Wave2020, Zbinden2020}
 
-\todo{compare}
+D-wave, therefore, increased their qubit number significantly in the last years.
+The qubit count increased by $150\%$ in just $3$ years.
+The coupler count increased by $580\%$ in the same time frame, although this number is misleading.
+The more important metric is the qubit connectivity, the so-called ''degree'', which increased by $133\%$.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.7 \textwidth]{02_Background/dwave_qbits_history.png}
+  \caption{Number of qubits in D-wave QPUs over the years \cite{D-Wave2018, D-Wave2020}}
+  \label{figure:annealing.processors.history}
+\end{figure}
+
+Figure \ref{figure:annealing.processors.history} shows the increase of the number of qubits that are in D-Waves QPUs.
+The number of qubits doubles every $2$ years.
+These numbers remind of Moore's Law that dictated the advances in classical computing up until recently.
+\cite{Theis2017}
 
 \subsubsection{Gate-based Quantum Computers}
 
