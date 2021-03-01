@@ -95,17 +95,10 @@ IBM was able to achieve a quantum volume of $64$ on this processor.
 
 Quantum volume is a metric that characterizes the power of quantum processors.
 It depends on the number of qubits and the number of gates that can be applied to the qubits without significant error.
-%\cite{Bishop2017}
+\cite{Bishop2017}
 IBM managed to achieve a $100\%$ increase of the quantum volume metric every year since 2017.
 \cite{IBMqv2020}
 This is illustrated in figure \ref{figure:gate.qv.history}.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.7 \textwidth]{02_Background/ibm_qv_history.png}
-  \caption{Quantum Volume achieved by IBM over the years \cite{IBMqv2020}}
-  \label{figure:gate.qv.history}
-\end{figure}
 
 Even though, quantum volume is a better measurement of the power of a quantum processor, the qubit count is still important.
 It determines how big the problems can be for the quantum processor to solve them.
@@ -113,10 +106,20 @@ IBM promises at least a doubling of the qubit count every year in their 2020 roa
 It projects its 2023 quantum processors to have $1, 121$ qubits.
 Figure \ref{figure:gate.qbits.projection} ilustrates the projected qubit count.
 \cite{IBMRoadmap2020}
+If IBM can hold their promises, the number of qubits in their quantum computers will also grow like the bits in classical computers under Moore's Law.
 
 \begin{figure}
-  \centering
-  \includegraphics[width=0.7 \textwidth]{02_Background/ibm_qubits_projection.png}
-  \caption{Projected Qbit Count of IBM Quantum Processors \cite{IBMRoadmap2020}}
-  \label{figure:gate.qbits.projection}
+  \begin{subfigure}[b]{0.5 \textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{02_Background/ibm_qv_history.png}
+    \caption{Quantum Volume achieved\\ of IBM Quantum Processors \cite{IBMqv2020}}
+    \label{figure:gate.qv.history}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.5 \textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{02_Background/ibm_qubits_projection.png}
+    \caption{Projected Qubit Count\\ of IBM Quantum Processors \cite{IBMRoadmap2020}}
+    \label{figure:gate.qbits.projection}
+  \end{subfigure}
+  \caption{Characteristics of IBM Quantum Processors}
 \end{figure}
