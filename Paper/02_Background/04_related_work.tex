@@ -1,6 +1,6 @@
 \section{Related Work}
 
-\subsection{Unit Commtiment Problem}
+\subsection{Unit Commitment Problem}
 
 Many methods for optimizing the UCP described in section \ref{backg:ucp} exist in the literature.
 Abujarad et al. \cite{Abujarad2017} listed and compared those methods.
@@ -12,7 +12,12 @@ When dealing with cost functions of thermal power plants, they seldom are linear
 Most commonly, they are quadratic.
 Baldick \cite{Baldick1995} generalized the formulation of the UCP as Mixed-integer Non-linear Problems, where he assumed a quadratic cost function.
 
-\subsection{Quantum Computing for Unit Commitment Problem}
+\subsection{Quantum Computing for Unit Commitment}
 
+Ajagekar and You \cite{Ajagekar2019} explore the utility of quantum computing for optimization problems in the energy domain.
+They also considered the UCP.
+They formulated a UCP as a QUBO and used D-Wave quantum hardware (the D-Wave 2000Q, to be precise) to optimize that model of the UCP.
+Compared to the optimization on a classical computer using the Gurobi solver, the quantum option did perform terribly.
+\cite{Ajagekar2019}
 
 \subsection{Discrete Quadratic Model Optimization on Quantum Computers}
