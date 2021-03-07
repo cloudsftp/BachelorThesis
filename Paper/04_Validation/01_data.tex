@@ -44,7 +44,7 @@ The data for the power plants is put together from different sources for differe
   \item Maximum output power from a list by the \citeauthor{Kraftwerkliste2020}. \cite{Kraftwerkliste2020}
   \item Minimum power output from \cite{Schroder2013}.
   \item The startup and shutdown cost from \cite{Kumar2012}.
-  \item Cost function parameters from \cite{Alrashidi2009}.
+  \item Cost function coefficients from \cite{Alrashidi2009}.
 \end{enumerate*}
 
 From the list of german powerplants, $4$ plants are chosen, and their maximum output is taken.
@@ -71,6 +71,14 @@ For ''super-critical'' power plants, the startup cost is $10.1$ MMBTU per MW max
 Where $1 \text{MMBTU} = 1.6 \cdot 10^{-6} \text{GJ}$.
 This work considers all fuel costs in unit GJ.
 
-\todo{cost function}
+The coeffitients of the cost functions is taken from a paper that identified them at coal-powered power plants.
+\cite{Alrashidi2009}
+\citeauthor{Alrashidi2009} identified $2$ polynomials, both are assigned randomly to the $4$ power plants.
+The resulting values are presented in table \ref{table:validation.data.plants}.
 
-\todo{table with values}
+\begin{table}[ht]
+  \centering
+  \input{81_Tables/04_Validation/plant_data.tex}
+  \caption{Characteristics of Power Plants}
+  \label{table:validation.data.plants}
+\end{table}
