@@ -5,7 +5,7 @@
 
 This work considers real-world demand data of energy consumers.
 It takes the data from two different sources.
-\begin{enumerate*}
+\begin{enumerate*}[label=(\roman*)]
   \item Smart meters that Georgievski \citeauthor{Georgievski2012} installed in an office. \cite{Georgievski2012}
   \item Adaptive Charging Network (ACN) electric vehicle charging stations at the Californian Institute of Technology. \cite{Lee2019, ACNCaltech2020}
 \end{enumerate*}
@@ -39,4 +39,38 @@ It is shown in figure \ref{figure:data.demand.day}.
 
 \subsection{Producers}
 
-\todo{List data of plants}
+The data for the power plants is put together from different sources for different characteristics.
+\begin{enumerate*}[label=(\roman*)]
+  \item Maximum output power from a list by the \citeauthor{Kraftwerkliste2020}. \cite{Kraftwerkliste2020}
+  \item Minimum power output from \cite{Schroder2013}.
+  \item The startup and shutdown cost from \cite{Kumar2012}.
+  \item Cost function parameters from \cite{Alrashidi2009}.
+\end{enumerate*}
+
+From the list of german powerplants, $4$ plants are chosen, and their maximum output is taken.
+All chosen plants are coal powered power plants.
+\cite{Kraftwerkliste2020}
+$2$ of the plants are categorized as ''sub-critical'' and the other $2$ as ''super-critical''.
+The difference between ''sub-critical'' and ''super-critical'' coal-powered power plants is the pressure level at which they operate.
+''sub-critical'' power plants operate at pressure levels below $221$ bar and produce about $300$ to $900$ MW.
+''super-critical'' power plants operate at pressure levels about $240$ bar and produce between $500$ to $1300$ MW.
+\cite{Kumar2012, Schroder2013}
+This choice is arbitrary but important for defining the other characteristics of the plants.
+
+The minimum power output is computed based on the maximum power output and the type of power plant.
+For ''sub-critical'' power plants, the minimal power output is $35\%$ of the maximum power output.
+For ''super-critical'' power plants, the minimal power output is $20\%$ of the maximum power output.
+\cite{Schroder2013}
+
+The coal-powered power plants don't have shutdown costs.
+So only the startup costs are computed.
+For simplicity, this work only considers hot start startup costs.
+For ''sub-critical'' power plants, the startup cost is $7.5$ MMBTU per MW maximum power output.
+For ''super-critical'' power plants, the startup cost is $10.1$ MMBTU per MW maximum power output.
+\cite{Kumar2012}
+Where $1 \text{MMBTU} = 1.6 \cdot 10^{-6} \text{GJ}$.
+This work considers all fuel costs in unit GJ.
+
+\todo{cost function}
+
+\todo{table with values}
