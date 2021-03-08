@@ -3,8 +3,82 @@
 
 \subsection{Consumers}
 
-\todo{List demand data, explain origin}
+This work considers real-world demand data of energy consumers.
+It takes the data from two different sources.
+\begin{enumerate*}[label=(\roman*)]
+  \item Smart meters that Georgievski \citeauthor{Georgievski2012} installed in an office. \cite{Georgievski2012}
+  \item Adaptive Charging Network (ACN) electric vehicle charging stations at the Californian Institute of Technology. \cite{Lee2019, ACNCaltech2020}
+\end{enumerate*}
+
+The data from the smart meters spans about $8$ months.
+It is from the year 2016.
+It has a time resolution of $10$ seconds.
+The program transforms the data to have a time resolution of $10$ minutes.
+It does so by adding up the energy demand of $10$ minute periods and then dividing by $0.166$ hours since the data is given as energy in kWh.
+The result is the power given in kW.
+
+The data from the ACN charging stations spans the first $9$ months of the year 2020.
+It consists of various charging sessions.
+The program identifies the energy demand by assuming the charger transfers energy to the car at one fixed rate in one session.
+This is not the point of adaptive charging, but it gives a real-world-like representation of electric vehicle charging behavior.
+The time resolution of the resulting data is $10$ minutes.
+
+The program computes the average day of both datasets.
+Then it combines both datasets.
+The data from the smart meters is weighted $1, 000 : 1$ against the data from the ACN charging stations.
+This composition is due to the low energy demand of one office.
+The final data represents an average day of one electric vehicle charging site and $1, 000$ offices with a $10$ minute time resolution.
+It is shown in figure \ref{figure:data.demand.day}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7 \textwidth]{04_Validation/data_demand_day.png}
+  \caption{Demand Data}
+  \label{figure:data.demand.day}
+\end{figure}
 
 \subsection{Producers}
 
-\todo{List data of plants}
+The data for the power plants is put together from different sources for different characteristics.
+\begin{enumerate*}[label=(\roman*)]
+  \item Maximum output power from a list by the \citeauthor{Kraftwerkliste2020}. \cite{Kraftwerkliste2020}
+  \item Minimum power output from \cite{Schroder2013}.
+  \item The startup and shutdown cost from \cite{Kumar2012}.
+  \item Cost function coefficients from \cite{Alrashidi2009}.
+\end{enumerate*}
+
+From the list of german powerplants, $4$ plants are chosen, and their maximum output is taken.
+All chosen plants are coal powered power plants.
+\cite{Kraftwerkliste2020}
+$2$ of the plants are categorized as ''sub-critical'' and the other $2$ as ''super-critical''.
+The difference between ''sub-critical'' and ''super-critical'' coal-powered power plants is the pressure level at which they operate.
+''sub-critical'' power plants operate at pressure levels below $221$ bar and produce about $300$ to $900$ MW.
+''super-critical'' power plants operate at pressure levels about $240$ bar and produce between $500$ to $1300$ MW.
+\cite{Kumar2012, Schroder2013}
+This choice is arbitrary but important for defining the other characteristics of the plants.
+
+The minimum power output is computed based on the maximum power output and the type of power plant.
+For ''sub-critical'' power plants, the minimal power output is $35\%$ of the maximum power output.
+For ''super-critical'' power plants, the minimal power output is $20\%$ of the maximum power output.
+\cite{Schroder2013}
+
+The coal-powered power plants don't have shutdown costs.
+So only the startup costs are computed.
+For simplicity, this work only considers hot start startup costs.
+For ''sub-critical'' power plants, the startup cost is $7.5$ MMBTU per MW maximum power output.
+For ''super-critical'' power plants, the startup cost is $10.1$ MMBTU per MW maximum power output.
+\cite{Kumar2012}
+Where $1 \text{MMBTU} = 1.6 \cdot 10^{-6} \text{GJ}$.
+This work considers all fuel costs in unit GJ.
+
+The coeffitients of the cost functions is taken from a paper that identified them at coal-powered power plants.
+\cite{Alrashidi2009}
+\citeauthor{Alrashidi2009} identified $2$ polynomials, both are assigned randomly to the $4$ power plants.
+The resulting values are presented in table \ref{table:validation.data.plants}.
+
+\begin{table}[ht]
+  \centering
+  \input{81_Tables/04_Validation/plant_data.tex}
+  \caption{Characteristics of Power Plants}
+  \label{table:validation.data.plants}
+\end{table}
