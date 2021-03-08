@@ -16,7 +16,7 @@ The optimization of these problems takes no longer than $5.6$ seconds each.
 \begin{table}[ht]
   \centering
   \input{81_Tables/04_Validation/performance_annealing_p4.tex}
-  \caption{Results of annealing optimization with four power plants.}
+  \caption{Results of Annealing Optimization with $4$ Power Plants}
   \label{table:validation.annealing.performance}
 \end{table}
 
@@ -24,24 +24,26 @@ In figure \ref{figure:validation.annealing.performance} the time complexity is d
 The time needed for optimizing problems with less than $15$ time instances also seems to be constant.
 After that, the linear time complexity is clearly visible.
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.75 \textwidth]{04_Validation/performance_annealing_p4.png}
-  \caption{Time complexity of annealing optimization with four power plants.}
-  \label{figure:validation.annealing.performance}
-\end{figure}
-
 When the problem size increases, the time complexity seems to be worse than linear.
 This becomes clear in figure \ref{figure:validation.annealin.performance.extended}.
 The time taken by the hybrid solver to optimize the problem grows linearly, but at a higher rate starting from $80$ time instances.
 After this increase of slope, the slope stays the same until the problem size reaches $200$ in the time dimension.
 I did not test the optimization of problems with more than $200$ time instances on the D-Wave hardware.
 
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.75 \textwidth]{04_Validation/performance_annealing_p4_extended.png}
-  \caption{Time complexity of annealing optimization with four power plants and more time instances.}
-  \label{figure:validation.annealin.performance.extended}
+\begin{figure}
+  \begin{subfigure}[b]{0.5 \textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{04_Validation/performance_annealing_p4.png}
+    \caption{With up to $50$ Loads}
+    \label{figure:validation.annealing.performance}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.5 \textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{04_Validation/performance_annealing_p4_extended.png}
+    \caption{With up to $200$ Loads}
+    \label{figure:validation.annealin.performance.extended}
+  \end{subfigure}
+  \caption{Time Complexity of Annealing Optimization with $4$ Power Plants}
 \end{figure}
 
 This approach does not produce optimal solutions for the UCP.
