@@ -1,4 +1,5 @@
 \subsection{Implementation of DQM on Annealing Hardware}
+\label{approach:annealing.implement.dqm}
 
 The implementation of the DQM uses D-Wave's \texttt{dwave-ocean-sdk}.
 \cite{OceanSDKDoc}
@@ -15,8 +16,12 @@ The size of the discrete variable $p_{i, t}$ --- the number of possible values -
 
 \subsection*{Quadratic Biases}
 
-There are two types of quadratic biases.
-One category is the startup and shutdown biases, and the other is the biases resulting from the demand constraints.
+There are $2$ types of quadratic biases
+--- biases resulting from either
+\begin{enumerate*}[label=(\roman*)]
+  \item Startup and shutdown costs, or
+  \item Demand constraints
+\end{enumerate*}
 
 The startup and shutdown biases are different for every plant but do not change over time.
 The program computes them once for every plant.

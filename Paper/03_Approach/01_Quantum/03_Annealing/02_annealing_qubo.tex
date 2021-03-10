@@ -1,3 +1,44 @@
-\subsection{Implementation of QUBO on Annealing Hardware}
+\subsection{Implementation of QUBO for Annealing Hardware}
 
-\todo{Describe implementation of QUBO on annealing hardware}
+The implementation of the QUBO for the annealing hardware uses the UQO-client.
+\cite{UQOPyPI, UQOGitHub}
+First, it writes the biases into a python \texttt{dict}.
+Then the class \texttt{Qubo} of the UQO-client builds the \texttt{dwave-ocean-sdk} \texttt{BinaryQuadraticModel}-instance that the UQO-client can then send to the UQO-server.
+
+\subsubsection{Variables}
+
+The variables in this implementation are implicit.
+The indices for the python \texttt{dict} are pairs of integers where the integers are the IDs of the variables.
+Each ID is computed with the mapping function $m'$ of formula (\ref{formula:qubo.mapping}).
+
+\subsubsection{Quadratic Biases}
+
+In this case, there are $3$ types of quadratic biases
+--- biases resulting from either
+\begin{enumerate*}[label=(\roman*)]
+  \item Startup and Shutdown costs, or
+  \item Demand constraints, or
+  \item Discretization constraints
+\end{enumerate*}
+
+The startup and shutdown costs are different for every power plant but do not change over time.
+The program iterates over all power plants $i$ and time instances $t > 0$ and applies the startup and shutdown costs.
+The program iterates over every power output value index $0 \leq k < 2^{n_i}$ for the power plant $i$.
+It adds the quadratic bias $A_U$ for the pair $(p_{i, t-1, 0}, p_{i, t, k})$ and the quadratic bias for the pair $(p_{i, t-1, k}, p_{i, t, 0})$
+
+The demand constraints are different for every pair of plants but do not change over time, like the startup and shutdown costs.
+The program iterates over all pairs of power plants $(i, j)$ where $i < j$ and power output value indices $0 \leq k < 2^{n_i}$ and $0 \leq l < 2^{n_j}$.
+Then it iterates over all time instances $t$ and applies the quadratic constraint $\gamma_d P_{i, k} * P_{j, l}$ to the pair $(p_{i, t, k}, p_{j, t, l})$
+Notice that the quadratic constraint is only computed once for every pair of power plants $(i, j)$ and pair of power output values $(k, l)$.
+
+The discretization constraint is the same for every plant and time instance.
+The program iterates over all power plants $i$ and time instances $t$.
+Then it iterates over all pairs of power output value indices $(k, l)$ where $0 \leq k < 2^{n_i}, 0 \leq l < 2^{n_j}$ and $k < l$ and apllies the quadratic constraint $\gamma_d$ to the pair $(p_{i, t, k}, p_{i, t, l})$.
+
+\subsubsection{Linear Biases}
+
+\todo{explain linear biases}
+
+\subsubsection{Constant Bias}
+
+\todo{explain the constant bias is ignored}
