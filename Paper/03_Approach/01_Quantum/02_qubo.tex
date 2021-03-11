@@ -197,6 +197,7 @@ After adding all parts together again, we obtain the following QUBO.
     \right)
   + \gamma_p \sum_{i, t} \sum_{k < l} \left( p_{i, t, k} \cdot p_{i, t, l} \right)
   & \text{(quadratic)}
+  \label{formula:qubo.result.quadratic}
   \\ + \quad &
   \sum_{i, t, k} \left(
     \gamma_c \cdot F_{i, k}
@@ -204,7 +205,9 @@ After adding all parts together again, we obtain the following QUBO.
   \right) p_{i, t, k}
   + \sum_{i, k} \left( S_{i, k}^{(0)} \cdot p_{i, 0, k} \right)
   & \text{(linear)}
+  \label{formula:qubo.result.linear}
   \\ + \quad &
   1 + \sum_t l_t^2
   & \text{(constant)}
+  \label{formula:qubo.result.constant}
 \end{align}

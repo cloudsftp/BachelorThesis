@@ -1,4 +1,5 @@
 \subsection{Implementation of QUBO for Annealing Hardware}
+\label{approach:annealing.implement.qubo}
 
 The implementation of the QUBO for the annealing hardware uses the UQO-client.
 \cite{UQOPyPI, UQOGitHub}
@@ -35,10 +36,29 @@ The discretization constraint is the same for every plant and time instance.
 The program iterates over all power plants $i$ and time instances $t$.
 Then it iterates over all pairs of power output value indices $(k, l)$ where $0 \leq k < 2^{n_i}, 0 \leq l < 2^{n_j}$ and $k < l$ and apllies the quadratic constraint $\gamma_d$ to the pair $(p_{i, t, k}, p_{i, t, l})$.
 
+In this case, the discretization biases and the demand constraining biases overlap.
+The program adds them together if it applies two different quadratic constraints to the same pair.
+
 \subsubsection{Linear Biases}
 
-\todo{explain linear biases}
+The linear biases depend on the fuel cost and the demand constraints.
+That's why they change for every plant $i$, every time instance $t$, and every possible power level $k$.
+Just as with the implementation of the DQM in section \ref{approach:annealing.implement.dqm.linear}, the linear biases of variables of the form $p_{i, 0, k}$
+--- meaning it corresponds to the first time instance ---
+depend on the startup and shutdown costs and the initial state of the power plant $i$.
+The formula (\ref{formula:qubo.result.linear}) captures the computation of the linear biases.
+
+The program iterates over all power plants $i$, time instances $t$, and possible power levels $0 \leq k < 2^{n_i}$.
+It calculates the linear bias as specified in formula (\ref{formula:qubo.result.linear}) for all indices.
+Then it applies the linear bias to the variable $p_{i, t, k}$.
+
+As mentioned in section \ref{approach:annealing.implement.qubo}, the program first builds the QUBO as a python \texttt{dict}.
+The keys are pairs of integers $(i, j)$ with $i \neq j$ for quadratic biases.
+For linear biases, the keys are pairs with identical integers $(i, i)$.
 
 \subsubsection{Constant Bias}
 
-\todo{explain the constant bias is ignored}
+The implementation ignores the constant bias.
+In this case it is defined by the formula (\ref{formula:qubo.result.constant}).
+The constant bias does not change the input values that produce a minimum.
+It only changes the value of that minimum.
