@@ -1,3 +1,32 @@
 \section{Implementation for Gate-based Quantum Computers}
 
-\todo{explain implementation using Qiskit}
+The implementation for the gate-based quantum computers uses the Qiskit framework.
+Qiskit is an open-source framework for quantum computing on gate-based quantum computers.
+It was founded by IBM Research.
+\cite{QiskitWeb, QiskitGitHub}
+After the program instantiates the QUBO using the \texttt{QuadraticProgram} class of the framework, it uses the class \texttt{GroverOptimizer} to optimize the QUBO.
+This class handles building the quantum circuits and executing the computation for the Grover Optimization algorithm as described in section \ref{backg:quantum.grover.optimization}.
+
+\subsection{Variables}
+
+In this implementation, the variables are not implicit as with the UQO-client in section \ref{approach:annealing.implement.qubo.variables}.
+The program instantiates all binary variables of the QUBO at the beginning of building the QUBO instance.
+It assigns a name to every variable that holds the indices of the corresponding power plant $i$, time instance $t$, and power output level $k$.
+
+\subsection{Quadratic Biases}
+
+The program adds the same quadratic biases as the implementation for annealing quantum computers in section \ref{approach:annealing.implement.qubo.quadratic}.
+It stores the biases in a python \texttt{dict} with keys that are pairs of strings.
+The strings are the names of the variables.
+
+\subsection{Linear Biases}
+
+The program adds the same linear biases as the implementation for annealing quantum computers in section \ref{approach:annealing.implement.qubo.linear}.
+It stores the biases in a python \texttt{dict} with keys that are strings.
+The strings are again the names of the variables.
+
+\subsection{Canstant Bias}
+
+As mentioned before in section \ref{approach:annealing.implement.qubo.constant}, the constant bias does not change the input that produces a optimum of the QUBO.
+But with this framework, the interface allows for a constant bias to be added to the QUBO.
+The implementation computes the bias once, as specified in the formula (\ref{formula:qubo.result.constant}, and adds it to the QUBO instance.
