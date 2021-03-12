@@ -7,12 +7,14 @@ First, it writes the biases into a python \texttt{dict}.
 Then the class \texttt{Qubo} of the UQO-client builds the \texttt{dwave-ocean-sdk} \texttt{BinaryQuadraticModel}-instance that the UQO-client can then send to the UQO-server.
 
 \subsubsection{Variables}
+\label{approach:annealing.implement.qubo.variables}
 
 The variables in this implementation are implicit.
 The indices for the python \texttt{dict} are pairs of integers where the integers are the IDs of the variables.
 Each ID is computed with the mapping function $m'$ of formula (\ref{formula:qubo.mapping}).
 
 \subsubsection{Quadratic Biases}
+\label{approach:annealing.implement.qubo.quadratic}
 
 In this case, there are $3$ types of quadratic biases
 --- biases resulting from either
@@ -36,10 +38,12 @@ The discretization constraint is the same for every plant and time instance.
 The program iterates over all power plants $i$ and time instances $t$.
 Then it iterates over all pairs of power output value indices $(k, l)$ where $0 \leq k < 2^{n_i}, 0 \leq l < 2^{n_j}$ and $k < l$ and apllies the quadratic constraint $\gamma_d$ to the pair $(p_{i, t, k}, p_{i, t, l})$.
 
+\todo{this paragraph is not correct. no quadratic biases are in conflict}
 In this case, the discretization biases and the demand constraining biases overlap.
 The program adds them together if it applies two different quadratic constraints to the same pair.
 
 \subsubsection{Linear Biases}
+\label{approach:annealing.implement.qubo.linear}
 
 The linear biases depend on the fuel cost and the demand constraints.
 That's why they change for every plant $i$, every time instance $t$, and every possible power level $k$.
@@ -57,6 +61,7 @@ The keys are pairs of integers $(i, j)$ with $i \neq j$ for quadratic biases.
 For linear biases, the keys are pairs with identical integers $(i, i)$.
 
 \subsubsection{Constant Bias}
+\label{approach:annealing.implement.qubo.constant}
 
 The implementation ignores the constant bias.
 In this case it is defined by the formula (\ref{formula:qubo.result.constant}).
