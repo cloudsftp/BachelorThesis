@@ -38,9 +38,11 @@ The discretization constraint is the same for every plant and time instance.
 The program iterates over all power plants $i$ and time instances $t$.
 Then it iterates over all pairs of power output value indices $(k, l)$ where $0 \leq k < 2^{n_i}, 0 \leq l < 2^{n_j}$ and $k < l$ and apllies the quadratic constraint $\gamma_d$ to the pair $(p_{i, t, k}, p_{i, t, l})$.
 
-\todo{this paragraph is not correct. no quadratic biases are in conflict}
-In this case, the discretization biases and the demand constraining biases overlap.
-The program adds them together if it applies two different quadratic constraints to the same pair.
+The quadratic biases do not overlap.
+The demand constraint biases and startup and shutdown biases are on orthogonal axes as mentioned before in section \ref{approach:annealing.implement.dqm.quadratic}.
+The biases constraining the power levels per power plant --- only one power level $k$ per power plant $i$ and time instance $t$ may be true
+--- are between different power levels $0 \leq k < 2^{n_i}, 0 \leq l < 2^{n_i}$ with $k \neq l$ of the same power plant at the same time instance $t$.
+Therefore they don't interfere with the demand constraint biases since they are between different power levels $0 \leq k < 2^{n_i}, 0 \leq l < 2^{n_j}$ of different power plants $i, j$.
 
 \subsubsection{Linear Biases}
 \label{approach:annealing.implement.qubo.linear}

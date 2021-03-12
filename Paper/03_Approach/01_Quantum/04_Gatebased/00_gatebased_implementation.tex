@@ -4,6 +4,8 @@ The implementation for the gate-based quantum computers uses the Qiskit framewor
 Qiskit is an open-source framework for quantum computing on gate-based quantum computers.
 It was founded by IBM Research.
 \cite{QiskitWeb, QiskitGitHub}
+After the program instantiates the QUBO using the \texttt{QuadraticProgram} class of the framework, it uses the class \texttt{GroverOptimizer} to optimize the QUBO.
+This class handles building the quantum circuits and executing the computation for the Grover Optimization algorithm as described in section \ref{backg:quantum.grover.optimization}.
 
 \subsection{Variables}
 
