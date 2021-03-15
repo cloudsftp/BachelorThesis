@@ -69,8 +69,8 @@ class ExperimentResults(object):
 
     time_series.plot()
 
-    plt.xlabel('number of loads')
-    plt.ylabel('t in seconds')
+    plt.xlabel('Number of Loads')
+    plt.ylabel('Computation Time (s)')
 
     plt.tight_layout()
     plt.savefig(output_file_name)
