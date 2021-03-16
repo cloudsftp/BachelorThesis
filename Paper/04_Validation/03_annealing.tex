@@ -58,4 +58,26 @@ This leads to a non-optimal solution of the UCP.
 
 \subsubsection{Direct QUBO Solver}
 
-\todo{explain infeasability of solving QUBO directly on dwave QPU}
+D-Wave's QPUs can embed many QUBOs on them.
+But if a QUBO has too many variables or quadratic biases connecting the biases, D-Wave might not find an embedding.
+This is the case for the problems this work considers.
+
+The smallest problem formulated as a QUBO has $1024$ variables and $263, 680$ quadratic biases.
+These values can be calculated using formulas (\ref{formula:qubo.num.qubits}) and (\ref{formula:qubo.num.qbiases}) respectively.
+
+\todo{explain more}
+
+\begin{subequations}
+\begin{align}
+  \label{formula:qubo.num.qubits}
+  q_{\text{QUBO}} = & \qquad
+  \left( \sum_{i \in \mathbb{I}} 2^{n_i} \right) \cdot \| \mathbb{T} \| \\
+  \label{formula:qubo.num.qbiases}
+  b_{\text{quadratic}} = & \qquad
+  \left(
+    \sum_{i \in \mathbb{I}} \frac{2^{n_i} \cdot \left( 2^{n_i} + 1 \right)}{2}
+    + \sum_{i < j \in \mathbb{I}} 2^{n_i} \cdot 2^{n_j}
+  \right) \cdot \| \mathbb{T} \|
+  + \sum_{i \in \mathbb{I}} 2^{n_i} \cdot 2 \cdot \left( \| \mathbb{T} \| - 1 \right)
+\end{align}
+\end{subequations}
