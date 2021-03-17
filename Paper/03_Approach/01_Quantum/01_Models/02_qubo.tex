@@ -1,6 +1,4 @@
-\section{Unit Commitment Problem as Quadratic Unconstrained Binary Model}
-
-\subsection{Preparations}
+\subsection{Unit Commitment Problem as Quadratic Unconstrained Binary Model}
 
 The formulation of the Quadratic Unconstrained Binary Model (QUBO) is based on the DQM formulated in section \ref{approach:annealing.formulate}.
 Instead of a single discrete variable for every power plant $i$ and time instance $t$, the QUBO has an array of binary variables for every possible power level in $P_i$ for every power plant $i$ and time instance $t$.
@@ -70,7 +68,7 @@ Thus $P_{i, 2^{n_i} - 1} = P_{max, i}$.
 This automatically enforces the constraint (\ref{formula:minlp.power}) that ensures that the power outputs stay inside the limits of every power plant.
 This constraint thus is not found in the energy function (\todo{link parts of function}).
 
-\subsection{Formulating the QUBO}
+\subsubsection{Initial Formula}
 
 The starting point is the DQM (\ref{formula:qubo.dqm.result.quadratic}-\ref{formula:qubo.dqm.result.constant}).
 The approach transforms the formula in a way that it uses binary variables instead of discrete variables.
@@ -97,7 +95,7 @@ The approach transforms the formula in a way that it uses binary variables inste
 \end{align}
 \end{subequations}
 
-\subsubsection{Quadratic Biases}
+\subsubsection{Rewrite Quadratic Biases}
 
 The transformation of the quadratic biases has two parts.
 The first part is the transformation of the startup and shutdown costs.
@@ -121,7 +119,7 @@ The second part is the transformation of the quadratic biases connected to the d
 
 It is more straightforward and shows the meaning of the tensor products and the Frobenius inner product used in the DQM.
 
-\subsubsection{Linear biases}
+\subsubsection{Rewrite Linear Biases}
 
 The transformation of the linear biases has two parts.
 The first part is the transformation of the objective and demand related biases.
@@ -157,7 +155,7 @@ The second part of the transformation is the startup and shutdown costs of the f
   \end{cases}
 \end{align}
 
-\subsubsection{Discretizing $p$}
+\subsubsection{Discretize $p_{i, t, k}$}
 
 Since the variables in the QUBO are binary, each represents a single possible power level $k$ of power plant $i$ at time $t$.
 Each power plant $i$ may only have one output level at each time instance $t$.
@@ -182,7 +180,7 @@ Penalizing multiple possible power output values for each plant at every time av
 \end{align}
 \end{subequations}
 
-\subsubsection{Result}
+\subsubsection{Final Formula}
 
 After adding all parts together again, we obtain the following QUBO.
 

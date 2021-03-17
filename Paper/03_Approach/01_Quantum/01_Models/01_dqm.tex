@@ -1,12 +1,9 @@
-\section{Unit Commitment Problem as Discrete Quadratic Model}
-
-\subsection{Preparations}
+\subsection{Unit Commitment Problem as Discrete Quadratic Model}
 
 The MINLP formulation of the UCP is converted to a Discrete Quadratic Model (DQM).
-As mentioned in section (\ref{backg:annealing}), this model is the extension
-of Binary Quadratic Models (BQM) or Quadratic Unconstrained Binary Optimization model (QUBO).
+As mentioned in section (\ref{backg:annealing}), this model is an extension of Binary Quadratic Models (BQM) or Quadratic Unconstrained Binary Optimization model (QUBO).
 
-\subsubsection{Mapping Variables}
+\subsubsection{Map Variables}
 \label{approach:annealing.prepare.map}
 
 The model, as seen in section (\ref{backg:annealing}), takes in a vector rather than a 2-dimensional matrix.
@@ -41,7 +38,7 @@ When implementing the DQM, the discrete variables $p_{i, t}$ are added in the or
 This order ensures that the applying of quadratic biases does not violate the form of the DQM.
 When adding a quadratic bias, the first argument is always a variable of lower order.
 
-\subsubsection{Discretizising Power Levels}
+\subsubsection{Discretize Power Levels}
 \label{approach:annealing.prepare.discretize}
 
 The approach discretizises the power levels, since the model, respectively the variables, are discrete.
@@ -66,7 +63,7 @@ Their values are:
 This automatically enforces the constraint (\ref{formula:minlp.power}) that ensures that the power outputs stay inside the limits of every power plant.
 This constraint thus is not found in the energy function (\ref{formula:dqm.start.obj}-\ref{formula:dqm.start.demand}).
 
-\subsection{Formulating the DQM}
+\subsubsection{Initial Fromula}
 \label{approach:annealing.formulate}
 
 The formula we start with (\ref{formula:dqm.start.obj}-\ref{formula:dqm.start.demand})
@@ -93,7 +90,7 @@ As well as grouping the linear biases and the quadratic biases.
 \end{align}
 \end{subequations}
 
-\subsubsection{Objective Function}
+\subsubsection{Rewrite Objective Function}
 
 The first summand of the energy function (\ref{formula:dqm.start.obj}) represents the objective function (\ref{formula:minlp.obj}) without the startup and shutdown costs.
 The objective function simply takes the sum of the costs of operating the power plants at the level they are operating at every time instance.
@@ -117,7 +114,7 @@ Since only one element of the vector $p_{i, t}$ is $1$, all other elements are $
 Specifically, the result of the scalar product is the element of $F_i$ that corresponds to the $1$-element in $p_{i, t}$.
 $F_i$ is called the linear bias of $p_{i, t}$.
 
-\subsubsection{Startup and Shutdown Costs}
+\subsubsection{Rewrite Startup and Shutdown Costs}
 \label{approach:annealing.formulate.startup}
 
 The second summand of the energy function (\ref{formula:dqm.start.startup}) represents the startup and shutdown costs (\ref{formula:minlp.updowncost}).
@@ -171,7 +168,7 @@ This element represents the change of the power level of the power plant $i$ at 
 That is why the matrix $S_i$ holds the startup costs at the elements, that correspond to zero output in $t-1$ and non-zero output in $t$ and vice versa.
 $S_i$ is called quadratic bias.
 
-\subsubsection{Demand}
+\subsubsection{Rewrite Demand}
 
 The third summand of the energy function (\ref{formula:dqm.start.demand}) represents the demand constraints (\ref{formula:minlp.load}).
 It is formulated in such a way, that its value is the sum of the squared differences of the required power and the power output of all power plants at time $t$.
@@ -237,7 +234,7 @@ This behaves exactly as the last summand of (\ref{formula:dqm.demand.multiplied_
   \end{pmatrix}
 \end{align}
 
-\subsubsection{Result}
+\subsubsection{Final Formula}
 
 The result is the formulas added together.
 Then the biases are ordered by their degree.
