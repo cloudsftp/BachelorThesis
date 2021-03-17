@@ -3,10 +3,10 @@
 The implementation of the QUBO as described in section \ref{approach:gate.implement} of the UCP builds a quantum circuit for the first iteration of the optimization algorithm described in section \ref{backg:quantum.grover.optimization}.
 Unfortunately, this quantum circuit is too big to be executed on any of IBM's public quantum computers for the smallest UCP that this work considers.
 
-The number of qubits needed just for the QUBO variables is given by the formula (\ref{formula:qubo.num.qubits}).
+The number of qubits needed just for the QUBO variables is given by the formula (\ref{formula:qubo.num.variables}).
 This is considered the first register of the quantum computer.
-In the case of the smallest UCP this work considers with the $4$ power plants listed in section \ref{table:validation.data.plants} and $2$ time instances, the number of qubits would be $\left( 2^6 + 2^6 + 2^7 + 2^8 \right) \cdot 2 = 1024$.
-With every additional time instance of the UCP, another $1024$ qubits are needed.
+In the case of the smallest UCP this work considers with the $4$ power plants listed in section \ref{table:validation.data.plants} and $2$ time instances, the number of qubits would be $1, 024$.
+With every additional $2$ time instances of the UCP, another $1, 024$ qubits are needed.
 
 Additionally to these qubits, the quantum circuit needs a second register for storing the result of the QUBO dependent on the QUBO variables of the first register.
 This number also grows with the QUBO size.

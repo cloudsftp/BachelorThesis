@@ -12,7 +12,7 @@ That's why the indices of the variables $p_{i,t}$ are mapped, such that the resu
 \begin{align}
   m:
   \quad
-  \mathbb{I} \times \mathbb{T} \to \mathbb{K}:
+  \mathbb{I} \times \mathbb{T} \to \mathbb{M}:
   \quad
   m(i, t) = i \cdot | \mathbb{T} | + t
 \end{align}
@@ -282,5 +282,32 @@ This could be removed without changing the nature of the solution that minimizes
   \sum_t l_t^2
   & \text{(constant)}
   \label{formula:dqm.result.constant}
+\end{align}
+\end{subequations}
+
+\subsubsection{Model Size}
+\label{approach:dqm.size}
+
+The size of DQMs consists of $3$ parts:
+\begin{enumerate*}[label=(\roman*)]
+  \item Number of variables,
+  \item Number of linear biases, and
+  \item Number of quadratic biases.
+\end{enumerate*}
+The number of variables $v_{\text{DQM}}$ is identical with the number of linear biases.
+Formula (\ref{formula:dqm.num.variables}) gives the number of variables.
+Formula (\ref{formula:dqm.num.quadratic.biases}) gives the number of quadratic biases $q_{\text{DQM}}$.
+Note that every quadratic bias is a matrix of numbers and every linear bias is a vector of numbers.
+
+\begin{subequations}
+\begin{align}
+  \label{formula:dqm.num.variables}
+  v_{\text{DQM}} = & \qquad
+  |\mathbb{T}| \cdot |\mathbb{I}|
+  \\
+  \label{formula:dqm.num.quadratic.biases}
+  q_{\text{DQM}} = & \qquad
+  \left( |\mathbb{T}| - 1 \right) \cdot |\mathbb{I}|
+  + |\mathbb{T}| \cdot \frac{|\mathbb{I}| \cdot \left( |\mathbb{I}| - 1 \right)}{2}
 \end{align}
 \end{subequations}

@@ -13,7 +13,7 @@ The mapping is extended by a third index $k$ corresponding to the power level.
   \quad
   \mathbb{I}
   \times \mathbb{T}
-  \times \{k \in \mathbb{N} | k \leq |P_i|\} \to \mathbb{K}':
+  \times \{k \in \mathbb{N} | k \leq |P_i|\} \to \mathbb{M}':
   \quad
   m'(i, t, k) = \left( |\mathbb{T}| \sum_{j=0}^{i-1} |P_j| \right)
   + t \cdot |P_i|
@@ -209,3 +209,33 @@ After adding all parts together again, we obtain the following QUBO.
   & \text{(constant)}
   \label{formula:qubo.result.constant}
 \end{align}
+
+\subsubsection{Model Size}
+\label{approach:qubo.size}
+
+The size of QUBOs consists of the same $3$ parts as DQMs (section \ref{approach:dqm.size}):
+\begin{enumerate*}[label=(\roman*)]
+  \item Number of variables,
+  \item Number of linear biases, and
+  \item Number of quadratic biases.
+\end{enumerate*}
+The number of variables $v_{\text{QUBO}}$ is identical to the number of linear biases.
+Formula (\ref{formula:qubo.num.variables}) gives the number of variables.
+Formula (\ref{formula:qubo.num.quadratic.biases}) gives the number of quadratic biases.
+With this model, the linear and quadratic biases are both plain numbers.
+
+\begin{subequations}
+\begin{align}
+  \label{formula:qubo.num.variables}
+  v_{\text{QUBO}} = & \qquad
+  |\mathbb{T}| \cdot \sum_{i \in \mathbb{I}} 2^{n_i}
+  \\
+  \label{formula:qubo.num.quadratic.biases}
+  q_{\text{QUBO}} = & \qquad
+  \left( |\mathbb{T}| - 1 \right) \cdot 2 \sum_{i \in \mathbb{I}} 2^{n_i}
+  + |\mathbb{T}| \cdot \left(
+    \sum_{i, j \in \mathbb{I}, i \neq j} 2^{n_i} \cdot 2^{n_j}
+    + \sum_{i \in \mathbb{I}} \frac{2^{n_i} \cdot \left( 2^{n_i} - 1 \right)}{2}
+  \right)
+\end{align}
+\end{subequations}

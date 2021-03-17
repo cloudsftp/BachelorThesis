@@ -17,22 +17,30 @@
   $l_t$ & Power demand (''load'') at time $t$
 \end{tabular}
 
-\subsubsection{Quantum Annealing}
+\subsubsection{Discrete Quadratic Model}
 
 \begin{tabular}{ll}
-  $E(p)$ & Energy function \\
+  $\mathbb{M}$ & Indices of all variables of the model \\
+  $m$ & Mapping function of $\mathbb{I} \times \mathbb{T} \to \mathbb{M}$ \\
   $p_{i, t}$ & Vector that signals the power output of unit $i$ at time $t$ \\
   $P_{i}$ & Vector of possible power output levels of unit $i$ \\
   $F_{i}$ & Vector of costs of corresponding power output level $P_{i}$ \\
-  $\mathbb{L}$ & Indices of all variables of the Discrete Quadratic Model \\
-  $m$ & Mapping function of $\mathbb{I} \times \mathbb{T} \to \mathbb{L}$ \\
   $S_{i}$ & Matrix of startup and shutdown costs of unit $i$ \\
-  $S_i^{(0)}$ & Vector of startup or shutdown costs of unit $i$ at time $0$
+  $S_i^{(0)}$ & Vector of startup or shutdown costs of unit $i$ at time $0$ \\
+  $v_{\text{DQM}}$ & Number of variables of the model \\
+  $q_{\text{DQM}}$ & Number of quadratic biases of the model
 \end{tabular}
 
-\subsubsection{Gate-based Quantum Computing}
+\subsubsection{Quadratic Unconstrained Binary Optimization}
 
 \begin{tabular}{ll}
+  $\mathbb{M}'$ & Indices of all variables of the model \\
+  $m'$ & Mapping function of $\mathbb{I} \times \mathbb{T} \to \mathbb{M}'$ \\
   $P_{i, k}$ & $k$th possible power output level of unit $i$ \\
-  $m'$ & Mapping function of $\mathbb{I} \times \mathbb{T} \to \mathbb{L}$
+  $p_{i, t, k}$ & Variable that signals the power output of unit $i$ at time $t$ at level $k$ \\
+  $P_{i, k}$ & Power output level $k$ of unit $i$ \\
+  $F_{i, k}$ & Costs of corresponding power output level $P_{i, k}$ \\
+  $S_{i, k}^{(0)}$ & Startup or shutdown cost of unit $i$ at time $0$ at level $k$ \\
+  $v_{\text{QUBO}}$ & Number of variables of the model \\
+  $q_{\text{QUBO}}$ & Number of quadratic biases of the model
 \end{tabular}
