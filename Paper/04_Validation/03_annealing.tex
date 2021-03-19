@@ -1,6 +1,6 @@
 \section{Performance of Annealing-based Quantum Computers}
 
-\subsection{Implementation using DQM}
+\subsection{Hybrid DQM Solver}
 
 For the optimization using the Quantum Annealing hardware, the formulated DQM is sent to a hybrid solver at D-Wave.
 The hybrid solver does not put the DQM on quantum hardware directly.
@@ -52,6 +52,17 @@ After retrieving the optimal DQM solution and translating it to a UCP solution, 
 It does so as described in section \ref{approach:quantum.read.solution}.
 This leads to a non-optimal solution of the UCP.
 
-\subsubsection{Implementation using QUBO}
+\subsubsection{Hybrid QUBO Solver}
 
-\todo{List performance results of QUBO on hybrid dwave solver}
+\todo{list results of hybrid QUBO solver}
+
+\subsubsection{Direct QUBO Solver}
+
+D-Wave's QPUs can embed many QUBOs on them.
+But if a QUBO has too many variables or quadratic biases connecting the biases, D-Wave might not find an embedding.
+This is the case for the problems this work considers.
+
+The smallest problem formulated as a QUBO has $1, 024$ variables and $263, 680$ quadratic biases.
+These values can be calculated using formulas (\ref{formula:qubo.num.variables}) and (\ref{formula:qubo.num.quadratic.biases}) respectively.
+
+\todo{explain more}
