@@ -60,9 +60,14 @@ This leads to a non-optimal solution of the UCP.
 
 D-Wave's QPUs can embed many QUBOs on them.
 But if a QUBO has too many variables or quadratic biases connecting the biases, D-Wave might not find an embedding.
-This is the case for the problems this work considers.
+That is the case for the problems this work considers.
 
 The smallest problem formulated as a QUBO has $1, 024$ variables and $263, 680$ quadratic biases.
 These values can be calculated using formulas (\ref{formula:qubo.num.variables}) and (\ref{formula:qubo.num.quadratic.biases}) respectively.
+One variable can have more than $255$ quadratic biases.
+The reason is that power plant $4$ has $2^8$ possible power levels after discretizing the power levels, and variables for the different power levels of one power plant at one time instances are connected with quadratic biases.
 
-\todo{explain more}
+Since the ''Advantage'' QPU has the degree $16$, meaning that one physical qubit has a connection with $16$ other qubits, it would need an enormous amount of physical qubits to represent one logical binary variable.
+More as there are available on the ''Advantage'' QPU.
+\cite{D-Wave2020, Zbinden2020}
+Because of this, D-Wave's embedding algorithm can't find embeddings for the QUBOs this work considers.
