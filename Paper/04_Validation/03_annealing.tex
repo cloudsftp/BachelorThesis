@@ -67,7 +67,9 @@ These values can be calculated using formulas (\ref{formula:qubo.num.variables})
 One variable can have more than $255$ quadratic biases.
 The reason is that power plant $4$ has $2^8$ possible power levels after discretizing the power levels, and variables for the different power levels of one power plant at one time instances are connected with quadratic biases.
 
-Since the ''Advantage'' QPU has the degree $16$, meaning that one physical qubit has a connection with $16$ other qubits, it would need an enormous amount of physical qubits to represent one logical binary variable.
+Since the ''Advantage'' QPU has a $15$-way qubit connectivity, it would need an enormous amount of physical qubits to represent one logical binary variable.
 More as there are available on the ''Advantage'' QPU.
 \cite{D-Wave2020, Zbinden2020}
-Because of this, D-Wave's embedding algorithm can't find embeddings for the QUBOs this work considers.
+Because of this, the minor miner can't find embeddings for the QUBOs this work considers.
+An algorithm designed specifially for embedding large cliques by \citeauthor{Zbinden2020}, can not embed cliques larger than $180$ for the ''Pegasus'' architecture.
+\cite{Zbinden2020}
