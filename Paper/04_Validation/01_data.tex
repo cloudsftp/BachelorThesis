@@ -48,7 +48,7 @@ The data for the power plants is put together from different sources for differe
 \end{enumerate*}
 
 From the list of german powerplants, $4$ plants are chosen, and their maximum output is taken.
-All chosen plants are coal powered power plants.
+All chosen plants are coal-powered power plants.
 \cite{Kraftwerkliste2020}
 $2$ of the plants are categorized as ''sub-critical'' and the other $2$ as ''super-critical''.
 The difference between ''sub-critical'' and ''super-critical'' coal-powered power plants is the pressure level at which they operate.
@@ -71,9 +71,9 @@ For ''super-critical'' power plants, the startup cost is $10.1$ MMBTU per MW max
 Where $1 \text{MMBTU} = 1.6 \cdot 10^{-6} \text{GJ}$.
 This work considers all fuel costs in unit GJ.
 
-The coeffitients of the cost functions is taken from a paper that identified them at coal-powered power plants.
+The coefficients of the cost functions are taken from a paper that identified them at coal-powered power plants.
 \cite{Alrashidi2009}
-\citeauthor{Alrashidi2009} identified $2$ polynomials, both are assigned randomly to the $4$ power plants.
+\citeauthor{Alrashidi2009} identified $2$ polynomials both are assigned randomly to the $4$ power plants.
 The resulting values are presented in table \ref{table:validation.data.plants}.
 
 \begin{table}[ht]
@@ -82,3 +82,65 @@ The resulting values are presented in table \ref{table:validation.data.plants}.
   \caption{Characteristics of Power Plants}
   \label{table:validation.data.plants}
 \end{table}
+
+\subsection{Model Sizes}
+
+With the concrete values for the minimal and maximum power output of the power plants, the concrete size of the DQM and QUBO can be computed.
+For this the formulas (\ref{formula:dqm.num.variables}), (\ref{formula:dqm.num.quadratic.biases}), (\ref{formula:qubo.num.variables}) and (\ref{formula:qubo.num.quadratic.biases}) are used.
+The formulas give the size of the DQM and QUBO, respectively, based on the number of time instances, power plants, and the power output levels of the power plants.
+They consider $2$ different metrics of the size:
+\begin{enumerate*}[label=(\roman*)]
+  \item The number of variables, which is the same as the number of linear biases ($v_{\text{DQM}}, v_{\text{QUBO}}$) and
+  \item The number of quadratic biases ($q_{\text{DQM}}, q_{\text{QUBO}}$).
+\end{enumerate*}
+
+\subsubsection{Size of DQM}
+
+For the DQM expanding the formulas (\ref{formula:dqm.num.variables}) and (\ref{formula:dqm.num.quadratic.biases}), and inserting the number of power plants is straight forward and gives the formulas (\ref{formula:dqm.num.variables.concrete}) and (\ref{formula:dqm.num.quadratic.biases.concrete}).
+\begin{subequations}
+\begin{align}
+  \label{formula:dqm.num.variables.concrete}
+  v_{\text{QUBO}} = & \aT \cdot \aI = 4 \cdot \aT \\
+  \label{formula:dqm.num.quadratic.biases.concrete}
+  q_{\text{QUBO}} = & \left( \aT - 1 \right) \cdot \aI + \aT \cdot \frac{\aI \cdot \left( \aI - 1 \right)}{2}
+  = 4 \cdot \aT - 4 + 6 \cdot \aT = 10 \cdot \aT - 4
+\end{align}
+\end{subequations}
+
+\subsubsection{Size of QUBO}
+
+For the QUBO expanding the formulas (\ref{formula:qubo.num.variables}) and (\ref{formula:qubo.num.quadratic.biases}) is straight forward.
+But we can not just insert the number of power plants into the formula.
+We need to know how many power output levels each power plant has.
+How the numbers are calculated is described in section \ref{approach:qubo.discretize}.
+Table \ref{table:validation.data.plants.power.levels} shows the resulting numbers for the power output levels of the power plants.
+\begin{table}[ht]
+  \centering
+  \input{81_Tables/04_Validation/power_output_levels}
+  \caption{Possible Power Output Levels of the Power Plants}
+  \label{table:validation.data.plants.power.levels}
+\end{table}
+
+Inserting these values into the expanded formulas (\ref{formula:qubo.num.variables}) and (\ref{formula:qubo.num.quadratic.biases}) gives the formulas (\ref{formula:qubo.num.variables.concrete}) and (\ref{formula:qubo.num.quadratic.biases.concrete}).
+\begin{subequations}
+\begin{align}
+\label{formula:qubo.num.variables.concrete}
+  v_{\text{QUBO}} = & \aT \cdot \sum_{i \in \I} 2^{n_i} = \aT \cdot \left( 64 + 64 + 128 + 256 \right)
+  = 1024 \cdot \aT
+\\
+\label{formula:qubo.num.quadratic.biases.concrete}
+\begin{split}
+  q_{\text{QUBO}} = & \left( \aT - 1 \right) \cdot 2 \cdot \sum_{i \in \I} 2^{n_i}
+  + \aT \cdot \left(
+    \sum_{i, j \in \I, i \neq j} 2^{n_i} \cdot 2^{n_j}
+    + \sum_{i \in \I} \frac{2^{n_i} \cdot \left( 2^{n_i} - 1 \right)}{2}
+  \right) \\
+  = & \left( \aT - 1 \right) \cdot \left( 64 + 64 + 128 + 256 \right) \\
+  & + \aT \left(
+    2^{6 + 6} + 2^{6 + 7} \cdot 2 + 2^{6 + 8} \cdot 2 + 2^{7 + 8}
+    + \frac{64 \cdot 63}{2} \cdot 2 + \frac{128 \cdot 127}{2} + \frac{256 \cdot 255}{2}
+  \right) \\
+  = & 130,816 \cdot \aT - 1,024
+\end{split}
+\end{align}
+\end{subequations}
