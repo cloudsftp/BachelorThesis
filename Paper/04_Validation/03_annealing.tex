@@ -72,7 +72,7 @@ Notice how identical figure \ref{figure:validation.annealing.performance.extende
     \caption{Corresponding to Extended Experiment Data}
     \label{figure:validation.dqm.hybrid.minimum.time.200}
   \end{subfigure}
-  \caption{Minimum Computing Time of Hyvrid DQM Solver}
+  \caption{Minimum Computing Time of Hybrid DQM Solver}
 \end{figure}
 
 This approach does not produce optimal solutions for the UCP.
@@ -86,6 +86,37 @@ That leads to a non-optimal solution of the UCP.
 This work implements the QUBOs for the UCP using the UQO-client.
 The UQO-server, unfortunately, does not support the optimization of QUBOs using the hybrid solver.
 For this reason, this work does not consider the performance of the hybrid solver for QUBOs.
+
+Even though this work does not run the experiments on the hybrid QUBO solver, the minimum computing power can be computed.
+The hybrid QUBO solver has a minimum computing time, just like the hybrid DQM solver.
+In this case, the computing time depends on the number of variables of the QUBO.
+Table \ref{table:validation.qubo.hybrid.minimum.time} lists the pairs of variable amount and computing time.
+Figure \ref{figure:validation.qubo.hybrid.minimum.time} shows the minimum time for all possible input sizes.
+Figure \ref{figure:validation.qubo.hybrid.minimum.time.200} shows the minimum time for the experiments represented in figure \ref{figure:validation.annealing.performance.extended}.
+\begin{table}[ht]
+  \centering
+  \input{81_Tables/04_Validation/qubo_hybrid_minimum_time}
+  \caption{Interpolation Points for Minimum Computing Time of Hybrid DQM Solver}
+  \label{table:validation.qubo.hybrid.minimum.time}
+\end{table}
+\begin{figure} [ht]
+  \begin{subfigure}[b]{0.5 \textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{04_Validation/minimum_computing_time_qubo_hybrid.png}
+    \caption{Full}
+    \label{figure:validation.qubo.hybrid.minimum.time}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.5 \textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{04_Validation/minimum_computing_time_qubo_hybrid_200.png}
+    \caption{Corresponding to Extended Experiment Data}
+    \label{figure:validation.qubo.hybrid.minimum.time.200}
+  \end{subfigure}
+  \caption{Minimum Computing Time of Hybrid QUBO Solver}
+\end{figure}
+
+Note that the minimum computing time of this solver is greater than the computing time of the hybrid DQM solver for large inputs.
+How much computing time this solver would need additionaly to the minimum computing time can't be reasoned about without actrually performing experiments.
 
 \subsubsection{Direct QUBO Solver}
 
