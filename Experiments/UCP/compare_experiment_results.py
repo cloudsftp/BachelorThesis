@@ -11,7 +11,7 @@ from UCP.experiment_results import ExperimentResults
 from UCP.unit_commitment_problem import UCPSolution
 
 
-def plot_comparison(experiment_results_list: List[ExperimentResults],
+def plot_time_comparison(experiment_results_list: List[ExperimentResults],
                     loads: List[int], num_plants: int, output_file_name: str) -> None:
   for experiment_results in experiment_results_list:
     solutions_list: List[UCPSolution] = experiment_results.get_experiments(num_plants)
@@ -35,6 +35,36 @@ def plot_comparison(experiment_results_list: List[ExperimentResults],
   plt.savefig(output_file_name)
 
 
+def plot_error_comparison(experiment_results_list: List[ExperimentResults],
+                    loads: List[int], num_plants: int, output_file_name: str) -> None:
+  result_base: pd.DataFrame
+  result_comp: pd.DataFrame
+
+  for i in range(len(experiment_results_list)):
+    solutions_list: List[UCPSolution] = experiment_results_list[i].get_experiments(num_plants)
+
+    results: Dict[int, float] = {}
+
+    for solution in solutions_list:
+      if solution.ucp.parameters.num_loads in loads:
+        results[solution.ucp.parameters.num_loads] = solution.o
+
+    if i == 0:
+      result_base = pd.Series(results).sort_index()
+    else:
+      result_comp = pd.Series(results).sort_index()
+
+  error: pd.DataFrame = (result_comp - result_base) / result_base / 100
+  error.plot()
+  plt.legend(('Relative Error',))
+
+  plt.xlabel('Number of Loads')
+  plt.ylabel('Relative Error (%)')
+
+  plt.tight_layout()
+  plt.savefig(output_file_name)
+
+
 if __name__ == "__main__":
   parser: argparse.ArgumentParser = argparse.ArgumentParser(description='Visualize comparison of results')
 
@@ -45,6 +75,9 @@ if __name__ == "__main__":
   parser.add_argument('--lower-loads', type=int, default=0)
   parser.add_argument('--upper-loads', type=int, default=500)
   parser.add_argument('--skip-loads', type=int, default=1)
+
+  performance_action: argparse.Action = parser.add_argument('-p', '--performance', action='store_true')
+  parser.add_argument('-e', '--error', action='store_true')
 
   output_action: argparse.Action = parser.add_argument('-o', '--output', type=str)
 
@@ -80,5 +113,13 @@ if __name__ == "__main__":
     if i % args.skip_loads == 0:
       loads.append(index_range[i])
 
-  plot_comparison(experiment_results_list, loads, plant_number, output_file_name)
+  if args.performance:
+    plot_time_comparison(experiment_results_list, loads, plant_number, output_file_name)
+  elif args.error:
+    if not len(experiment_results_list) == 2:
+      raise argparse.ArgumentError(performance_action, 'When --error is specified, please only use 2 sources of experiment results')
+
+    plot_error_comparison(experiment_results_list, loads, plant_number, output_file_name)
+  else:
+    raise argparse.ArgumentError(performance_action, 'Pleace specify either --performance or --error')
 
