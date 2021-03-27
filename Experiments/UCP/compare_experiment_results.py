@@ -53,7 +53,7 @@ def plot_error_comparison(experiment_results_list: List[ExperimentResults],
     else:
       result_comp = pd.Series(results).sort_index()
 
-  error: pd.DataFrame = (result_comp - result_base) / result_base / 100
+  error: pd.DataFrame = (result_comp - result_base) / result_comp / 100
   error.plot()
   plt.legend(('Relative Error',))
 

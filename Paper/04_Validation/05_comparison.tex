@@ -1,14 +1,17 @@
 \section{Comparison of Performances}
 \label{validation:comparison}
 
-\todo{Compare performances of classical, annealing-based and gate-based Computers}
+The hybrid DQM sampler from D-Wave solves the UCP with $14$ time instances a lot faster than the Classical algorithm for solving MINLPs.
+For problems with more time instances, this paper has no data from the classical solver.
+Figure \ref{figure:validation.comparison.performance} shows the computing times needed to solve UCPs for the classical algorithm and the hybrid annealing-based algorithm for UCPs with up to $50$ time instances.
+Assuming that the classical algorithm has an exponential time complexity and the computation time continues like the graph in the figure, the hybrid annealing-based algorithm has a great advantage for bigger problems.
 
 \begin{figure}
   \begin{subfigure}[b]{0.5 \textwidth}
     \centering
     \includegraphics[width=\textwidth]{04_Validation/comparison_performance_c_dqm_p4.png}
     \caption{With up to $50$ Loads}
-    \label{figure:validation.performance.comparison}
+    \label{figure:validation.comparison.performance}
   \end{subfigure}
   \begin{subfigure}[b]{0.5 \textwidth}
     \centering
@@ -19,8 +22,19 @@
   \caption{Performance Comparison of Classical and Hybrid Annealing Algorithms}
 \end{figure}
 
+Although this improvement in computing time is astonishing, it is worthless if the hybrid annealing-based algorithm produces bad results for the UCP problems.
+For this reason, this work compares the solutions both algorithms produce based on the objective function $f(x)$ (\ref{formula:minlp.obj}).
+The work computes the relative error of the solution by the hybrid annealing-based algorithm based on formula (\ref{formula:validation.relative.error}).
+\begin{align}
+  \label{formula:validation.relative.error}
+  e_{\text{hybrid}}(x) = \quad \frac{f_{\text{hybrid}}(x) - f_{\text{classical}}(x)}{f_{\text{hybrid}}(x)}
+\end{align}
+
+Figure \ref{figure:validation.comparison.error} shows the error of the hybrid annealing-based algorithm the few experiments that this work runs using both the classical and the hybrid annealing-based algorithms.
+
 \begin{figure}
   \centering
   \includegraphics[width=0.7 \textwidth]{04_Validation/comparison_error_c_dqm_p4_.png}
   \caption{Relative Error of Hybrid Annealing Algorithm compared to Classical Algorithm}
+  \label{figure:validation.comparison.error}
 \end{figure}
