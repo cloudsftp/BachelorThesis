@@ -1,9 +1,8 @@
 #!/bin/python3.8
 
 
-import os
 import argparse
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import matplotlib.pyplot as plt # type: ignore
 import pandas as pd # type: ignore

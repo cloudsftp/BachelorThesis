@@ -6,8 +6,7 @@ import argparse
 from typing import Dict, List, Optional
 
 import matplotlib.pyplot as plt # type: ignore
-import pandas as pd
-from pandas.core.indexes.base import maybe_extract_name # type: ignore
+import pandas as pd # type: ignore
 from UCP.unit_commitment_problem import UCPSolution
 
 
