@@ -11,10 +11,12 @@ from UCP.unit_commitment_problem import UCPSolution
 
 
 class ExperimentResults(object):
-  def __init__(self, solution_dir_name: str) -> None:
+  def __init__(self, solution_dir_name: str, solutions_name: str) -> None:
     self.solution_dir_name: str = solution_dir_name
+    self.solutions_name: str = solutions_name
     self.load_expertiment_results()
     self.sort_experiment_results()
+
 
 
   @staticmethod
@@ -69,6 +71,8 @@ class ExperimentResults(object):
 
     time_series.plot()
 
+    plt.legend((self.solutions_name,))
+
     plt.xlabel('Number of Loads')
     plt.ylabel('Computation Time (s)')
 
@@ -98,30 +102,39 @@ class ExperimentResults(object):
 if __name__ == "__main__":
   parser: argparse.ArgumentParser = argparse.ArgumentParser(description='Visualize results')
 
-  parser.add_argument('--solutions-dir', type=str)
+  solutions_dir_action: argparse.Action = parser.add_argument('--solutions-dir', type=str)
+  solutions_name_action: argparse.Action = parser.add_argument('--solutions-name', type=str)
 
-  parser.add_argument('-p', '--plot', action='store_true')
-  parser.add_argument('--num', type=int)
-  parser.add_argument('--lower-load', type=int, default=0)
-  parser.add_argument('--upper-load', type=int, default=500)
+  plant_number_action: argparse.Action = parser.add_argument('--num', type=int)
+  parser.add_argument('--lower-loads', type=int, default=0)
+  parser.add_argument('--upper-loads', type=int, default=500)
   parser.add_argument('--skip-loads', type=int, default=1)
 
+  plot_action: argparse.Action = parser.add_argument('-p', '--plot', action='store_true')
   parser.add_argument('-t', '--table', action='store_true')
-  parser.add_argument('-o', '--output', type=str)
+  output_action: argparse.Action = parser.add_argument('-o', '--output', type=str)
 
   args = parser.parse_args()
 
-  solutions_dir: str = args.solutions_dir
-  if solutions_dir == '':
-    raise argparse.ArgumentError(args.solutions_dir, message='Please provide a directory where the solutions are stored')
+  solutions_dir: Optional[str] = args.solutions_dir
+  if not solutions_dir:
+    raise argparse.ArgumentError(solutions_dir_action, message='Please provide a directory where the solutions are stored')
 
-  output_file_name: str = args.output
-  if output_file_name == '':
-    raise argparse.ArgumentError(args.output, message='Please provide an output file name')
+  solutions_name: Optional[str] = args.solutions_name
+  if not solutions_name:
+    raise argparse.ArgumentError(solutions_name_action, message='Please provide a name for the solutions')
 
-  results: ExperimentResults = ExperimentResults(solutions_dir)
+  output_file_name: Optional[str] = args.output
+  if not output_file_name:
+    raise argparse.ArgumentError(output_action, message='Please provide an output file name')
 
-  index_range: range = range(args.lower_load, args.upper_load + 1)
+  plant_number: Optional[int] = args.num
+  if not plant_number:
+    raise argparse.ArgumentError(plant_number_action, message='Please provide the number of plants')
+
+  results: ExperimentResults = ExperimentResults(solutions_dir, solutions_name)
+
+  index_range: range = range(args.lower_loads, args.upper_loads + 1)
   loads: List[int] = []
   for i in range(len(index_range)):
     if i % args.skip_loads == 0:
@@ -131,3 +144,5 @@ if __name__ == "__main__":
     results.plot_time(args.num, loads, output_file_name)
   elif args.table:
     results.generate_table(args.num, loads, output_file_name)
+  else:
+    raise argparse.ArgumentError(plot_action, message='Please either specify --plot or --table')
