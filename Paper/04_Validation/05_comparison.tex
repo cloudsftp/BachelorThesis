@@ -31,6 +31,10 @@ The work computes the relative error of the solution by the hybrid annealing-bas
 \end{align}
 
 Figure \ref{figure:validation.comparison.error} shows the error of the hybrid annealing-based algorithm the few experiments that this work runs using both the classical and the hybrid annealing-based algorithms.
+While the error stays smaller than $0.5\%$ for these problems, it seems to grow exponentially.
+There is no way to know how the solution error behaves for larger problems without actually running the experiments on classical hardware.
+Assuming that the error continues to grow exponentially with respect to the number of time instances in the UCP, the hybrid annealing-based algorithm produces worse solutions for larger UCPs.
+It is crucial to highlight this trade-off in this work.
 
 \begin{figure}
   \centering

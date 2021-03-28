@@ -50,12 +50,12 @@ def plot_error_comparison(experiment_results_list: List[ExperimentResults],
 
     if i == 0:
       result_base = pd.Series(results).sort_index()
-    else:
+    elif i == 1:
       result_comp = pd.Series(results).sort_index()
 
-  error: pd.DataFrame = (result_comp - result_base) / result_comp / 100
+  error: pd.DataFrame = ((result_comp - result_base) / result_comp) * 100
   error.plot()
-  plt.legend(('Relative Error',))
+  plt.legend(('{} vs {}'.format(experiment_results_list[1].solutions_name, experiment_results_list[0].solutions_name),))
 
   plt.xlabel('Number of Loads')
   plt.ylabel('Relative Error (%)')
