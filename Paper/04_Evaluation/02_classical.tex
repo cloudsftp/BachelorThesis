@@ -17,7 +17,7 @@ The optimizations are performed on the Excess Cluster of the HLRS, Stuttgart.
 
 The optimization of the problem is of high time complexity.
 In the beginning, with small inputs, it takes little time.
-As listed in table \ref{table:validation.classical.performance}, the optimization of $4$ power plants with $2$ units of time takes about $0.5$ seconds.
+As listed in table \ref{table:evaluation.classical.performance}, the optimization of $4$ power plants with $2$ units of time takes about $0.5$ seconds.
 But as the input size grows, the time needed by the solver grows exponentially.
 When the input size is doubled --- $4$ plants over $4$ units of time --- the optimization takes about $3.5$ seconds.
 After adding another $2$ units of time, the optimization takes $15.5$ seconds.
@@ -31,15 +31,15 @@ But the data shows that it took about $311,144.9$ seconds.
   \centering
   \input{81_Tables/04_Validation/performance_classical_p4}
   \caption{Results of Classical Optimization with $4$ Power Plants}
-  \label{table:validation.classical.performance}
+  \label{table:evaluation.classical.performance}
 \end{table}
 
-The diagram \ref{figure:validation.classical.performance} highlights the exponential nature of the optimization of the problem.
+The diagram \ref{figure:evaluation.classical.performance} highlights the exponential nature of the optimization of the problem.
 It shows the time needed for optimization dependent on the input size --- the number of units of time.
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.75 \textwidth]{04_Validation/performance_classical_p4.png}
   \caption{Time Complexity of Classical Optimization with $4$ Power Plants}
-  \label{figure:validation.classical.performance}
+  \label{figure:evaluation.classical.performance}
 \end{figure}

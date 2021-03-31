@@ -70,7 +70,7 @@ If multiple elements satisfy the condition, only one of those elements can be fo
 The algorithm consists on 3 parts:
 \begin{enumerate}
   \item Initialize the input register with the equal superposition $\ket{\Phi} = \frac{1}{\sqrt{N}} \sum_{x=0}^N \ket{x}$
-  \item \label{backg:quantum.grover.iteration}
+  \item \label{fundamentals:quantum.grover.iteration}
   Repeat the following steps $O(\sqrt{N})$ times:
   \begin{enumerate}[label=\alph*)]
     \item Rotate all states that satisfy $C$ by $\pi$.
@@ -82,18 +82,18 @@ The algorithm consists on 3 parts:
       \end{cases}
     \end{align}
   \end{enumerate}
-  \item \label{backg:quantum.grover.sampling}
+  \item \label{fundamentals:quantum.grover.sampling}
   Sample the input register.
 \end{enumerate}
 
-Step \ref{backg:quantum.grover.iteration} is called the Grover-iteration $G$.
+Step \ref{fundamentals:quantum.grover.iteration} is called the Grover-iteration $G$.
 Its first part that rotates desired states is called an oracle.
 The Grover-iteration amplifies the amplitudes of desired states.
-This increases the probability of measuring those states in step \ref{backg:quantum.grover.sampling}.
+This increases the probability of measuring those states in step \ref{fundamentals:quantum.grover.sampling}.
 \cite{Grover1996}
 
 \subsubsection{Optimization}
-\label{backg:quantum.grover.optimization}
+\label{fundamentals:quantum.grover.optimization}
 
 Optimizing QUBOs on gate-based quantum computers is possible by iteratively searching for better values of the QUBO variables.
 The algorithm uses the Grover search to search for better values for the QUBO variables.

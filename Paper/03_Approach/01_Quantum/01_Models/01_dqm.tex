@@ -1,12 +1,12 @@
 \subsection{Unit Commitment Problem as Discrete Quadratic Model}
 
 The MINLP formulation of the UCP is converted to a Discrete Quadratic Model (DQM).
-As mentioned in section (\ref{backg:annealing}), this model is an extension of Binary Quadratic Models (BQM) or Quadratic Unconstrained Binary Optimization model (QUBO).
+As mentioned in section (\ref{fundamentals:annealing}), this model is an extension of Binary Quadratic Models (BQM) or Quadratic Unconstrained Binary Optimization model (QUBO).
 
 \subsubsection{Map Variables}
 \label{approach:dqm.map}
 
-The model, as seen in section (\ref{backg:annealing}), takes in a vector rather than a 2-dimensional matrix.
+The model, as seen in section (\ref{fundamentals:annealing}), takes in a vector rather than a 2-dimensional matrix.
 That's why the indices of the variables $p_{i,t}$ are mapped, such that the result is just as many variables $p_{l}$.
 \begin{align}
   m: \quad
