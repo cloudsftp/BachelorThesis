@@ -1,0 +1,10 @@
+prefix=/home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+
+Name: Blas
+Description: Basic linear algebra package
+URL: https://projects.coin-or.org/BuildTools
+Version: 1.4.8
+Libs: -L${libdir} -lcoinblas  -L/usr/lib/gcc/x86_64-redhat-linux/8 -L/usr/lib/gcc/x86_64-redhat-linux/8/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/8/../../.. -lgfortran -lm -lquadmath
+Cflags:

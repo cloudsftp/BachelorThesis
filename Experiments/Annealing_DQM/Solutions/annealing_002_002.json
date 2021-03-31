@@ -1,0 +1,60 @@
+{
+    "ucp": {
+        "parameters": {
+            "num_loads": 2,
+            "num_plants": 2,
+            "offset_loads": 0
+        },
+        "loads": [
+            1226.5,
+            1201.7377280837204
+        ],
+        "plants": [
+            {
+                "A": 95.856,
+                "B": 7.374,
+                "C": 0.047,
+                "Pmin": 193.55,
+                "Pmax": 553,
+                "AU": 4.39635,
+                "AD": 0,
+                "initially_on": false,
+                "type": "coal, subcritical"
+            },
+            {
+                "A": 96.279,
+                "B": 7.592,
+                "C": 0.042,
+                "Pmin": 380,
+                "Pmax": 1900,
+                "AU": 20.3414,
+                "AD": 0,
+                "initially_on": false,
+                "type": "coal, supercritical"
+            }
+        ]
+    },
+    "time": 5.01297,
+    "optimal": true,
+    "o": 84051.83020485914,
+    "u": [
+        [
+            true,
+            true
+        ],
+        [
+            true,
+            true
+        ]
+    ],
+    "p": [
+        [
+            553,
+            553
+        ],
+        [
+            673.4999999999999,
+            648.7377280837204
+        ]
+    ]
+}

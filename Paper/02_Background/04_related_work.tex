@@ -1,0 +1,32 @@
+\section{Related Work}
+
+\subsection{Unit Commitment Problem}
+
+Many methods for optimizing the UCP described in section \ref{backg:ucp} exist in the literature.
+\citeauthor{Abujarad2017} listed and compared those methods.
+They listed the use of Mixed-integer Linear Programming as accurate but exponentially expensive.
+All other methods give a sub-optimal solution.
+\cite{Abujarad2017}
+
+When dealing with cost functions of thermal power plants, they seldom are linear.
+Most commonly, they are quadratic.
+\citeauthor{Baldick1995} generalized the formulation of the UCP as Mixed-integer Non-linear Problems, where he assumed a quadratic cost function.
+\cite{Baldick1995}
+
+\subsection{Quantum Computing for Unit Commitment}
+
+\citeauthor{Ajagekar2019} explore the utility of quantum computing for optimization problems in the energy domain.
+They also considered the UCP.
+They formulated a UCP as a QUBO and used D-Wave quantum hardware (the D-Wave 2000Q, to be precise) to optimize that model of the UCP.
+Compared to the optimization on a classical computer using the Gurobi solver, the quantum option did perform terribly.
+\cite{Ajagekar2019}
+
+\subsection{Discrete Quadratic Model Optimization on Quantum Computers}
+
+At the end of 2020, D-Wave released a hybrid solver that can solve Discrete Quadratic Models.
+\cite{DQMHybrid2020}
+The DQM model has a large advantage over the QUBO model when modeling problems with discrete or continuous variables.
+The QUBO can only have binary variables.
+Modeling discrete variables takes many binary variables and many more quadratic biases to ensure only one binary variable corresponding to one discrete variable is $1$.
+This phenomenon also appears in the QUBO formulation of the UCP by \citeauthor{Ajagekar2019}.
+\cite{Ajagekar2019}

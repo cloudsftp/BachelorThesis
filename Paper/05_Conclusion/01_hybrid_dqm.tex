@@ -1,0 +1,10 @@
+This work proposes an approach to reformulate UCPs with inter-time dependencies as problems that quantum computers can solve.
+DQMs and QUBOs are the names of the optimization problems that this approach produces.
+Gate-based quantum computers can't optimize the resulting QUBOs because they lack qubits.
+Annealing-based quantum computers can't optimize the resulting QUBOs directly on the QPU because they lack connections between their qubits.
+But hybrid approaches using both classical computing and quantum computing can optimize the resulting QUBOs and DQMs.
+
+This work compares the performance of hybrid annealing-based optimization of DQMs with the classical optimization of MINLPs for real-world like UCPs.
+The hybrid algorithm has a big computational advantage regarding the time it needs to optimize the UCP.
+But also, it has a computational disadvantage regarding the quality of the result.
+That leads to a trade-off between computation time and optimality of the result.

@@ -1,0 +1,28 @@
+\section{Motivation}
+
+Optimizing the UCP takes a lot of time for large inputs.
+Large inputs here means one of two things or both:
+\begin{enumerate*}[label=(\roman*)]
+  \item More units, i.e., power plants or
+  \item A longer timeframe over which to schedule the units.
+\end{enumerate*}
+UCPs are optimization problems and thus, most of the time formulated as Mixed-integer Non-linear Problems.
+\cite{Baldick1995}
+What these are exactly is discussed in section \ref{backg:minlp}.
+Important for now is that these optimization problems are NP-complete.
+\cite{Li2005, Bienstock1996}
+
+Quantum computing promises optimization algorithms with smaller time complexity.
+\cite{Portnov2000, Ahuja1999, Gilliam2019, Ajagekar2020, Shaydulin2019}
+There are two types of quantum processors.
+Both types and their differences are introduced in section \ref{backg:quantum}.
+One of which is designed for optimizations and the other which is a more general quantum processor.
+
+Later it will become clear that most optimization algorithms that run solely on quantum computers will not be able to tackle the problem.
+Today's quantum computers are described as Noisy Intermediate-Scale Quantum (NISQ) technology.
+This is because the hardware is sensitive to noise and thus not able to run long computations.
+Also, there are not many qubits in the latest quantum computers (intermediate-scale).
+\cite{Leymann2020}
+The solution is hybrid algorithms.
+Such algorithms solve the problem at hand with classical computers and use quantum computers to speed up specific parts that are much faster on a quantum computer and realizable on todays NISQ hardware.
+\cite{Ajagekar2020, Shaydulin2019}

@@ -1,0 +1,16 @@
+\section{Performance of Gate-based Quantum Computers}
+
+The implementation of the QUBO as described in section \ref{approach:gate.implement} of the UCP builds a quantum circuit for the first iteration of the optimization algorithm described in section \ref{backg:quantum.grover.optimization}.
+Unfortunately, this quantum circuit is too big to be executed on any of IBM's public quantum computers for the smallest UCP that this work considers.
+
+The number of qubits needed just for the QUBO variables is the same as the number of binary variables in the QUBO.
+The number of variables in a QUBO is given by the formula (\ref{formula:qubo.num.variables}).
+These qubits are considered the first quantum register of the quantum circuit.
+In the case of the smallest UCP, this work considers with the $4$ power plants listed in section \ref{table:validation.data.plants} and $2$ time instances, the number of qubits would be $1, 024$.
+With every additional $2$ time instances of the UCP, the algorithm needs another $1, 024$ qubits.
+
+Additionally to this quantum register, the algorithm needs a second quantum register for storing the result of the QUBO dependent on the QUBO variables of the first register.
+The domain of values the QUBO produces grows with the size of the QUBO.
+It is proportional to the number of biases assuming the average value of the biases stays the same.
+
+Regardless of the number of gates the quantum circuit would have, the gate-based quantum computers right now do not have enough qubits to handle the problems this work considers.

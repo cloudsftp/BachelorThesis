@@ -1,0 +1,44 @@
+\section{Mixed-Integer Non-linear Problems}
+\label{backg:minlp}
+
+Mixed-integer Non-linear Problems (MINLPs) are a class of optimization problems that fit a specific form.
+The form of the problems is displayed in formula \ref{formula:minlp.form}.
+
+\begin{subequations}
+  \begin{align}
+    \min_x \quad
+    & f(x)
+    \label{formula:minlp.form.objective}
+    \\
+    s.t. \quad
+    & g_j(x) \leq 0
+    & \forall j \in M
+    \label{formula:minlp.form.constraints}
+    \\
+    & x_i^l \leq x_i \leq x_i^u
+    & \forall i \in N_0
+    \label{formula:minlp.form.limits}
+    \\
+    & x_i \in \mathbb{Z}
+    & \forall i \in N_0^I \subseteq N_0
+    \label{formula:minlp.form.integer}
+  \end{align}
+  \label{formula:minlp.form}
+\end{subequations}
+
+where $f(x)$ and all $g(x)$ may be non-linear.
+That is why the class of problems is called non-linear.
+
+The first line \ref{formula:minlp.form.objective} is the objective function.
+The goal is to find an input $x \in \mathbb{R}^n$ that minimizes $f(x)$ while also respecting the constraints discussed in the next paragraph.
+
+The second line \ref{formula:minlp.form.constraints} lists all the constraints that involve multiple parts of the input x.
+The input $x$ must not violate any of the constraints.
+Line \ref{formula:minlp.form.limits} sets limits for the elements $x_i$ of $x$.
+And the last line \ref{formula:minlp.form.integer} states that some of the elements $x_i$ are integers rather than rational numbers.
+That is why the class of problems is called mixed-integer.
+\cite{Belotti2009}
+
+Optimizing MINLPs is NP-complete.
+\cite{Bienstock1996}
+That means that no known algorithm can optimize any MINLP with polynomial time complexity.

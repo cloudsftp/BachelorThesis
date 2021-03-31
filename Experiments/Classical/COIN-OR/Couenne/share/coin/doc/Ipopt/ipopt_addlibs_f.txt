@@ -1,0 +1,1 @@
+         -L/home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib -lipopt -ldl -lcoinlapack -lcoinblas           -lstdc++ -lm

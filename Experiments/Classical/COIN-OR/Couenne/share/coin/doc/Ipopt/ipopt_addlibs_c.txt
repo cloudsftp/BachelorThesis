@@ -1,0 +1,1 @@
+-L/home/fabi/Projects/Uni/BachelorThesis/Experiments/Classical/COIN-OR/Couenne/lib -lipopt -ldl -lcoinlapack -L/usr/lib/gcc/x86_64-redhat-linux/8 -L/usr/lib/gcc/x86_64-redhat-linux/8/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/8/../../.. -lcoinblas -lgfortran -lm -lquadmath  -lstdc++ -lm
