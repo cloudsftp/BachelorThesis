@@ -1,8 +1,10 @@
-The proposed approach using a hybrid annealing-based DQM sampler demonstrates a huge computation time advantage over the classical optimization algorithm.
-This work shows that advantage by running experiments for optimizing real-world like UCP scenarios.
-But even though this approach is much faster for large inputs, it also produces non-optimal solutions.
-The error increases with the size of the UCPs.
+This work proposes an approach to reformulate UCPs with inter-time dependencies as problems that quantum computers can solve.
+DQMs and QUBOs are the names of the optimization problems that this approach produces.
+Gate-based quantum computers can't optimize the resulting QUBOs because they lack qubits.
+Annealing-based quantum computers can't optimize the resulting QUBOs directly on the QPU because they lack connections between their qubits.
+But hybrid approaches using both classical computing and quantum computing can optimize the resulting QUBOs and DQMs.
 
-Optimizing UCPs in the size as this work considers is not possible with purely quantum algorithms.
-Both the annealing-based quantum computers and the gate-based quantum computers do not have the resources to tackle QUBOs of this size yet.
-While annealing-based QPUs only lack the connectivity of their qubits with one another, the gate-based quantum computers are far from achieving the needed number of qubits.
+This work compares the performance of hybrid annealing-based optimization of DQMs with the classical optimization of MINLPs for real-world like UCPs.
+The hybrid algorithm has a big computational advantage regarding the time it needs to optimize the UCP.
+But also, it has a computational disadvantage regarding the quality of the result.
+That leads to a trade-off between computation time and optimality of the result.
