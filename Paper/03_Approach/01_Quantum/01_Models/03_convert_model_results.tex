@@ -1,6 +1,8 @@
 \subsection{Converting Solutions of Quadratic Models}
 \label{approach:quantum.read.solution}
 
+\todo{move code to implementation}
+
 \subsubsection{Choosing Power Levels}
 
 For QUBOs, it can happen that for a single power plant at a single time instance, multiple binary variables for different power levels are $1$.
@@ -35,8 +37,6 @@ The sum of the power outputs at every time instance does not satisfy the demand.
 The program, therefore, raises the power outputs of all plants at every time instance uniformly.
 While doing so, it also avoids violating the power limits of the individual plants.
 For this the algortihm \ref{approach:quantum.read.solution.algorithm} is used.
-
-\todo{Replace with final code}
 
 \begin{lstlisting}[
   caption={Adjusting the UCP Solution},
