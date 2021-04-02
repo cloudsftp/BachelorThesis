@@ -62,7 +62,7 @@ Where $n_i$ is chosen as in section \ref{approach:dqm.discretize}.
 Thus $P_{i, 2^{n_i} - 1} = P_{max, i}$.
 
 This automatically enforces the constraint (\ref{formula:minlp.power}) that ensures that the power outputs stay inside the limits of every power plant.
-This constraint thus is not found in the energy function (\todo{link parts of function}).
+This constraint thus is not found in the energy function (\ref{formula:qubo.result.quadratic}-\ref{formula:qubo.result.constant}).
 
 \subsubsection{Initial Formula}
 
@@ -172,19 +172,22 @@ Penalizing multiple possible power output values for each plant at every time av
 \subsubsection{Final Formula}
 
 After adding all parts together again, we obtain the following QUBO.
+\begin{subequations}
 \begin{align}
   E(p)
   = \quad & \gamma_s \sum_i \sum_{t, k > 0} \left(
       A_i^D \cdot p_{i, t-1, k} \cdot p_{i, t, 0}
       + A_i^U \cdot p_{i, t-1, 0} \cdot p_{i, t, k}
-    \right) \\
+    \right)
+  \label{formula:qubo.result.quadratic}
+  \\
   + \quad & \gamma_d \sum_{i, k, l} \sum_{i < j} \left(
       P_{i,k} \cdot P_{j,l} \cdot p_{i, t, k} \cdot p_{j, t, l}
     \right)
   + \gamma_p \sum_{i, t} \sum_{k < l} \left( p_{i, t, k} \cdot p_{i, t, l} \right)
   & \text{(quadratic)}
-  \label{formula:qubo.result.quadratic}
-  \\ + \quad &
+  \\
+  + \quad &
   \sum_{i, t, k} \left(
     \gamma_c \cdot F_{i, k}
     + \gamma_d \left( P_{i, k}^2 - l_t \cdot P_{i, k} \right)
@@ -192,11 +195,13 @@ After adding all parts together again, we obtain the following QUBO.
   + \sum_{i, k} \left( S_{i, k}^{(0)} \cdot p_{i, 0, k} \right)
   & \text{(linear)}
   \label{formula:qubo.result.linear}
-  \\ + \quad &
+  \\
+  + \quad &
   1 + \sum_t l_t^2
   & \text{(constant)}
   \label{formula:qubo.result.constant}
 \end{align}
+\end{subequations}
 
 \subsubsection{Model Size}
 \label{approach:qubo.size}

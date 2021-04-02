@@ -1,5 +1,5 @@
 \section{Data used for Validation}
-\label{validation:data}
+\label{evaluation:data}
 
 \subsection{Consumers}
 
@@ -74,13 +74,13 @@ This work considers all fuel costs in unit GJ.
 The coefficients of the cost functions are taken from a paper that identified them at coal-powered power plants.
 \cite{Alrashidi2009}
 \citeauthor{Alrashidi2009} identified $2$ polynomials both are assigned randomly to the $4$ power plants.
-The resulting values are presented in table \ref{table:validation.data.plants}.
+The resulting values are presented in table \ref{table:evaluation.data.plants}.
 
 \begin{table}[ht]
   \centering
   \input{81_Tables/04_Validation/plant_data.tex}
   \caption{Characteristics of Power Plants}
-  \label{table:validation.data.plants}
+  \label{table:evaluation.data.plants}
 \end{table}
 
 \subsection{Model Sizes}
@@ -113,12 +113,12 @@ For the QUBO expanding the formulas (\ref{formula:qubo.num.variables}) and (\ref
 But we can not just insert the number of power plants into the formula.
 We need to know how many power output levels each power plant has.
 How the numbers are calculated is described in section \ref{approach:qubo.discretize}.
-Table \ref{table:validation.data.plants.power.levels} shows the resulting numbers for the power output levels of the power plants.
+Table \ref{table:evaluation.data.plants.power.levels} shows the resulting numbers for the power output levels of the power plants.
 \begin{table}[ht]
   \centering
   \input{81_Tables/04_Validation/power_output_levels}
   \caption{Possible Power Output Levels of the Power Plants}
-  \label{table:validation.data.plants.power.levels}
+  \label{table:evaluation.data.plants.power.levels}
 \end{table}
 
 Inserting these values into the expanded formulas (\ref{formula:qubo.num.variables}) and (\ref{formula:qubo.num.quadratic.biases}) gives the formulas (\ref{formula:qubo.num.variables.concrete}) and (\ref{formula:qubo.num.quadratic.biases.concrete}).
