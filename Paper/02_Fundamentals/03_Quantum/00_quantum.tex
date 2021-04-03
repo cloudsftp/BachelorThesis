@@ -1,46 +1,48 @@
 \section{Quantum Computing}
 \label{fundamentals:quantum}
 
-Quantum computers use quantum bits (qubits) instead of normal bits that classical computers use.
+Quantum computers use quantum bits (qubits) instead of bits that classical computers use.
 While a bit can be either in the state $0$ or $1$, a qubit can be in a so-called superposition of two states.
-States of qubits are generally written using the Dirac-Notation, also known as the Bra-Ket-Notation
+States of qubits are generally written using the Dirac-Notation, also known as the Bra-Ket-Notation.
 The two states, the superposition is a combination of, are called the basis.
 The most basic basis is the basis $\{ \ket{0}, \ket{1} \}$.
 The formula (\ref{formula:quantum.superposition}) describes such a superposition.
-When one measures the state of the qubit, it collapses into one of the base states, which is the result of the measurement.
-The probability of either basis state being measured is the square of the the complex amplitude of the basis state in the superposition.
-\cite{Vedral1998}
+When one measures the state of the qubit, it collapses into one of the base states, which is the measurement result.
+The probability of either basis state being measured is the absolute square of the complex amplitude of the basic state in the superposition.
+Formula (\ref{formula:quantum.superposition.probability}) shows this for the state $\ket{0}$~\cite{Vedral1998}.
 \begin{subequations}
 \begin{align}
-  \label{formula:quantum.superposition}
   \ket{\phi} & = \alpha \cdot \ket{0} + \beta \cdot \ket{1}
   = \begin{pmatrix}
     \alpha \\ \beta
   \end{pmatrix}
   & \text{with } \alpha, \beta \in \mathbb{C}, \alpha^2 + \beta^2 = 1
+  \label{formula:quantum.superposition}
   \\
-  p_0 & = \alpha^2
+  p_0 & = |\alpha|^2
+  \label{formula:quantum.superposition.probability}
 \end{align}
 \end{subequations}
 
 Multiple qubits chained together form a quantum register.
-In such a register, the measurement results of one qubit might depend on the measurement results of other qubits.
-This is called entanglement.
+In such a register, multiple qubits might be entangled.
+That means that the measurement of one qubit depends on the measurement of the other qubit.
 The formula (\ref{formula:quantum.superposition.register}) describes a quantum register with $n$ qubits.
 If one can't separate the formula into single qubits, the state is entangled.
-The probability of measuring a specific state of the quantum register is given by the amplitude of that state squared.
-\cite{Vedral1998}
+The probability of measuring a specific state of the quantum register is given by the absolute square of the amplitude of that state
+Formula (\ref{formula:quantum.superposition.register.probability}) shoes this for all states $\ket{x}$~\cite{Vedral1998}.
 \begin{subequations}
 \begin{align}
-  \label{formula:quantum.superposition.register}
   \ket{\Phi} & = \sum_{x \in \{0, 1\}^n} \alpha_x \cdot \ket{x}
   = \begin{pmatrix}
     \alpha_{0 \ldots 00} \\ \alpha_{0 \ldots 01} \\ \alpha_{0 \ldots 10} \\ \ldots \\ \alpha_{1 \ldots 11}
   \end{pmatrix}
   & \text{with } \forall x \in \{0, 1\}^n: \alpha_x \in \mathbb{C},
   \sum_{x \in \{0, 1\}^n} \alpha_x^2 = 1
+  \label{formula:quantum.superposition.register}
   \\
   p_x & = \alpha_x^2
+  \label{formula:quantum.superposition.register.probability}
 \end{align}
 \end{subequations}
 
@@ -69,7 +71,7 @@ The qubit count increased by $150\%$ in just $3$ years.
 The coupler count increased by $580\%$ in the same time frame, although this number is misleading.
 The more important metric is the qubit connectivity, the so-called ''degree'', which increased by $133\%$.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=0.7 \textwidth]{02_Background/dwave_qbits_history.png}
   \caption{Number of Qubits in D-wave QPUs over the Years \cite{D-Wave2018, D-Wave2020}}
@@ -77,12 +79,12 @@ The more important metric is the qubit connectivity, the so-called ''degree'', w
 \end{figure}
 
 Figure \ref{figure:annealing.processors.history} shows the increase of the number of qubits that are in D-Wave's QPUs.
-The number of qubits doubles every $2$ years.
+The number of qubits doubles all $2$ years.
 
 \subsubsection{Gate-based Quantum Computers}
 
 IBM is the leading manufacturer of Gate-based Quantum Computers.
-Their newest model, ''Hummingbird'', has exactly $65$ qubits.
+Their newest model, ``Hummingbird'', has exactly $65$ qubits.
 It debuted in 2020.
 Unfortunately, information about the performance of this processor is not available to the public.
 \cite{IBMRoadmap2020}
@@ -106,7 +108,7 @@ It projects its 2023 quantum processors to have $1, 121$ qubits.
 Figure \ref{figure:gate.qbits.projection} ilustrates the projected qubit count.
 \cite{IBMRoadmap2020}
 
-\begin{figure}
+\begin{figure}[!ht]
   \begin{subfigure}[b]{0.5 \textwidth}
     \centering
     \includegraphics[width=\textwidth]{02_Background/ibm_qv_history.png}
