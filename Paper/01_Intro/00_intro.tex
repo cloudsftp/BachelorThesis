@@ -30,6 +30,8 @@ Large inputs here means one of two things or both:
 \end{enumerate*}
 UCPs are optimization problems and thus, most of the time formulated as Mixed-integer Non-linear Problems~\cite{Baldick1995}.
 Precisely optimizing these problems is NP-complete~\cite{Li2005, Bienstock1996}.
+The energy industry needs faster algorithms for large inputs to deal with the increasing amount of information.
+These algorithms also have to be precise.
 
 Quantum computing promises optimization algorithms with improved time complexity~\cite{Portnov2000, Ahuja1999, Gilliam2019, Ajagekar2020, Shaydulin2019}.
 There are two types of quantum processors.
@@ -38,10 +40,12 @@ One of which is designed for optimizations and the other which is a more general
 Today's quantum computers are described as Noisy Intermediate-Scale Quantum (NISQ) technology.
 That is because the hardware is sensitive to noise and thus not able to run long computations.
 Also, there are not many qubits in the latest quantum computers (intermediate-scale)~\cite{Leymann2020}.
-The solution is hybrid algorithms.
+That is why one can't run most quantum algorithms for practical problems.
+Either there are not enough qubits to represent the variables, or the result is too noisy.
+One alternative that still can give a speed-up for some problems are hybrid classical-quantum algorithms.
 Such algorithms solve the problem at hand with classical computers and use quantum computers to speed up specific parts that a NISQ quantum computer can compute~\cite{Ajagekar2020, Shaydulin2019}.
 
-This work explores the application of purely quantum and hybrid quantum algorithms to the UCP.
+This work explores the application of purely quantum and hybrid classical-quantum algorithms to the UCP.
 It compares their performance in regards to computation time and accuracy of the result.
 The goal is to find an algorithm that can accurately solve large UCPs faster than the current classical algorithms.
 
