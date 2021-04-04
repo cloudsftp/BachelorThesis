@@ -1,46 +1,48 @@
 \section{Quantum Computing}
 \label{fundamentals:quantum}
 
-Quantum computers use quantum bits (qubits) instead of normal bits that classical computers use.
+Quantum computers use quantum bits (qubits) instead of bits that classical computers use.
 While a bit can be either in the state $0$ or $1$, a qubit can be in a so-called superposition of two states.
-States of qubits are generally written using the Dirac-Notation, also known as the Bra-Ket-Notation
+States of qubits are generally written using the Dirac-Notation, also known as the Bra-Ket-Notation.
 The two states, the superposition is a combination of, are called the basis.
 The most basic basis is the basis $\{ \ket{0}, \ket{1} \}$.
 The formula (\ref{formula:quantum.superposition}) describes such a superposition.
-When one measures the state of the qubit, it collapses into one of the base states, which is the result of the measurement.
-The probability of either basis state being measured is the square of the the complex amplitude of the basis state in the superposition.
-\cite{Vedral1998}
+When one measures the state of the qubit, it collapses into one of the base states, which is the measurement result.
+The probability of either basis state being measured is the absolute square of the complex amplitude of the basic state in the superposition.
+Formula (\ref{formula:quantum.superposition.probability}) shows this for the state $\ket{0}$~\cite{Vedral1998}.
 \begin{subequations}
 \begin{align}
-  \label{formula:quantum.superposition}
   \ket{\phi} & = \alpha \cdot \ket{0} + \beta \cdot \ket{1}
   = \begin{pmatrix}
     \alpha \\ \beta
   \end{pmatrix}
   & \text{with } \alpha, \beta \in \mathbb{C}, \alpha^2 + \beta^2 = 1
+  \label{formula:quantum.superposition}
   \\
-  p_0 & = \alpha^2
+  p_0 & = |\alpha|^2
+  \label{formula:quantum.superposition.probability}
 \end{align}
 \end{subequations}
 
 Multiple qubits chained together form a quantum register.
-In such a register, the measurement results of one qubit might depend on the measurement results of other qubits.
-This is called entanglement.
+In such a register, multiple qubits might be entangled.
+That means that the measurement of one qubit depends on the measurement of the other qubit.
 The formula (\ref{formula:quantum.superposition.register}) describes a quantum register with $n$ qubits.
 If one can't separate the formula into single qubits, the state is entangled.
-The probability of measuring a specific state of the quantum register is given by the amplitude of that state squared.
-\cite{Vedral1998}
+The probability of measuring a specific state of the quantum register is given by the absolute square of the amplitude of that state
+Formula (\ref{formula:quantum.superposition.register.probability}) shoes this for all states $\ket{x}$~\cite{Vedral1998}.
 \begin{subequations}
 \begin{align}
-  \label{formula:quantum.superposition.register}
   \ket{\Phi} & = \sum_{x \in \{0, 1\}^n} \alpha_x \cdot \ket{x}
   = \begin{pmatrix}
     \alpha_{0 \ldots 00} \\ \alpha_{0 \ldots 01} \\ \alpha_{0 \ldots 10} \\ \ldots \\ \alpha_{1 \ldots 11}
   \end{pmatrix}
   & \text{with } \forall x \in \{0, 1\}^n: \alpha_x \in \mathbb{C},
   \sum_{x \in \{0, 1\}^n} \alpha_x^2 = 1
+  \label{formula:quantum.superposition.register}
   \\
   p_x & = \alpha_x^2
+  \label{formula:quantum.superposition.register.probability}
 \end{align}
 \end{subequations}
 
@@ -51,25 +53,23 @@ The probability of measuring a specific state of the quantum register is given b
 
 \subsubsection{Annealing-based Quantum Computers}
 
-D-Wave is the leading manufacturer of Quantum Annealers.
-Their newest model, ''Advantage'', has over $5, 000$ qubits and over $35, 000$ couplers.
-The connectors connect the qubits in a $P_{16}$-Graph, also called ''Pegasus''.
+D-Wave is the leading manufacturer of annealing-based quantum computers.
+Their newest model, ``Advantage'', has over $5, 000$ qubits and over $35, 000$ couplers.
+The connectors connect the qubits in a $P_{16}$-Graph, also called ``Pegasus''.
 This graph has the degree $16$, which means that every qubit has a connection with $15$ other qubits.
-D-Wave released this model in 2020.
-\cite{D-Wave2020, Zbinden2020}
+D-Wave released this model in 2020~\cite{D-Wave2020, Zbinden2020}.
 
-The model before this, ''2000Q'', has over $2, 000$ qubits and over $6, 000$ couplers.
-The connectors connect the qubits in a $C_{16}$-Graph, also called ''Chimera''.
+The model before this, ``2000Q'', has over $2, 000$ qubits and over $6, 000$ couplers.
+The connectors connect the qubits in a $C_{16}$-Graph, also called ``Chimera''.
 This graph has the degree $6$, which means that every qubit has a connection with $5$ other qubits.
-D-wave released that model in 2017.
-\cite{D-Wave2020, Zbinden2020}
+D-wave released that model in 2017~\cite{D-Wave2020, Zbinden2020}.
 
 D-wave, therefore, increased their qubit number significantly in the last years.
 The qubit count increased by $150\%$ in just $3$ years.
 The coupler count increased by $580\%$ in the same time frame, although this number is misleading.
-The more important metric is the qubit connectivity, the so-called ''degree'', which increased by $133\%$.
+The more meaningful metric anout the coupler count is the qubit connectivity, the so-called ``degree'', which increased by $133\%$.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=0.7 \textwidth]{02_Background/dwave_qbits_history.png}
   \caption{Number of Qubits in D-wave QPUs over the Years \cite{D-Wave2018, D-Wave2020}}
@@ -77,36 +77,31 @@ The more important metric is the qubit connectivity, the so-called ''degree'', w
 \end{figure}
 
 Figure \ref{figure:annealing.processors.history} shows the increase of the number of qubits that are in D-Wave's QPUs.
-The number of qubits doubles every $2$ years.
+The number of qubits doubles all $2$ years.
 
 \subsubsection{Gate-based Quantum Computers}
 
 IBM is the leading manufacturer of Gate-based Quantum Computers.
-Their newest model, ''Hummingbird'', has exactly $65$ qubits.
+Their newest model, ``Hummingbird'', has exactly $65$ qubits.
 It debuted in 2020.
-Unfortunately, information about the performance of this processor is not available to the public.
-\cite{IBMRoadmap2020}
+Unfortunately, information about the performance of this processor is not available to the public~\cite{IBMRoadmap2020}.
 
 The model before that, ''Falcon'', has exactly $27$ qubits.
 It debuted in 2019.
-IBM was able to achieve a quantum volume of $64$ on this processor.
-\cite{IBMRoadmap2020}
+IBM was able to achieve a quantum volume of $64$ on this processor~\cite{IBMRoadmap2020}.
 
 Quantum volume is a metric that characterizes the power of quantum processors.
-It depends on the number of qubits and the number of gates that can be applied to the qubits without significant error.
-\cite{Bishop2017}
-IBM managed to achieve a $100\%$ increase of the quantum volume metric every year since 2017.
-\cite{IBMqv2020}
+It depends on the number of qubits and the number of gates that a quantum circuit can have without producing significant errors~\cite{Bishop2017}.
+IBM managed to achieve a $100\%$ increase of the quantum volume metric every year since 2017~\cite{IBMqv2020}.
 This is illustrated in figure \ref{figure:gate.qv.history}.
 
-Even though the quantum volume is a better measurement of the power of a quantum processor, the number of qubits is still important.
+Even though the quantum volume is an improved measurement of the power of a quantum processor, the number of qubits is still important.
 It determines how big the problems can be for the quantum processor to solve them.
 IBM promises at least a doubling of the qubit count every year in their 2020 roadmap.
 It projects its 2023 quantum processors to have $1, 121$ qubits.
-Figure \ref{figure:gate.qbits.projection} ilustrates the projected qubit count.
-\cite{IBMRoadmap2020}
+Figure \ref{figure:gate.qbits.projection} ilustrates the projected qubit count~\cite{IBMRoadmap2020}.
 
-\begin{figure}
+\begin{figure}[!ht]
   \begin{subfigure}[b]{0.5 \textwidth}
     \centering
     \includegraphics[width=\textwidth]{02_Background/ibm_qv_history.png}
@@ -121,20 +116,3 @@ Figure \ref{figure:gate.qbits.projection} ilustrates the projected qubit count.
   \end{subfigure}
   \caption{Characteristics of IBM Quantum Processors}
 \end{figure}
-
-\subsubsection{Moore's Law}
-
-The number of qubits in D-Wave's quantum processors and the projected number of qubits in IBM's quantum processors grow exponentially.
-This is visualized in figures \ref{figure:annealing.processors.history} and \ref{figure:gate.qbits.projection}.
-Also, the quantum volume of IBM's quantum processors grew exponentially in the last years.
-This is visualized figure \ref{figure:gate.qv.history}.
-
-This exponential growth reminds of Moore's Law.
-This law states that the computing power of classical computers grows exponentially.
-More precisely, it doubles every two years.
-This law was accurate until recently.
-The industry is close to a physical limit, where it can not fit more transistors into the same space due to quantum tunneling.
-\cite{Theis2017, Ferain2011}
-
-If D-Wave continues to improve its quantum processors as in recent years, its quantum processors will improve similarly to classical computers in the last $5$ decades.
-If IBM holds their promises of the 2020 roadmap, its quantum processors will improve twice as fast as classical computers in the last $5$ decades.
