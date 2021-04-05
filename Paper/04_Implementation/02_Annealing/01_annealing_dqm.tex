@@ -1,5 +1,5 @@
 \subsection{Implementation of DQM for Annealing Hardware}
-\label{approach:annealing.implement.dqm}
+\label{implementation:annealing.dqm}
 
 The implementation of the DQM uses D-Wave's \texttt{dwave-ocean-sdk}.
 \cite{OceanSDKDoc}
@@ -15,7 +15,7 @@ One discrete variable is added to the model for every $p_{i, t}$ of the DQM defi
 The size of the discrete variable $p_{i, t}$ --- the number of possible values --- is $| P_i |$.
 
 \subsection*{Quadratic Biases}
-\label{approach:annealing.implement.dqm.quadratic}
+\label{implementation:annealing.dqm.quadratic}
 
 There are $2$ types of quadratic biases
 --- biases resulting from either
@@ -39,7 +39,7 @@ This is because the startup and shutdown biases are applied along the time axes,
 and the demand biases are applied along the plant axes, which is orthogonal to the time axes.
 
 \subsection*{Linear Biases}
-\label{approach:annealing.implement.dqm.linear}
+\label{implementation:annealing.dqm.linear}
 
 The linear biases are different for every plant and every time instance.
 They depend on the fuel cost, the possible power levels, and the demand at that time instance.

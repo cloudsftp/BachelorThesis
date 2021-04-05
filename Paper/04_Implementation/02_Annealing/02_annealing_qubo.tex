@@ -1,5 +1,5 @@
 \subsection{Implementation of QUBO for Annealing Hardware}
-\label{approach:annealing.implement.qubo}
+\label{implementation:annealing.qubo}
 
 The implementation of the QUBO for the annealing hardware uses the UQO-client.
 \cite{UQOPyPI, UQOGitHub}
@@ -7,14 +7,14 @@ First, it writes the biases into a python \texttt{dict}.
 Then the class \texttt{Qubo} of the UQO-client builds the \texttt{dwave-ocean-sdk} \texttt{BinaryQuadraticModel}-instance that the UQO-client can then send to the UQO-server.
 
 \subsubsection{Variables}
-\label{approach:annealing.implement.qubo.variables}
+\label{implementation:annealing.qubo.variables}
 
 The variables in this implementation are implicit.
 The indices for the python \texttt{dict} are pairs of integers where the integers are the IDs of the variables.
 Each ID is computed with the mapping function $m'$ of formula (\ref{formula:qubo.mapping}).
 
 \subsubsection{Quadratic Biases}
-\label{approach:annealing.implement.qubo.quadratic}
+\label{implementation:annealing.qubo.quadratic}
 
 In this case, there are $3$ types of quadratic biases
 --- biases resulting from either
@@ -45,11 +45,11 @@ The biases constraining the power levels per power plant --- only one power leve
 Therefore they don't interfere with the demand constraint biases since they are between different power levels $0 \leq k < 2^{n_i}, 0 \leq l < 2^{n_j}$ of different power plants $i, j$.
 
 \subsubsection{Linear Biases}
-\label{approach:annealing.implement.qubo.linear}
+\label{implementation:annealing.qubo.linear}
 
 The linear biases depend on the fuel cost and the demand constraints.
 That's why they change for every plant $i$, every time instance $t$, and every possible power level $k$.
-Just as with the implementation of the DQM in section \ref{approach:annealing.implement.dqm.linear}, the linear biases of variables of the form $p_{i, 0, k}$
+Just as with the implementation of the DQM in section \ref{implementation:annealing.dqm.linear}, the linear biases of variables of the form $p_{i, 0, k}$
 --- meaning it corresponds to the first time instance ---
 depend on the startup and shutdown costs and the initial state of the power plant $i$.
 The formula (\ref{formula:qubo.result.linear}) captures the computation of the linear biases.
@@ -58,12 +58,12 @@ The program iterates over all power plants $i$, time instances $t$, and possible
 It calculates the linear bias as specified in formula (\ref{formula:qubo.result.linear}) for all indices.
 Then it applies the linear bias to the variable $p_{i, t, k}$.
 
-As mentioned in section \ref{approach:annealing.implement.qubo}, the program first builds the QUBO as a python \texttt{dict}.
+As mentioned in section \ref{implementation:annealing.qubo}, the program first builds the QUBO as a python \texttt{dict}.
 The keys are pairs of integers $(i, j)$ with $i \neq j$ for quadratic biases.
 For linear biases, the keys are pairs with identical integers $(i, i)$.
 
 \subsubsection{Constant Bias}
-\label{approach:annealing.implement.qubo.constant}
+\label{implementation:annealing.qubo.constant}
 
 The implementation ignores the constant bias.
 In this case it is defined by the formula (\ref{formula:qubo.result.constant}).
