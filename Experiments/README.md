@@ -23,31 +23,53 @@ It contains Python code to run the experiments described in the document and pro
 2. Install Couenne if you want to execute the experiments on a classial computer. Refer to [this](Classical/COIN-OR/README.md) document for instructions.
 1. Activate the environment and environment variables for Couenne via `source setup.sh`.
 
+## Run Experiments
 
-TODO: rewrite rest of document
+### Runners
 
-## Standards
+There are 4 Runners for
+- Classical `Classical.perform_experiments`
+- Hybrid Annealing DQM `Annealing_DQM.perform_experiments`
+- Direct Annealing QUBO `Annealing_QUBO.perform_experiments`
+- Gate-based QUBO `Gatebased.perform_experiments`
+
+optimization
+
+### Options
+
+All runners have these command-line options:
+- `--one-shot` Turns off range mode. Lower bounds are used as parameters.
+- `--lower-loads` Lower bound of the number of loads. (standard: 2)
+- `--upper-loads` Upper bound of the number of loads. (standard: 20)
+- `--step-loads` Steps size of the range of the number of loads. (standard: 2)
+- `--lower-plants` Lower bound of the number of plants. (standard: 2)
+- `--upper-plants` Upper bound of the number of plants. (standard: 20)
+- `--step-plants` Step size of the range of the number of plants. (standard: 2)
+
+### Output
 
 The result of experiments will be saved in files that follow the rule:
 
-`(classical|annealing|gatebased)_\d{3}_\d{3}.json`
+`(classical|annealing|gatebased)_\d{3}_\d{3}\.json`
 
 Where the first number indicates the number of loads and the second number indicates the number of power plants.
 
-### Experiment Runners
+The location is the folder where `perform_experiments` is located `/Solutions`.
+When executing the runners, the results that are already there will be overwritten.
 
-The experiment runners have the following command line options:
-- `--one-shot` Turns off range mode. Lower bounds are used as parameters.
-- `-ll --lower-loads` Lower bound of number of loads. (standard: 2)
-- `-ul --upper-loads` Upper bound of number of loads. (standard: 20)
-- `-sl --step-loads` Steps size of range of number of loads. (standard: 2)
-- `-lp --lower-plants` Lower bound of number of plants. (standard: 2)
-- `-up --upper-plants` Upper bound of number of plants. (standard: 20)
-- `-sp --step-plants` Step size of range of number of plants. (standard: 2)
+### Example:
 
-TODO: list runners and execution
+If you want to perform the experiments on the annealing hardware using the DQM approach:
 
-## Experiment Runners
+`python -m Annealing_DQM.perform_experiments --lower-plants 4 --upper-plants 4 --lower-loads 2 --upper-loads 50 --step-loads 2`
+
+If you only want to perform the first experiment on the classical hardware:
+
+`python -m Classical.perform_experiments --one-shot --lower-plants 4 --lower-loads 2`
+
+## Generate Figures from Results
+
+TODO: complete his document
 
 The experiment result analyzer has the following command line options:
 - `--solutions-dir` Directory where the solutions are stored.
@@ -59,12 +81,3 @@ The experiment result analyzer has the following command line options:
 - `-p --plot` Outputs plot of the time needed for optimization.
 - `-t --table` Outputs a table of the time needed for optimization in LaTeX-format.
 - `-o --output` Specifies output file for the table or the plot or table.
-
-## Classical Solver
-
-[Couenne](https://projects.coin-or.org/Couenne) is used for solving the optimization problem as
-a MINLP (mixed integer non-linear problem) on a classical computer.
-
-
-The experiments can be performed by running the module `Classical.perform_experiments`.
-The results will be saved in `Classical/Solutions/` in files according to the standard defined [above](#Standards).
