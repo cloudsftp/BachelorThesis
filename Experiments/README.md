@@ -1,12 +1,30 @@
-# Experiments
+# Quantum Computing for Smart Energy Systems
 
-## Setup Conda Environment
+This is the code for the bachelor thesis "Quantum Computing for Smart Energy Systems".
+It contains Python code to run the experiments described in the document and produce the figures that compare the performance of the different solvers.
 
-All required packages are listed in `conda_environment.yml`
+### Contents
 
-The environment is called `opt` and can be installed via `./install_conda_env.sh`
+1. Requirements
+1. How to set everything up
+1. How to run the experiments
+1. How to generate the figures
 
-It is setup by running `source setup.sh`
+## Requirements
+
+- Linux (Code tested on Ubuntu 20.04 and CentOS 8).
+- Preferably `bash` as the terminal (default on most distributions).
+- The Python packages are managed by Anaconda. So please go ahead and install Anaconda from the official [website](https://www.anaconda.com/products/individual#Downloads).
+
+
+## Setup
+
+1. Install Python packages via `./install_conda_environment.sh`. This sets up the Anaconda environment `opt`.
+2. Install Couenne if you want to execute the experiments on a classial computer. Refer to [this](Classical/COIN-OR/README.md) document for instructions.
+1. Activate the environment and environment variables for Couenne via `source setup.sh`.
+
+
+TODO: rewrite rest of document
 
 ## Standards
 
@@ -46,7 +64,7 @@ The experiment result analyzer has the following command line options:
 
 [Couenne](https://projects.coin-or.org/Couenne) is used for solving the optimization problem as
 a MINLP (mixed integer non-linear problem) on a classical computer.
-[Installation](Classical/COIN-OR/README.md)
+
 
 The experiments can be performed by running the module `Classical.perform_experiments`.
 The results will be saved in `Classical/Solutions/` in files according to the standard defined [above](#Standards).
