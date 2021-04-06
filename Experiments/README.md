@@ -8,7 +8,6 @@ It contains Python code to run the experiments described in the document and pro
 1. Requirements
 1. How to set everything up
 1. How to run the experiments
-1. How to generate the figures
 
 ## Requirements
 
@@ -66,18 +65,3 @@ If you want to perform the experiments on the annealing hardware using the DQM a
 If you only want to perform the first experiment on the classical hardware:
 
 `python -m Classical.perform_experiments --one-shot --lower-plants 4 --lower-loads 2`
-
-## Generate Figures from Results
-
-TODO: complete his document
-
-The experiment result analyzer has the following command line options:
-- `--solutions-dir` Directory where the solutions are stored.
-- `--solutions-name` Name of solutions.
-- `--num` Specifies number of plants for the data.
-- `--lower-loads` Specifies lower bound of loads for the data.
-- `--upper-loads` Specifies the upper bound of loads for the data.
-- `--skip-loads` Specifies the step size of loads for the data.
-- `-p --plot` Outputs plot of the time needed for optimization.
-- `-t --table` Outputs a table of the time needed for optimization in LaTeX-format.
-- `-o --output` Specifies output file for the table or the plot or table.
