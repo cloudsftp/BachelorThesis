@@ -6,29 +6,29 @@
 This work considers real-world demand data of energy consumers.
 It takes the data from two different sources.
 \begin{enumerate*}[label=(\roman*)]
-  \item Smart meters that Georgievski \citeauthor{Georgievski2012} installed in an office. \cite{Georgievski2012}
-  \item Adaptive Charging Network (ACN) electric vehicle charging stations at the Californian Institute of Technology. \cite{Lee2019, ACNCaltech2020}
+  \item Smart meters that \citeauthor{Georgievski2012} installed in an office, and
+  \item Adaptive Charging Network (ACN) electric vehicle charging stations at the Californian Institute of Technology~\cite{Lee2019, ACNCaltech2020}.
 \end{enumerate*}
 
 The data from the smart meters spans about $8$ months.
 It is from the year 2016.
 It has a time resolution of $10$ seconds.
-The program transforms the data to have a time resolution of $10$ minutes.
+This work transforms the data to have a time resolution of $10$ minutes.
 It does so by adding up the energy demand of $10$ minute periods and then dividing by $0.166$ hours since the data is given as energy in kWh.
 The result is the power given in kW.
 
 The data from the ACN charging stations spans the first $9$ months of the year 2020.
 It consists of various charging sessions.
 The program identifies the energy demand by assuming the charger transfers energy to the car at one fixed rate in one session.
-This is not the point of adaptive charging, but it gives a real-world-like representation of electric vehicle charging behavior.
+This behavior is not the point of adaptive charging, but it gives a real-world-like representation of electric vehicle charging behavior.
 The time resolution of the resulting data is $10$ minutes.
 
 The program computes the average day of both datasets.
 Then it combines both datasets.
-The data from the smart meters is weighted $1, 000 : 1$ against the data from the ACN charging stations.
+The data from the smart meters is weighted $1, 000 : 1$ with respect to the data from the ACN charging stations.
 This composition is due to the low energy demand of one office.
 The final data represents an average day of one electric vehicle charging site and $1, 000$ offices with a $10$ minute time resolution.
-It is shown in figure \ref{figure:data.demand.day}.
+Figure \ref{figure:data.demand.day} shows how the energy demand behaves over the day.
 
 \begin{figure}
   \centering
@@ -41,40 +41,36 @@ It is shown in figure \ref{figure:data.demand.day}.
 
 The data for the power plants is put together from different sources for different characteristics.
 \begin{enumerate*}[label=(\roman*)]
-  \item Maximum output power from a list by the \citeauthor{Kraftwerkliste2020}. \cite{Kraftwerkliste2020}
-  \item Minimum power output from \cite{Schroder2013}.
-  \item The startup and shutdown cost from \cite{Kumar2012}.
-  \item Cost function coefficients from \cite{Alrashidi2009}.
+  \item Maximum output power from a list by the \citeauthor{Kraftwerkliste2020},
+  \item Minimum power output from \citeauthor{Schroder2013},
+  \item The startup and shutdown cost from \citeauthor{Kumar2012}, and
+  \item Cost function coefficients from \citeauthor{Alrashidi2009}.
 \end{enumerate*}
 
-From the list of german powerplants, $4$ plants are chosen, and their maximum output is taken.
-All chosen plants are coal-powered power plants.
-\cite{Kraftwerkliste2020}
-$2$ of the plants are categorized as ''sub-critical'' and the other $2$ as ''super-critical''.
-The difference between ''sub-critical'' and ''super-critical'' coal-powered power plants is the pressure level at which they operate.
-''sub-critical'' power plants operate at pressure levels below $221$ bar and produce about $300$ to $900$ MW.
-''super-critical'' power plants operate at pressure levels about $240$ bar and produce between $500$ to $1300$ MW.
-\cite{Kumar2012, Schroder2013}
+The work chooses $4$ plants from the list of german power plants.
+The maximum output for every power plant comes from this list.
+All chosen plants are coal-powered power plants~\cite{Kraftwerkliste2020}.
+$2$ of the plants are categorized as ``sub-critical'' and the other $2$ as ``super-critical''.
+The difference between ``sub-critical'' and ``super-critical'' coal-powered power plants is the pressure level at which they operate.
+``sub-critical'' power plants operate at pressure levels below $221$ bar and produce about $300$ to $900$ MW.
+``super-critical'' power plants operate at pressure levels about $240$ bar and produce between $500$ to $1300$ MW~\cite{Kumar2012, Schroder2013}.
 This choice is arbitrary but important for defining the other characteristics of the plants.
 
 The minimum power output is computed based on the maximum power output and the type of power plant.
-For ''sub-critical'' power plants, the minimal power output is $35\%$ of the maximum power output.
-For ''super-critical'' power plants, the minimal power output is $20\%$ of the maximum power output.
-\cite{Schroder2013}
+For ``sub-critical'' power plants, the minimal power output is $35\%$ of the maximum power output.
+For ``super-critical'' power plants, the minimal power output is $20\%$ of the maximum power output~\cite{Schroder2013}.
 
 The coal-powered power plants don't have shutdown costs.
 So only the startup costs are computed.
 For simplicity, this work only considers hot start startup costs.
-For ''sub-critical'' power plants, the startup cost is $7.5$ MMBTU per MW maximum power output.
-For ''super-critical'' power plants, the startup cost is $10.1$ MMBTU per MW maximum power output.
-\cite{Kumar2012}
+For ``sub-critical'' power plants, the startup cost is $7.5$ MMBTU per MW maximum power output.
+For ``super-critical'' power plants, the startup cost is $10.1$ MMBTU per MW maximum power output~\cite{Kumar2012}.
 Where $1 \text{MMBTU} = 1.6 \cdot 10^{-6} \text{GJ}$.
 This work considers all fuel costs in unit GJ.
 
-The coefficients of the cost functions are taken from a paper that identified them at coal-powered power plants.
-\cite{Alrashidi2009}
+The coefficients of the cost functions are taken from a paper that identified them at coal-powered power plants~\cite{Alrashidi2009}.
 \citeauthor{Alrashidi2009} identified $2$ polynomials both are assigned randomly to the $4$ power plants.
-The resulting values are presented in table \ref{table:evaluation.data.plants}.
+Table \ref{table:evaluation.data.plants} lists the resulting values of all the described characteristics.
 
 \begin{table}[ht]
   \centering
@@ -109,11 +105,9 @@ For the DQM expanding the formulas (\ref{formula:dqm.num.variables}) and (\ref{f
 
 \subsubsection{Size of QUBO}
 
-For the QUBO expanding the formulas (\ref{formula:qubo.num.variables}) and (\ref{formula:qubo.num.quadratic.biases}) is straight forward.
-But we can not just insert the number of power plants into the formula.
-We need to know how many power output levels each power plant has.
-How the numbers are calculated is described in section \ref{approach:qubo.discretize}.
-Table \ref{table:evaluation.data.plants.power.levels} shows the resulting numbers for the power output levels of the power plants.
+For the calculating the size of the QUBO, the number of discrete power output levels per power plant must be known.
+Section \ref{approach:qubo.discretize} describes the calculations nescessary to get this information.
+Table \ref{table:evaluation.data.plants.power.levels} shows the resulting numbers for the chosen power plants.
 \begin{table}[ht]
   \centering
   \input{81_Tables/04_Validation/power_output_levels}
@@ -124,11 +118,11 @@ Table \ref{table:evaluation.data.plants.power.levels} shows the resulting number
 Inserting these values into the expanded formulas (\ref{formula:qubo.num.variables}) and (\ref{formula:qubo.num.quadratic.biases}) gives the formulas (\ref{formula:qubo.num.variables.concrete}) and (\ref{formula:qubo.num.quadratic.biases.concrete}).
 \begin{subequations}
 \begin{align}
-\label{formula:qubo.num.variables.concrete}
+\begin{split}
   v_{\text{QUBO}} = & \aT \cdot \sum_{i \in \I} 2^{n_i} = \aT \cdot \left( 64 + 64 + 128 + 256 \right)
   = 1024 \cdot \aT
-\\
-\label{formula:qubo.num.quadratic.biases.concrete}
+\label{formula:qubo.num.variables.concrete}
+\end{split} \\
 \begin{split}
   q_{\text{QUBO}} = & \left( \aT - 1 \right) \cdot 2 \cdot \sum_{i \in \I} 2^{n_i}
   + \aT \cdot \left(
@@ -141,6 +135,7 @@ Inserting these values into the expanded formulas (\ref{formula:qubo.num.variabl
     + \frac{64 \cdot 63}{2} \cdot 2 + \frac{128 \cdot 127}{2} + \frac{256 \cdot 255}{2}
   \right) \\
   = & 130,816 \cdot \aT - 1,024
+\label{formula:qubo.num.quadratic.biases.concrete}
 \end{split}
 \end{align}
 \end{subequations}
