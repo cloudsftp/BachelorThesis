@@ -1,10 +1,11 @@
 \section{Performance of Gate-based Quantum Computers}
 
-The implementation of the QUBO as described in section \ref{approach:gate.implement} of the UCP builds a quantum circuit for the first iteration of the optimization algorithm described in section \ref{fundamentals:quantum.grover.optimization}.
-Unfortunately, this quantum circuit is too big to be executed on any of IBM's public quantum computers for the smallest UCP that this work considers.
+This work uses the Qiskit framework by IBM for the optimization using gate-based hardware.
+The framework uses the algorithm described in section \ref{fundamentals:quantum.grover.optimization}.
+Unfortunately, the quantum circuit is too big to be executed on any of IBM's public quantum computers for the smallest UCP that this work considers.
 
 The number of qubits needed just for the QUBO variables is the same as the number of binary variables in the QUBO.
-The number of variables in a QUBO is given by the formula (\ref{formula:qubo.num.variables}).
+Formula (\ref{formula:qubo.num.variables}) gives the number of variables in a QUBO depending on the number of time instances of the UCP.
 These qubits are considered the first quantum register of the quantum circuit.
 In the case of the smallest UCP, this work considers with the $4$ power plants listed in section \ref{table:evaluation.data.plants} and $2$ time instances, the number of qubits would be $1, 024$.
 With every additional $2$ time instances of the UCP, the algorithm needs another $1, 024$ qubits.
