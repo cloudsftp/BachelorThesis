@@ -1,12 +1,13 @@
-\subsection{Unit Commitment Problem as Quadratic Unconstrained Binary Model}
+\section{Unit Commitment Problem as Quadratic Unconstrained Binary Model}
 
 The formulation of the Quadratic Unconstrained Binary Model (QUBO) is based on the DQM formulated in section \ref{approach:annealing.formulate}.
-Instead of a single discrete variable for every power plant $i$ and time instance $t$, the QUBO has an array of binary variables for every possible power level in $P_i$ for every power plant $i$ and time instance $t$.
+Instead of a single discrete variable for every power plant $i$ and time instance $t$, the QUBO has an array of binary variables for every possible power level in $P_i$ for every power plant $i$ and time $t$.
 
-\subsubsection{Mapping Variables}
+\subsection{Mapping Variables}
 \label{approach:qubo.map}
 
-As before in section \ref{approach:dqm.map}, the variable indices are mapped to a single index to make sure the form of the QUBO is correct.
+The variable indices are mapped to a single index to make sure the QUBO form is correct.
+In addition to the mapping in \ref{approach:dqm.map}, this mapping also considers the power levels of each power plant.
 The mapping is extended by a third index $k$ corresponding to the power level.
 \begin{align}
   m': \quad
@@ -19,32 +20,27 @@ The mapping is extended by a third index $k$ corresponding to the power level.
 \end{align}
 
 In the model below, $p_{i,t,k}$ is used, but this is to show that
-\begin{subequations}
 \begin{align}
+\begin{split}
   &
   \forall i \in \I, t \in \T, k, l \in \mathbb{N}, k < l < |P_i|:
-  &
   m'(i, t, k) < m'(i, t, l)
   \\
-  \land \quad
-  &
+  \land \quad &
   \forall i \in \I, t, t' \in \T, k \in \mathbb{N}, k < |P_i|, t < t':
-  &
   m'(i, t, k) < m'(i, t', k)
   \\
-  \land \quad
-  &
+  \land \quad &
   \forall i, j \in \I, t  \in \T, k, l \in \mathbb{N}, k < |P_i|, l < |P_j|, i < j:
-  &
   m'(i, t, k) < m'(j, t, l)
+\end{split}
 \end{align}
-\end{subequations}
 
-When implementing the BQM, the discrete variables $p_{i, t, k}$ are added in the order specified by $m'(i, t, k)$.
-This order ensures that the applying of quadratic biases does not violate the form of the BQM.
-When adding a quadratic bias, the first argument is always a variable of lower order.
+When implementing the QUBO, the discrete variables $p_{i, t, k}$ are added in the order specified by $m'(i, t, k)$.
+This order ensures that the applying of quadratic biases does not violate the form of the QUBO.
+When adding a quadratic bias, the first argument is always a variable with a lower index $m'(i, t, k)$.
 
-\subsubsection{Discretizising Power Levels}
+\subsection{Discretizising Power Levels}
 \label{approach:qubo.discretize}
 
 This approach discretizes the power levels just like in section \ref{approach:dqm.discretize}.
@@ -61,36 +57,16 @@ $P_{i, k}$ is defined for all $i \in \I, k \in \mathbb{N}, k < 2^{n_i}$.
 Where $n_i$ is chosen as in section \ref{approach:dqm.discretize}.
 Thus $P_{i, 2^{n_i} - 1} = P_{max, i}$.
 
-This automatically enforces the constraint (\ref{formula:minlp.power}) that ensures that the power outputs stay inside the limits of every power plant.
-This constraint thus is not found in the energy function (\ref{formula:qubo.result.quadratic}-\ref{formula:qubo.result.constant}).
+This automatically enforces the constraint (\ref{formula:minlp.power}) ensuring that the power outputs stay inside the limits of every power plant.
+That constraint thus is not found in the energy function (\ref{formula:qubo.result}).
 
-\subsubsection{Initial Formula}
+\subsection{Initial Formula}
 
-The starting point is the DQM (\ref{formula:qubo.dqm.result.quadratic}-\ref{formula:qubo.dqm.result.constant}).
+The starting point is the DQM (\ref{formula:dqm.result}).
 The approach transforms the formula in a way that it uses binary variables instead of discrete variables.
-\begin{subequations}
-\begin{align}
-  E(p) = \quad
-  &
-  \gamma_s \sum_i \sum_{t > 0} S_i \left( p_{i, t-1} \otimes p_{i, t} \right)
-  + \gamma_d \sum_t \sum_{i < j} \left( P_i \otimes P_j \right) \left( p_{i, t} \otimes p_{j, t} \right)
-  & \text{(quadratic)}
-  \label{formula:qubo.dqm.result.quadratic}
-  \\ + \quad &
-  \sum_{i, t} \left(
-    \gamma_c \cdot F_i + \gamma_d \left(P_i^{\odot 2} - l_t \cdot P_i \right)
-  \right) p_{i, t}
-  + \sum_i S_i^{(0)} \cdot p_{i, 0}
-  & \text{(linear)}
-  \label{formula:qubo.dqm.result.linear}
-  \\ + \quad &
-  \sum_t l_t^2
-  & \text{(constant)}
-  \label{formula:qubo.dqm.result.constant}
-\end{align}
-\end{subequations}
+Additionally, the QUBO has to ensure that only one of the binary variables corresponding to one power plant $i$ at one time $t$ is $1$.
 
-\subsubsection{Rewrite Quadratic Biases}
+\subsection{Rewrite Quadratic Biases}
 
 The transformation of the quadratic biases has two parts.
 The first part is the transformation of the startup and shutdown costs.
@@ -112,7 +88,7 @@ The second part is the transformation of the quadratic biases connected to the d
 
 It is more straightforward and shows the meaning of the tensor products and the Frobenius inner product used in the DQM.
 
-\subsubsection{Rewrite Linear Biases}
+\subsection{Rewrite Linear Biases}
 
 The transformation of the linear biases has two parts.
 The first part is the transformation of the objective and demand related biases.
@@ -145,7 +121,7 @@ The second part of the transformation is the startup and shutdown costs of the f
   \end{cases}
 \end{align}
 
-\subsubsection{Discretize $p_{i, t, k}$}
+\subsection{Discretize $p_{i, t, k}$}
 
 Since the variables in the QUBO are binary, each represents a single possible power level $k$ of power plant $i$ at time $t$.
 Each power plant $i$ may only have one output level at each time instance $t$.
@@ -169,24 +145,23 @@ Penalizing multiple possible power output values for each plant at every time av
 \end{align}
 \end{subequations}
 
-\subsubsection{Final Formula}
+\subsection{Final Formula}
 
 After adding all parts together again, we obtain the following QUBO.
 \begin{subequations}
 \begin{align}
-  E(p)
-  = \quad & \gamma_s \sum_i \sum_{t, k > 0} \left(
+  \begin{split}
+  E(p) = \quad &
+  \gamma_s \sum_i \sum_{t, k > 0} \left(
       A_i^D \cdot p_{i, t-1, k} \cdot p_{i, t, 0}
       + A_i^U \cdot p_{i, t-1, 0} \cdot p_{i, t, k}
     \right)
-  \label{formula:qubo.result.quadratic}
-  \\
-  + \quad & \gamma_d \sum_{i, k, l} \sum_{i < j} \left(
+    \\ + \quad & \gamma_d \sum_{i, k, l} \sum_{i < j} \left(
       P_{i,k} \cdot P_{j,l} \cdot p_{i, t, k} \cdot p_{j, t, l}
     \right)
   + \gamma_p \sum_{i, t} \sum_{k < l} \left( p_{i, t, k} \cdot p_{i, t, l} \right)
-  & \text{(quadratic)}
-  \\
+  \end{split}
+  & \text{(quadratic)} \\
   + \quad &
   \sum_{i, t, k} \left(
     \gamma_c \cdot F_{i, k}
@@ -194,16 +169,16 @@ After adding all parts together again, we obtain the following QUBO.
   \right) p_{i, t, k}
   + \sum_{i, k} \left( S_{i, k}^{(0)} \cdot p_{i, 0, k} \right)
   & \text{(linear)}
-  \label{formula:qubo.result.linear}
-  \\
+  \label{formula:qubo.result.linear} \\
   + \quad &
   1 + \sum_t l_t^2
   & \text{(constant)}
   \label{formula:qubo.result.constant}
 \end{align}
+\label{formula:qubo.result}
 \end{subequations}
 
-\subsubsection{Model Size}
+\subsection{Model Size}
 \label{approach:qubo.size}
 
 The size of QUBOs consists of the same $3$ parts as DQMs (section \ref{approach:dqm.size}):

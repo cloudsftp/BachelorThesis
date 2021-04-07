@@ -1,17 +1,15 @@
-\subsection{Converting Solutions of Quadratic Models}
-\label{approach:quantum.read.solution}
+\section{Converting Solutions of Quadratic Models}
+\label{implementation:quantum.transform.solution}
 
-\todo{move code to implementation}
-
-\subsubsection{Choosing Power Levels}
+\subsection{Choosing Power Levels}
 
 For QUBOs, it can happen that for a single power plant at a single time instance, multiple binary variables for different power levels are $1$.
 The program then has to choose one of the possible power levels where the binary variable is $1$.
-For this the algorithm \ref{approach:quantum.read.solution.qubo.algorithm} is used.
+For this the algorithm \ref{implementation:quantum.read.solution.qubo.algorithm} is used.
 
 \begin{lstlisting}[
   caption={Choosing Power Levels from the QUBO},
-  label={approach:quantum.read.solution.qubo.algorithm},
+  label={implementation:quantum.read.solution.qubo.algorithm},
   language=Python
 ]
 value_indices: List[int] = []
@@ -29,18 +27,18 @@ if num_indices > 0:
 
 The program always chooses the median value.
 
-\subsubsection{Adjusting Power Levels}
+\subsection{Adjusting Power Levels}
 
 The program translates the optimal solution of the DQM or QUBO to a solution for the UCP.
 This solution, however, is not legal.
 The sum of the power outputs at every time instance does not satisfy the demand.
 The program, therefore, raises the power outputs of all plants at every time instance uniformly.
 While doing so, it also avoids violating the power limits of the individual plants.
-For this the algortihm \ref{approach:quantum.read.solution.algorithm} is used.
+For this the algortihm \ref{implementation:quantum.read.solution.algorithm} is used.
 
 \begin{lstlisting}[
   caption={Adjusting the UCP Solution},
-  label={approach:quantum.read.solution.algorithm},
+  label={implementation:quantum.read.solution.algorithm},
   language=Python
 ]
 for t in range(self.ucp.parameters.num_loads):

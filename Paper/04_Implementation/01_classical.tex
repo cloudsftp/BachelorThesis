@@ -1,0 +1,53 @@
+\section{Implementation on Classical Computers}
+
+For the implementation of the MINLP for classical computers, this work uses the Python library Pyomo to build the MINLPs from the UCPs.
+Pyomo is open-source and supports the formulation of various optimization problems, particularly mixed-integer nonlinear problems.
+It also supports performing the optimization of the problems with standard open-source or commercial solvers~\cite{hart2011pyomo}.
+
+The program is given a UCP object that holds information about the power demands and the available power plants.
+It then creates a ''ConcreteModel'' from this information.
+This model of the MINLP formulation of the UCP has three $\aI \times \aT$ matrices as variables.
+The first two are the variables for the commitment $u_{i, t}$ and the power output $p_{i, t}$ for every power plant at every time.
+These are the free variables of the model that will be adjusted so that the objective function is minimized.
+The last matrix is for $s_{i, t}$, the startup and shutdown costs.
+These are not free but depend on the data of the UCP object.
+
+\subsection{The Objective Function}
+
+The objective function (\ref{formula:minlp.obj}) is modeled using an \texttt{Objective} object provided by the Pyomo framework.
+It depends on the model variables for $u_{i, t}$, $p_{i, t}$ and $s_{i, t}$.
+Where $u_{i, t}$ and $p_{i, t}$ are free variables and $s_{i, t}$ are defined through the model.
+The coefficients $A_i$, $B_i$, and $C_i$ are taken from the UCP object.
+
+The startup and shutdown costs are defined through a method called ``disjunctive programming''.
+This method makes it possible to formulate ``either-or'' conditions and set values of variables based on the value of other variables~\cite{Balas1983}.
+
+With this method the value of $s_{i, j}$ set to either $A^U_i$, $A^D_i$ or $0$ depending on the values of $u_{i, t}$ and $u_{i, t-1}$.
+This relation is defined mathematically by the constraint (\ref{formula:minlp.updowncost}).
+And it is modeled by giving the model three disjunct events for each plant $i$ and time instance $t$:
+\begin{align}
+\begin{split}
+  & \left( u_{i, t} < u_{i, t-1} \land s_{i, t} = A^U_i \right) \\
+  \lor & \left( u_{i, t} > u_{i, t-1} \land s_{i, t} = A^D_i \right) \\
+  \lor & \left( u_{i, t} = u_{i, t-1} \land s_{i, t} = 0 \right)
+\end{split}
+\end{align}
+
+If $t = 0$, $u_{i, t-1}$ is defined as the initial commitment state of the power plant $i$.
+The first part of the events is the condition and the second part defines the value of $s_{i, t}$.
+Since the conditions are mutually exclusive, only one of the events will be true.
+That means that $s_{i, t}$ has the value specified on the right side of the true condition.
+
+\subsection{Constraints}
+
+The first constraint is the load constraint.
+It is specified by the formula (\ref{formula:minlp.load}).
+It makes sure that the power demand is met by all the power plants $i$ at every time $t$.
+The program creates a constraint list of length $\aT$.
+Each element of the list makes sure that the sum of all power outputs at its corresponding time $t$ is equal to the power demand at that time instance.
+
+The second constraint is the power level constraint.
+It is specified by the formula (\ref{formula:minlp.power}).
+It makes sure that the power output of every power plant $i$ is within its limits at every time $t$.
+The program creates a constraint matrix of dimensions $\aT \times \aI$.
+Each element of the constraint matrix makes sure the power output of the corresponding power plant $i$ at the corresponding time $t$ is within the limits of the power plant's constraints.
