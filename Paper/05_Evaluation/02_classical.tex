@@ -3,17 +3,15 @@
 For the optimization of the Pyomo model, the Pyomo library runs a standard solver.
 It formulates the problem in the mathematical modeling language AMPL
 and calls a solver to optimize it.
-The solver returns the solution, which is then read by Pyomo.
-\cite{PyomoAMPL}
+The solver returns the solution, which Pyomo then reads~\cite{PyomoAMPL}.
 
-The solver that is used in this paper is called Couenne and was built by COIN-OR.
+This work uses the open-source solver Couenne for classical optimizations.
+COIN-OR built this solver.
 Couenne is short for ''Convex Over and Under ENvelopes for Nonlinear Estimation''.
-It can find global minima of nonconvex MINLPs like the one that is formulated above.
-It is a branch and bound algorithm and utilizes linearization, bound reduction, and branching methods.
-\cite{Belotti2009,CoinorHome,CouenneRepo}
+It can find global minima of nonconvex MINLPs like the one that this work considers.
+It is a branch and bound algorithm and utilizes linearization, bound reduction, and branching methods~\cite{Belotti2009, CoinorHome, CouenneRepo}.
 
-The optimizations are performed on the Excess Cluster of the HLRS, Stuttgart.
-\cite{ExcessHLRS,HLRS}
+This work performs the classical optimizations on the Excess Cluster of the HLRS, Stuttgart~\cite{ExcessHLRS, HLRS}.
 
 The optimization of the problem is of high time complexity.
 In the beginning, with small inputs, it takes little time.
@@ -34,8 +32,9 @@ But the data shows that it took about $311,144.9$ seconds.
   \label{table:evaluation.classical.performance}
 \end{table}
 
-The diagram \ref{figure:evaluation.classical.performance} highlights the exponential nature of the optimization of the problem.
-It shows the time needed for optimization dependent on the input size --- the number of units of time.
+The diagram \ref{figure:evaluation.classical.performance} highlights the fast growing computation time needed for the optimization.
+Only the last two data points are distinguishable from the first data points because their computation time is very long compared to the first data points.
+It shows the time needed for optimization dependent on the input size --- the number of time instances.
 
 \begin{figure}[ht]
   \centering
