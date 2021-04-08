@@ -1,9 +1,10 @@
 \chapter*{Nomenclature}
 
 \begin{tabular}{ll}
-  $\mathbb{I}$ & Indices of all units $\{0, 1, \ldots, I\}$\\
-  $\mathbb{T}$ & Indices of all time steps $\{0, 1, \ldots, T\}$ \\
+  $i \in \I$ & Indices of all units $\{0, 1, \ldots, I\}$ \\
+  $t \in \T$ & Indices of all time steps $\{0, 1, \ldots, T\}$ \\
   $u_{i, t}$ & Commitment of unit $i$ at time $t$ \\
+  $u_{i, -1}$ & Initial commitment of unit $i$ \\
   $p_{i, t}$ & Power output of unit $i$ at time $t$ \\
   $f_{i, t}$ & Cost function of unit $i$ at time $t$ \\
   $A_i$ & Constant cost function coefficient of unit $i$ \\
@@ -14,7 +15,7 @@
   $s_{i, t}$ & Actual start-up or shut-down cost of unit $i$ at time $t$ \\
   $P_{min, i}$ & Minimum power output of unit $i$ \\
   $P_{max, i}$ & Maximum power ourput of unit $i$ \\
-  $l_t$ & Power demand (''load'') at time $t$
+  $l_t$ & Power demand (``load'') at time $t$
 \end{tabular}
 
 \subsubsection{Discrete Quadratic Model}
@@ -22,11 +23,17 @@
 \begin{tabular}{ll}
   $\mathbb{M}$ & Indices of all variables of the model \\
   $m$ & Mapping function of $\mathbb{I} \times \mathbb{T} \to \mathbb{M}$ \\
-  $p_{i, t}$ & Vector that signals the power output of unit $i$ at time $t$ \\
   $P_{i}$ & Vector of possible power output levels of unit $i$ \\
+  $\delta_i$ & Difference between the non-zero power levels of $P_i$ \\
+  $n_i$ & Defines number of elements in $P_i$: $| P_i | = 2^{n_i}$ \\
+  $E$ & Energy Function of DQM \\
+  $\gamma_c$ & Factor of ojective function \\
+  $\gamma_s$ & Factor of startup and shutdown constraints \\
+  $\gamma_d$ & Factor of demand constraint \\
+  $p_{i, t}$ & Vector that signals the power output of unit $i$ at time $t$ \\
   $F_{i}$ & Vector of costs of corresponding power output level $P_{i}$ \\
-  $S_{i}$ & Matrix of startup and shutdown costs of unit $i$ \\
   $S_i^{(0)}$ & Vector of startup or shutdown costs of unit $i$ at time $0$ \\
+  $S_{i}$ & Matrix of startup and shutdown costs of unit $i$ \\
   $v_{\text{DQM}}$ & Number of variables of the model \\
   $q_{\text{DQM}}$ & Number of quadratic biases of the model
 \end{tabular}
@@ -34,11 +41,13 @@
 \subsubsection{Quadratic Unconstrained Binary Optimization}
 
 \begin{tabular}{ll}
+  $k \in \mathbb{N}_0, k < | P_i |$ & Indices of possible power levels of plant $i$ \\
   $\mathbb{M}'$ & Indices of all variables of the model \\
-  $m'$ & Mapping function of $\mathbb{I} \times \mathbb{T} \to \mathbb{M}'$ \\
+  $m'$ & Mapping function of $\I \times \T \times \{k \in \mathbb{N}_0 | k < | P_i |\} \to \mathbb{M}'$ \\
   $P_{i, k}$ & $k$th possible power output level of unit $i$ \\
+  $E$ & Energy function of QUBO \\
+  $\gamma_p$ & Factor of discretization constraints \\
   $p_{i, t, k}$ & Variable that signals the power output of unit $i$ at time $t$ at level $k$ \\
-  $P_{i, k}$ & Power output level $k$ of unit $i$ \\
   $F_{i, k}$ & Costs of corresponding power output level $P_{i, k}$ \\
   $S_{i, k}^{(0)}$ & Startup or shutdown cost of unit $i$ at time $0$ at level $k$ \\
   $v_{\text{QUBO}}$ & Number of variables of the model \\

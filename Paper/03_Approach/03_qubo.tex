@@ -11,7 +11,7 @@ In addition to the mapping in \ref{approach:dqm.map}, this mapping also consider
 The mapping is extended by a third index $k$ corresponding to the power level.
 \begin{align}
   m': \quad
-  \I \times \T \times \{k \in \mathbb{N} | k \leq |P_i|\}
+  \I \times \T \times \{k \in \mathbb{N}_0 | k < |P_i|\}
   \to \mathbb{M}': \quad
   m'(i, t, k) = \left( |\mathbb{T}| \sum_{j=0}^{i-1} |P_j| \right)
   + t \cdot |P_i|
@@ -23,15 +23,15 @@ In the model below, $p_{i,t,k}$ is used, but this is to show that
 \begin{align}
 \begin{split}
   &
-  \forall i \in \I, t \in \T, k, l \in \mathbb{N}, k < l < |P_i|:
+  \forall i \in \I, t \in \T, k, l \in \mathbb{N}_0, k < l < |P_i|:
   m'(i, t, k) < m'(i, t, l)
   \\
   \land \quad &
-  \forall i \in \I, t, t' \in \T, k \in \mathbb{N}, k < |P_i|, t < t':
+  \forall i \in \I, t, t' \in \T, k \in \mathbb{N}_0, k < |P_i|, t < t':
   m'(i, t, k) < m'(i, t', k)
   \\
   \land \quad &
-  \forall i, j \in \I, t  \in \T, k, l \in \mathbb{N}, k < |P_i|, l < |P_j|, i < j:
+  \forall i, j \in \I, t  \in \T, k, l \in \mathbb{N}_0, k < |P_i|, l < |P_j|, i < j:
   m'(i, t, k) < m'(j, t, l)
 \end{split}
 \end{align}
@@ -53,7 +53,7 @@ They are defined as
   \end{cases}
 \end{align}
 
-$P_{i, k}$ is defined for all $i \in \I, k \in \mathbb{N}, k < 2^{n_i}$.
+$P_{i, k}$ is defined for all $i \in \I, k \in \mathbb{N}_0, k < 2^{n_i}$.
 Where $n_i$ is chosen as in section \ref{approach:dqm.discretize}.
 Thus $P_{i, 2^{n_i} - 1} = P_{max, i}$.
 

@@ -2,12 +2,12 @@
 
 The annealing-based hybrid classical-quantum optimizer requires a reformulation of the UCP as a DQM.
 This approach converts the MINLP formulation from section \ref{approach:minlp} to a DQM.
-As mentioned in section (\ref{fundamentals:annealing}), DQM is an extension of QUBO by allowing for discrete variables rather than binary variables.
+As mentioned in section \ref{fundamentals:annealing}, DQM is an extension of QUBO by allowing for discrete variables rather than binary variables.
 
 \subsection{Map Variables}
 \label{approach:dqm.map}
 
-The model, as seen in section (\ref{fundamentals:annealing}), takes in a vector rather than a 2-dimensional matrix.
+The model, as described in section \ref{fundamentals:annealing}, takes in a vector rather than a 2-dimensional matrix.
 That's why the indices of the variables $p_{i,t}$ are mapped, such that the result is just as many variables $p_{l}$.
 \begin{align}
   m: \quad
