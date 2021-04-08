@@ -1,7 +1,7 @@
 \section{Converting Solutions of Quadratic Models}
-\label{implementation:quantum.transform.solution}
 
 \subsection{Choosing Power Levels}
+\label{implementation:quantum.read.solution.qubo}
 
 For QUBOs, it can happen that for a single power plant at a single time instance, multiple binary variables for different power levels are $1$.
 The program then has to choose one of the possible power levels where the binary variable is $1$.
@@ -28,6 +28,7 @@ if num_indices > 0:
 The program always chooses the median value.
 
 \subsection{Adjusting Power Levels}
+\label{implementation:quantum.read.solution}
 
 The program translates the optimal solution of the DQM or QUBO to a solution for the UCP.
 This solution, however, is not legal.
