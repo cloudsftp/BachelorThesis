@@ -1,0 +1,17 @@
+\section{Performance of Gate-based Quantum Computers}
+
+This work uses the Qiskit framework by IBM for the optimization using gate-based hardware.
+The framework uses the algorithm described in section \ref{fundamentals:quantum.grover.optimization}.
+Unfortunately, the quantum circuit is too big to be executed on any of IBM's public quantum computers for the smallest UCP that this work considers.
+
+The number of qubits needed just for the QUBO variables is the same as the number of binary variables in the QUBO.
+Formula (\ref{formula:qubo.num.variables}) gives the number of variables in a QUBO depending on the number of time instances of the UCP.
+These qubits are considered the first quantum register of the quantum circuit.
+In the case of the smallest UCP, this work considers with the $4$ power plants listed in section \ref{table:evaluation.data.plants} and $2$ time instances, the number of qubits would be $1, 024$.
+With every additional $2$ time instances of the UCP, the algorithm needs another $1, 024$ qubits.
+
+Additionally to this quantum register, the algorithm needs a second quantum register for storing the result of the QUBO dependent on the QUBO variables of the first register.
+The domain of values the QUBO produces grows with the size of the QUBO.
+It is proportional to the number of biases assuming the average value of the biases stays the same.
+
+Regardless of the number of gates the quantum circuit would have, the gate-based quantum computers right now do not have enough qubits to handle the problems this work considers.

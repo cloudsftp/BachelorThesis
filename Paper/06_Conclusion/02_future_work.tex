@@ -1,0 +1,23 @@
+\subsection*{Future Work}
+
+
+The conversion of the MINLP formulation of the UCP to a DQM formulation is not optimal.
+While converting the UCP to a DQM, the proposed approach loses the ability to find the actual optimal solution to the UCP.
+This work shows this experimentally in section \ref{evaluation:comparison}.
+
+There might be a better way to formulate a DQM for the UCP.
+That way must conserve the ability to find the actual optimal solution to the UCP.
+That way could achieve the same computational advantage as demonstrated in section \ref{evaluation:comparison} if the size of the DQMs is about the same.
+The size of the DQM depends on the number of variables, their possible values, and the number of biases.
+
+Another approach to mitigate the non-optimality would be taking the result and computing the details using a classical algorithm.
+The classical algorithm for optimizing MINLPs this work considers, ``Couenne'', can have a starting point for the optimization.
+The idea is to use the hybrid DQM sampler's result as the starting point.
+
+Yet another promising approach is to find a hybrid algorithm for optimizing MINLP problems directly.
+Then the reformulation as a DQM would not be necessary.
+\citeauthor{Ajagekar2020} demonstrated hybrid algorithms for similar mathematical optimization problems like the Mixed-integer Linear Problem (MILP).
+
+Such a general-purpose hybrid MINLP solver would help not only the energy industry but also many other industries.
+There exists an MINLP formulation for almost every real-world industry problem~\cite{Belotti2009}.
+Thus most real-world industry problems could be solved using such a hybrid MINLP solver.

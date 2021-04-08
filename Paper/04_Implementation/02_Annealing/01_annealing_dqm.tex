@@ -1,0 +1,52 @@
+\subsection{Implementation of DQM for Annealing Hardware}
+\label{implementation:annealing.dqm}
+
+For the implementation of the DQM for annealing-based hardware, this work uses D-Wave's \texttt{dwave-ocean-sdk}~\cite{OceanSDKDoc}.
+To be more specific, it uses the class \texttt{DiscreteQuadraticModel} that is part of the \texttt{dimod} package~\cite{DQMDoc}.
+The source code of the SDK is available online~\cite{OceanSDKGit}.
+
+\subsubsection{Variables}
+
+The first step is to instantiate a DQM with discrete variables.
+One discrete variable is added to the model for every $p_{i, t}$ of the DQM defined in section \ref{approach:annealing.formulate}.
+The size of the discrete variable $p_{i, t}$ --- the number of possible values --- is $| P_i |$.
+
+\subsubsection{Quadratic Biases}
+\label{implementation:annealing.dqm.quadratic}
+
+There are $2$ types of quadratic biases --- biases resulting from either
+\begin{enumerate*}[label=(\roman*)]
+  \item Startup and shutdown costs, or
+  \item Demand constraints.
+\end{enumerate*}
+
+The startup and shutdown biases are different for every plant but do not change over time.
+The program computes them once for every plant.
+Then it applies them to variables that correspond to the same plant but correspond to adjacent time instances.
+So $S_i$ is computed and then applied to variables $p_{i, t-1}$ and $p_{i, t}$ for all $t > 0$.
+
+The demand biases are different for every pair of plants involved but do not change over time.
+The program computes them once for every pair of plants.
+Then it applies them to the variables that correspond to the same time $t$ but correspond to each one of the involved plants.
+So $P_i \otimes P_j$ is computed and then applied to the variables $p_{i, t}$ and $p_{j, t}$ for all $i < j$.
+
+The two categories of quadratic biases do not overlap.
+This is because the startup and shutdown biases are applied along the time axes, and the demand biases are applied along the plant axes, which is orthogonal to the time axes.
+
+\subsubsection{Linear Biases}
+\label{implementation:annealing.dqm.linear}
+
+The linear biases are different for every plant and every time instance.
+They depend on the fuel cost, the possible power levels, and the demand at that time instance.
+If the variable is of the form $p_{i, 0}$ --- meaning it corresponds to the first time instance --- the linear bias of that variable is also dependent on the startup or shutdown costs and the initial state of the plant.
+The formula (\ref{formula:dqm.result.linear}) captures the computation of the linear biases.
+
+The program iterates over all power plants $i$ and time instances $t$.
+It calculates the linear bias as specified in the formula (\ref{formula:dqm.result.linear}) for all indices.
+Then it applies the calculated linear bias to the variable $p_{i, t}$.
+
+\subsubsection{Constant Bias}
+
+The constant bias is defined by the fromula (\ref{formula:dqm.result.constant}).
+The class \texttt{DiscreteQuadraticModel} does not have an interface for adding a constant bias.
+Because a constant bias does not change the optimal input value, the implementation ignores it.
