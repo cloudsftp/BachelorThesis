@@ -1,4 +1,5 @@
-#!/bin/python3.8
+#!/bin/python
+# version 3.8 required
 
 import json
 import os
@@ -9,6 +10,9 @@ from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, U
 
 
 class TestUCP(unittest.TestCase):
+  '''
+  test saving and resing UCPs to and from files
+  '''
   ucp = UCP(ExperimentParameters(3, 2),
     [1, 2, 3], [
       CombustionPlant(1, 1, 1, 0, 100, 1, 0),

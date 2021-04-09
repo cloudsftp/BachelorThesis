@@ -1,5 +1,5 @@
-#!/bin/python3.8
-
+#!/bin/python
+# versino 3.8 required
 
 import argparse
 from typing import Dict, List, Optional
@@ -9,9 +9,21 @@ import pandas as pd # type: ignore
 from UCP.experiment_results import ExperimentResults
 from UCP.unit_commitment_problem import UCPSolution
 
+'''
+this file is used to create the figures comparing the experiment results
+it is not part of the experiments
+'''
 
 def plot_time_comparison(experiment_results_list: List[ExperimentResults],
-                    loads: List[int], num_plants: int, output_file_name: str) -> None:
+                         loads: List[int], num_plants: int, output_file_name: str) -> None:
+  '''
+  plot the computing time of all passed experiment results
+
+  :experiment_results_list: list of the experiment results objects to plot
+  :loads: list of number of loads, for which to plot the computing time
+  :num_plants: number of plants, for which to plot the computing time
+  :output_file_name: name of the output file
+  '''
   for experiment_results in experiment_results_list:
     solutions_list: List[UCPSolution] = experiment_results.get_experiments(num_plants)
 
@@ -35,7 +47,15 @@ def plot_time_comparison(experiment_results_list: List[ExperimentResults],
 
 
 def plot_error_comparison(experiment_results_list: List[ExperimentResults],
-                    loads: List[int], num_plants: int, output_file_name: str) -> None:
+                          loads: List[int], num_plants: int, output_file_name: str) -> None:
+  '''
+  plot the error of some experiment results compared to other experiment results
+
+  :experiment_results_list: list of the experiment results objects to plot
+  :loads: list of number of loads, for which to plot the error
+  :num_plants: number of plants, for which to plot the error
+  :output_file_name: name of the output file
+  '''
   result_base: pd.DataFrame
   result_comp: pd.DataFrame
 
@@ -65,6 +85,9 @@ def plot_error_comparison(experiment_results_list: List[ExperimentResults],
 
 
 if __name__ == "__main__":
+  '''
+  read arguments and call above defined functions to plot the comparison
+  '''
   parser: argparse.ArgumentParser = argparse.ArgumentParser(description='Visualize comparison of results')
 
   solutions_dir_action: argparse.Action = parser.add_argument('--solutions-dir', nargs="+", type=str, default=[])
