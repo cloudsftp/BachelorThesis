@@ -1,15 +1,17 @@
 #!/bin/python3.8
 
-
 from typing import List
 import unittest
 
 from Classical.minlp import UCP_MINLP
-
 from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCPSolution
 
 
 class TestUCP(unittest.TestCase):
+  '''
+  tests the classical algorithm (couenne) on different UCP instances
+  '''
+
   @staticmethod
   def optimize(ucp: UCP) -> UCPSolution:
     minlp: UCP_MINLP = UCP_MINLP(ucp)
