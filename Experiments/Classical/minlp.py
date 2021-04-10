@@ -1,4 +1,5 @@
-#!/bin/python3.8
+#!/bin/python
+# version 3.8 required
 
 from typing import List
 from pyomo.core.base.PyomoModel import ConcreteModel # type: ignore

@@ -1,5 +1,5 @@
-#!/bin/python3.8
-
+#!/bin/python
+# version 3.8 required
 
 from typing import Any, List
 from dimod import DiscreteQuadraticModel # type: ignore
@@ -11,21 +11,35 @@ from Util.logging import debug_msg_time
 
 
 class UCP_DQM(object):
+  '''
+  handles the generation of a DQM using D-Wave's ocean-sdk given an UCP
+  '''
   model: DiscreteQuadraticModel
   ucp: UCP
   p: List[List[Any]] # variables of model
-
   P: List[np.ndarray] # discretizised power levels
 
-
   def indices_to_index(self, i: int, t: int) -> int:
+    '''
+    implements the mapping function m of the paper
+
+    :i: unit index
+    :t: time index
+    '''
     return i * self.ucp.parameters.num_loads + t
 
-
   def discretizise_plants(self, max_h: float) -> None:
-    self.P = self.ucp.get_discretized_power_levels()
+    '''
+    discretizes the power levels of all plants
+
+    :max_h: maximum difference of non-zero power levels, default: 10
+    '''
+    self.P = self.ucp.get_discretized_power_levels(max_h)
 
   def init_variables(self) -> None:
+    '''
+    instanciate the variables of the DQM
+    '''
     self.p = []
 
     for i in range(self.ucp.parameters.num_plants):
@@ -37,6 +51,12 @@ class UCP_DQM(object):
       self.p.append(p_i)
 
   def calculate_F_i(self, plant: CombustionPlant, i: int) -> np.array:
+    '''
+    calculate the F vector for unit i
+
+    :plant: power plant
+    :i: unit instance
+    '''
     P_i: np.ndarray = self.P[i]
     F_i: List[float] = [0]
 
@@ -46,6 +66,9 @@ class UCP_DQM(object):
     return np.array(F_i)
 
   def set_linear(self, y_c: float, y_s: float, y_d: float) -> None:
+    '''
+    set the linear biases for the DQM
+    '''
     for i in range(len(self.p)):
       P_i: np.ndarray = self.P[i]
       plant: CombustionPlant = self.ucp.plants[i]
@@ -66,8 +89,10 @@ class UCP_DQM(object):
 
         self.model.set_linear(self.p[i][t], linear_biases)
 
-
   def set_quadratic_startup(self, y_s: float) -> None:
+    '''
+    set the quadratic biases for the startup costs for the DQM
+    '''
     for i in range(self.ucp.parameters.num_plants):
       plant: CombustionPlant = self.ucp.plants[i]
       num_cases: int = len(self.P[i])
@@ -82,8 +107,10 @@ class UCP_DQM(object):
       for t in range(1, self.ucp.parameters.num_loads):
         self.model.set_quadratic(self.p[i][t-1], self.p[i][t], quadratic_biases)
 
-
   def set_quadratic_demand(self, y_d: float) -> None:
+    '''
+    set the quadratic biases for the demand for the DQM
+    '''
     for j in range(1, self.ucp.parameters.num_plants):
       for i in range(j):
         quadratic_biases: np.ndarray = np.tensordot(self.P[i], self.P[j], axes=0)
@@ -92,8 +119,16 @@ class UCP_DQM(object):
         for t in range(self.ucp.parameters.num_loads):
           self.model.set_quadratic(self.p[i][t], self.p[j][t], quadratic_biases)
 
-
   def __init__(self, ucp: UCP, y_c: float = 1, y_s: float = 1, y_d: float = 1, max_h: float = 10) -> None:
+    '''
+    generate a MINLP from an UCP instance using the ocean-sdk
+
+    :ucp: UCP instance
+    :y_c: factor of objective function
+    :y_s: factor of startup and shutdown cost
+    :y_d: factor of demand constraints
+    :max_h: maximum difference of non-zero power levels, default: 10
+    '''
     self.model = DiscreteQuadraticModel()
     self.ucp = ucp
 
@@ -104,8 +139,14 @@ class UCP_DQM(object):
     self.set_quadratic_startup(y_s)
     self.set_quadratic_demand(y_d)
 
-
   def get_variables_from_sample(self, sample: List[float], u: List[List[bool]], p: List[List[float]]) -> None:
+    '''
+    computes the UCP variables from a DQM solution
+
+    :sample: DQM solution
+    :u: commitment of units (output variable)
+    :p: power output of units (output variable)
+    '''
     for i in range(self.ucp.parameters.num_plants):
       u.append([])
       p.append([])
@@ -118,6 +159,12 @@ class UCP_DQM(object):
         u[i].append((bool) (p[i][t] > 0))
 
   def optimize(self, sampler, adjust: bool = True) -> UCPSolution:
+    '''
+    optimizes the DQM using a specified sampler
+
+    :sampler: sampler used to optimize the DQM
+    :adjust: whether the result should be adjusted to meet power demand at all times
+    '''
     debug_msg_time('Start Solver')
     samples: SampleSet = sampler.sample_dqm(self.model)
     sample: List[float] = samples.record[0][0]

@@ -82,6 +82,11 @@ class UCP(object):
     return read_dataclass_from(file_name, UCP)
 
   def get_discretized_power_levels(self, max_h: float = 10) -> List[np.ndarray]:
+    '''
+    discretizes the power levels of all plants
+
+    :max_h: maximum difference of non-zero power levels, default: 10
+    '''
     P = []
 
     for plant in self.plants:
