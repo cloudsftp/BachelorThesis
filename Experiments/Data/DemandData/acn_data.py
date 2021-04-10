@@ -11,11 +11,17 @@ from Data.DemandData.demand_data import DemandData
 
 @dataclass
 class ACN_Root(object):
+  '''
+  represents ACN data object
+  '''
   _meta: Dict
   _items: List[Dict[str, Any]]
 
 @dataclass
 class ACN_DataItem(object):
+  '''
+  represents one data item of the ACN data
+  '''
   start: datetime
   disconnectTime: datetime
   work_kWh: float = 0
@@ -23,18 +29,34 @@ class ACN_DataItem(object):
   power_kW: float = 0
 
 class ACN_DataConverter(object):
+  '''
+  handles the conversion of the ACN data to a DemandData object
+  '''
+  items: List[ACN_DataItem] = []
+
   @staticmethod
   def date(date_str: str) -> datetime:
+    '''
+    parses a date
+
+    :date_str: string representation of a date
+    '''
     dateformat ='%a, %d %b %Y %H:%M:%S %Z'
     return datetime.strptime(date_str, dateformat)
 
-  items: List[ACN_DataItem] = []
-
   def __init__(self, data_file_name) -> None:
+    '''
+    initializes the converter
+
+    :data_file_name: file to read data from
+    '''
     acn_root: ACN_Root = read_dataclass_from(data_file_name, ACN_Root)
     self.acn_loading_sessions: List[Dict] = acn_root._items
 
   def convert_items(self) -> None:
+    '''
+    converts raw ACN data to ACN_DataItems
+    '''
     for loading_session in self.acn_loading_sessions:
       connectionTime: datetime = ACN_DataConverter.date(loading_session['connectionTime'])
 
@@ -47,6 +69,9 @@ class ACN_DataConverter(object):
       self.items.append(ACN_DataItem(connectionTime, disconnectTime, work_kWh=loading_session['kWhDelivered']))
 
   def specify_load(self) -> None:
+    '''
+    computes the power demand of every data item based on the charging time and total energy
+    '''
     for item in self.items:
       charging_period: timedelta = item.disconnectTime - item.start
       item.period_hours = charging_period.total_seconds() / 3600
@@ -57,6 +82,13 @@ class ACN_DataConverter(object):
     self.specify_load()
 
   def get_load_of_timeframe(self, start: datetime, end: datetime, interval_minutes: int=10) -> pd.DataFrame:
+    '''
+    compute the power demand of a specific time period
+
+    :start: start date
+    :end: end date
+    :interval_minutes: time resolution of the data, default: 10 (minutes)
+    '''
     demand_data: DemandData = DemandData(period=end - start, interval_minutes=interval_minutes)
 
     df: pd.DataFrame = demand_data.data
@@ -72,10 +104,16 @@ class ACN_DataConverter(object):
     return df
 
   def get_load_of_one_day(self, start: datetime) -> pd.DataFrame:
+    '''
+    compute the power demand of one day
+    '''
     one_day: timedelta = timedelta(1)
     return self.get_load_of_timeframe(start, start + one_day)
 
 def get_average_day() -> DemandData:
+  '''
+  compute the average day of power demand
+  '''
   data_file_name = "Data/DemandData/ACN_caltech_2020-10.json"
   ev_data: ACN_DataConverter = ACN_DataConverter(data_file_name)
   ev_data.process_data()
@@ -96,7 +134,6 @@ def get_average_day() -> DemandData:
 
   load_df /= num_of_days
   return DemandData(data=load_df)
-
 
 if __name__ == "__main__":
   average_demand: DemandData = get_average_day()

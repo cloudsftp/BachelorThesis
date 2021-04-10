@@ -1,4 +1,5 @@
-#!/bin/python3.8
+#!/bin/python
+# version 3.8 required
 
 from typing import Dict, List, Tuple
 import numpy as np # type: ignore
