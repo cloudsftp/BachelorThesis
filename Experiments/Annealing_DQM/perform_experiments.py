@@ -33,7 +33,7 @@ if __name__ == "__main__":
   - the path and prefix for the result files, and
   - the command-line arguments
   '''
-  client: Client = Client.from_config(token='DEV-eef9bd1d1d722708bf268e55471ac662896f8d79')
+  client: Client = Client.from_config(token='!!! INSERT OWN TOKEN !!!')
 
   experiments_main(
     optimize_annealing,

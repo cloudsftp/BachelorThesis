@@ -21,7 +21,8 @@ It contains Python code to run the experiments described in the document and pro
 1. Install Python packages via `./install_conda_environment.sh`. This sets up the Anaconda environment `opt`.
 2. Install Couenne if you want to execute the experiments on a classial computer. Refer to [this](Classical/COIN-OR/README.md) document for instructions.
 1. Activate the environment and environment variables for Couenne via `source setup.sh`.
-1. Insert API keys TODO: specify
+1. Insert API token for D-Wave in the experiment runner (`Annealing_DQM/perform_experiments.py`)
+1. Setup local IBMQ account with this [tutorial](https://quantum-computing.ibm.com/docs/manage/account/ibmq)
 
 ## Run Experiments
 
