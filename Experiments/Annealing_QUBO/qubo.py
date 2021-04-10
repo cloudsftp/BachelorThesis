@@ -59,7 +59,7 @@ class UCP_QUBO(object):
 
   def add_linear(self, y_c: float, y_d: float, y_p: float) -> None:
     '''
-    set the linear biases for the QUBO
+    sets the linear biases for the QUBO
     '''
     for i in range(self.ucp.parameters.num_plants):
       plant: CombustionPlant = self.ucp.plants[i]
@@ -74,7 +74,7 @@ class UCP_QUBO(object):
 
   def add_linear_startup_shutdown(self, y_s: float) -> None:
     '''
-    set the linear biases for the QUBO regarding startup and shutdown costs
+    sets the linear biases for the QUBO regarding startup and shutdown costs
     '''
     for i in range(self.ucp.parameters.num_plants):
       is_initially_on: bool = self.ucp.plants[i].initially_on
@@ -111,7 +111,7 @@ class UCP_QUBO(object):
 
   def add_quadratic_startup_shutdown(self, y_s: float) -> None:
     '''
-    set the quadratic biases for the startup costs for the QUBO
+    sets the quadratic biases for the startup costs for the QUBO
     '''
     for i in range(self.ucp.parameters.num_plants):
       AU: float = self.ucp.plants[i].AU
@@ -124,7 +124,7 @@ class UCP_QUBO(object):
 
   def add_quadratic_demand(self, y_d: float) -> None:
     '''
-    set the quadratic biases for the demand for the QUBO
+    sets the quadratic biases for the demand for the QUBO
     '''
     for j in range(self.ucp.parameters.num_plants):
       for i in range(j):
@@ -136,7 +136,7 @@ class UCP_QUBO(object):
 
   def add_quadratic_discretized(self, y_d: float) -> None:
     '''
-    set the quadratic biases for making sure only one power level is active per unit and time
+    sets the quadratic biases for making sure only one power level is active per unit and time
     '''
     for i in range(self.ucp.parameters.num_plants):
       for t in range(self.ucp.parameters.num_loads):

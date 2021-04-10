@@ -32,7 +32,7 @@ There are 4 Runners for
 - Classical `Classical.perform_experiments`
 - Hybrid Annealing DQM `Annealing_DQM.perform_experiments`
 - Direct Annealing QUBO `Annealing_QUBO.perform_experiments`
-- Gate-based QUBO `Gatebased.perform_experiments`
+- Gate-based QUBO `Gatebased.perform_experiments` (only runs one very small experiment, no command-line options available)
 
 optimization
 

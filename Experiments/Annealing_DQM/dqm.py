@@ -121,7 +121,7 @@ class UCP_DQM(object):
 
   def __init__(self, ucp: UCP, y_c: float = 1, y_s: float = 1, y_d: float = 1, max_h: float = 10) -> None:
     '''
-    generate a MINLP from an UCP instance using the ocean-sdk
+    generates a MINLP from an UCP instance using the ocean-sdk
 
     :ucp: UCP instance
     :y_c: factor of objective function
