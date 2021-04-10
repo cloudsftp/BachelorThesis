@@ -21,7 +21,7 @@ class UCP_DQM(object):
 
   def indices_to_index(self, i: int, t: int) -> int:
     '''
-    implements the mapping function m of the paper
+    implements the mapping function m of the report
 
     :i: unit index
     :t: time index

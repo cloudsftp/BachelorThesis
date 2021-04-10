@@ -28,7 +28,7 @@ def optimize_annealing(ucp: UCP) -> UCPSolution:
 if __name__ == "__main__":
   '''
   initializes the dwave client
-  and then calls the ecperiment runner with
+  and then calls the experiment runner with
   - the optimization function,
   - the path and prefix for the result files, and
   - the command-line arguments

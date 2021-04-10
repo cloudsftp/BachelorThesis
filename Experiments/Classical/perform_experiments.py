@@ -23,7 +23,7 @@ def optimize_classical(ucp: UCP) -> UCPSolution:
 
 if __name__ == "__main__":
   '''
-  calls the ecperiment runner with
+  calls the experiment runner with
   - the optimization function,
   - the path and prefix for the result files, and
   - the command-line arguments

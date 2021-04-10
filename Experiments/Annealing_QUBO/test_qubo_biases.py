@@ -11,6 +11,9 @@ from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, U
 from Annealing_QUBO.qubo import UCP_QUBO
 
 class TestQUBOBiases(unittest.TestCase):
+  '''
+  tests the generation of QUBOs using different UCPs
+  '''
 
   def linear_biases(self, qubo: UCP_QUBO, i: int, t: int, biases: List[float]) -> None:
     for k, bias in enumerate(biases):
