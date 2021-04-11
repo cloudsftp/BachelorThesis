@@ -18,6 +18,34 @@ The objective function (\ref{formula:minlp.obj}) is modeled using an \texttt{Obj
 It depends on the model variables for $u_{i, t}$, $p_{i, t}$ and $s_{i, t}$.
 Where $u_{i, t}$ and $p_{i, t}$ are free variables and $s_{i, t}$ are defined through the model.
 The coefficients $A_i$, $B_i$, and $C_i$ are taken from the UCP object.
+Listing \ref{implementation:classical.objective.code} shows the code that implements the objective function based on the free variables and the variables $s_{i, t}$ here called \texttt{startup\_shutdown\_cost}.
+
+\begin{python}[
+  float,
+  caption={Implementation of the Objective Function using Pyomo},
+  label={implementation:classical.objective.code}
+]
+def build_objective(self) -> None:
+  '''
+  builds the objective function of the MINLP
+  '''
+  def objective_function(model: ConcreteModel) -> Expression:
+    plants: List[CombustionPlant] = self.ucp.plants
+
+    return sum( # for every plant i
+      sum( # and every time t
+        model.u[(i, t)] * (
+          plants[i].A +
+          plants[i].B * model.p[i, t] +
+          plants[i].C * model.p[i, t] ** 2
+        ) + (
+          model.startup_shutdown_cost[i, t]
+        ) for t in model.T
+      ) for i in model.I
+    )
+
+  self.model.o = Objective(rule=objective_function)
+\end{python}
 
 The startup and shutdown costs are defined through a method called ``disjunctive programming''.
 This method makes it possible to formulate ``either-or'' conditions and set values of variables based on the value of other variables~\cite{Balas1983}.
@@ -45,9 +73,54 @@ It is specified by the formula (\ref{formula:minlp.load}).
 It makes sure that the power demand is met by all the power plants $i$ at every time $t$.
 The program creates a constraint list of length $\aT$.
 Each element of the list makes sure that the sum of all power outputs at its corresponding time $t$ is equal to the power demand at that time instance.
+Listing \ref{implementation:classical.load.constraint.code} shows the code that implements this constraint.
+
+\begin{python}[
+  float,
+  caption={Implementation of the Load Constraint using Pyomo},
+  label={implementation:classical.load.constraint.code}
+]
+def build_load_constraints(self) -> None:
+  '''
+  builds the constraints for the MINLP that make sure the power plants produce enough energy
+  '''
+  def load_constraint_rule(model: ConcreteModel, t: int) -> Expression:
+    '''
+    defines the rule for the constraints
+
+    :model: MINLP
+    :t: time index
+    '''
+    return self.ucp.loads[t] == sum(model.u[(i, t)] * model.p[(i, t)] for i in model.I)
+
+  self.model.l_constr = Constraint(self.model.T, rule=load_constraint_rule)
+\end{python}
 
 The second constraint is the power level constraint.
 It is specified by the formula (\ref{formula:minlp.power}).
 It makes sure that the power output of every power plant $i$ is within its limits at every time $t$.
 The program creates a constraint matrix of dimensions $\aT \times \aI$.
 Each element of the constraint matrix makes sure the power output of the corresponding power plant $i$ at the corresponding time $t$ is within the limits of the power plant's constraints.
+Listing \ref{implementation:classical.power.constraint.code} shows the code that implements this constraint.
+
+\begin{python}[
+  float,
+  caption={Implementation of the Power Constraint using Pyomo},
+  label={implementation:classical.power.constraint.code}
+]
+def build_power_constraints(self) -> None:
+  '''
+  builds the constraints for the MINLP that make sure every power output is inside the limits of the power plants
+  '''
+  def power_constraint_rule(model: ConcreteModel, i: int, t: int) -> Expression:
+    '''
+    defines the rule for the constraints
+
+    :model: MINLP
+    :i: plant index
+    :t: time index
+    '''
+    return inequality(self.ucp.plants[i].Pmin, model.p[(i, t)], self.ucp.plants[i].Pmax)
+
+  self.model.p_constr = Constraint(self.model.I, self.model.T, rule=power_constraint_rule)
+\end{python}
