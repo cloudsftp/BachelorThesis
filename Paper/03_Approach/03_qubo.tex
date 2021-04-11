@@ -149,6 +149,7 @@ Penalizing multiple possible power output values for each plant at every time av
 
 After adding all parts together again, we obtain the following QUBO.
 \begin{subequations}
+\label{formula:qubo.result}
 \begin{align}
   \begin{split}
   E(p) = \quad &
@@ -171,11 +172,10 @@ After adding all parts together again, we obtain the following QUBO.
   & \text{(linear)}
   \label{formula:qubo.result.linear} \\
   + \quad &
-  1 + \sum_t l_t^2
+  \gamma_p + \gamma_d \sum_t l_t^2
   & \text{(constant)}
   \label{formula:qubo.result.constant}
 \end{align}
-\label{formula:qubo.result}
 \end{subequations}
 
 \subsection{Model Size}

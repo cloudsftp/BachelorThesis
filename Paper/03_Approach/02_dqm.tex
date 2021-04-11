@@ -61,6 +61,7 @@ This is already enforced by the discretization of the power levels.
 The formula is not in the standard form (\ref{formula:dqm.form}).
 The last summand must be multiplied out and the quadratic, linear and constant biases have to be grouped toghether.
 \begin{subequations}
+\label{formula:dqm.start}
 \begin{align}
   E(p) =
   &  \quad \gamma_c \sum_{i, t} F_i p_{i, t}
@@ -73,7 +74,6 @@ The last summand must be multiplied out and the quadratic, linear and constant b
   + & \quad \gamma_d \sum_t \left( \left( \sum_i P_i p_{i, t} \right) - l_t \right)^2
   \label{formula:dqm.start.demand}
 \end{align}
-\label{formula:dqm.start}
 \end{subequations}
 
 \subsection{Rewrite Objective Function}
@@ -224,6 +224,7 @@ The constant biases are grouped in the last summand of the result (\ref{formula:
 This is simply a constant summand.
 This could be removed without changing the nature of the solution that minimizes the energy function.
 \begin{subequations}
+\label{formula:dqm.result}
 \begin{align}
   \begin{split}
   E(p) = \quad
@@ -235,7 +236,7 @@ This could be removed without changing the nature of the solution that minimizes
     \right)
   \\ + \quad &
   \gamma_d \sum_t \left(
-    L_t^2
+    l_t^2
     + \sum_i \left( P_i^{\odot 2} - l_t P_i \right)i p_{i, t}
     + \sum_{i < j} \left( P_i \otimes P_j \right) \left( p_{i, t} \otimes p_{j, t} \right)
   \right)
@@ -254,11 +255,10 @@ This could be removed without changing the nature of the solution that minimizes
   & \text{(linear)}
   \label{formula:dqm.result.linear}
   \\ + \quad &
-  \sum_t l_t^2
+  \gamma_d \sum_t l_t^2
   & \text{(constant)}
   \label{formula:dqm.result.constant}
 \end{align}
-\label{formula:dqm.result}
 \end{subequations}
 
 \subsection{Model Size}

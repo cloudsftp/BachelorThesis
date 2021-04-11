@@ -1,5 +1,5 @@
-#!/bin/python3.8
-
+#!/bin/python
+# version 3.8 required
 
 import sys
 from typing import List
@@ -10,6 +10,9 @@ import numpy as np # type: ignore
 
 
 class DQMSimulator(object):
+  '''
+  solves DQMs via brute force (for testing purposes)
+  '''
   dqm: DiscreteQuadraticModel
   v: List[int]
   c: List[int]
@@ -20,14 +23,18 @@ class DQMSimulator(object):
     self.c = []
     self.o = sys.float_info.max
 
-
   def initialize_variables(self) -> None:
+    '''
+    instantiates the variables
+    '''
     for i in range(len(self.dqm.variables)):
       self.v.append(0)
       self.c.append(len(self.dqm.get_linear(self.dqm.variables[i])))
 
-
   def possible_v(self):
+    '''
+    generates possible inputs to the DQM
+    '''
     self.v[0] = -1
 
     while True:
@@ -49,6 +56,11 @@ class DQMSimulator(object):
       yield self.v
 
   def compute_o(self, v: List[int]) -> float:
+    '''
+    computes the energy function of the DQM for a given input
+
+    :v: input for DQM
+    '''
     o: float = 0
 
     for i in range(len(self.dqm.variables)):
@@ -69,8 +81,10 @@ class DQMSimulator(object):
 
     return o
 
-
   def brute_force_solution(self) -> None:
+    '''
+    search for the optimal input to the DQM
+    '''
     optimal_v: List[int] = self.v.copy()
 
     for v in self.possible_v():
@@ -81,8 +95,12 @@ class DQMSimulator(object):
 
     self.v = optimal_v.copy()
 
-
   def sample_dqm(self, dqm: DiscreteQuadraticModel) -> SampleSet:
+    '''
+    search for the optimal input to a DQM
+
+    :dqm: dqm instance
+    '''
     self.dqm = dqm
 
     self.initialize_variables()

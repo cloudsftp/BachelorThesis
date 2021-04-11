@@ -1,5 +1,5 @@
-#!/bin/python3.8
-
+#!/bin/python
+# version 3.8 required
 
 import random
 from typing import List

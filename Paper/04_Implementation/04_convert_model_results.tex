@@ -6,26 +6,29 @@
 For QUBOs, it can happen that for a single power plant at a single time instance, multiple binary variables for different power levels are $1$.
 The program then has to choose one of the possible power levels where the binary variable is $1$.
 For this the algorithm \ref{implementation:quantum.read.solution.qubo.algorithm} is used.
+The program always chooses the median value.
 
-\begin{lstlisting}[
+\begin{python}[
+  float,
   caption={Choosing Power Levels from the QUBO},
-  label={implementation:quantum.read.solution.qubo.algorithm},
-  language=Python
+  label={implementation:quantum.read.solution.qubo.algorithm}
 ]
+# store every power level k possible at time t for plant i
 value_indices: List[int] = []
 for k in range(len(self.P[i])):
-  if result[self.p[i][t][k].name] == 1:
+  if result[self.m[i, t, k]] == 1:
     value_indices.append(k)
 
 value: float = 0
 num_indices: int = len(value_indices)
 if num_indices > 0:
+  # choose median power level
   value = self.P[i][value_indices[(int) (num_indices / 2)]]
   if num_indices > 1:
     debug_msg('Warning: {} possible power levels for plant {} detected'.format(num_indices, i))
-\end{lstlisting}
 
-The program always chooses the median value.
+p[i].append(value)
+\end{python}
 
 \subsection{Adjusting Power Levels}
 \label{implementation:quantum.read.solution}
@@ -37,17 +40,21 @@ The program, therefore, raises the power outputs of all plants at every time ins
 While doing so, it also avoids violating the power limits of the individual plants.
 For this the algortihm \ref{implementation:quantum.read.solution.algorithm} is used.
 
-\begin{lstlisting}[
+\begin{python}[
+  float,
   caption={Adjusting the UCP Solution},
-  label={implementation:quantum.read.solution.algorithm},
-  language=Python
+  label={implementation:quantum.read.solution.algorithm}
 ]
 for t in range(self.ucp.parameters.num_loads):
-  adjust: List[bool] = [u[i][t] for i in range(self.ucp.parameters.num_plants)]
-  delta: float = self.ucp.loads[t] - sum([p[i][t] for i in range(self.ucp.parameters.num_plants)])
+  # set adjust bool for every power plant that is active
+  adjust: List[bool] = [self.u[i][t] for i in range(self.ucp.parameters.num_plants)]
+  # compute the power that is missing or too much
+  delta: float = self.ucp.loads[t] - sum([self.p[i][t] for i in range(self.ucp.parameters.num_plants)])
 
   while True:
     if delta == 0 or not functools.reduce(lambda a,b: a or b, adjust):
+      # repeat the loop until either the demand is met (delta == 0)
+      # or no plant can be adjusted anymore
       break
 
     adjustment: float = delta / sum([1 if b else 0 for b in adjust])
@@ -55,17 +62,20 @@ for t in range(self.ucp.parameters.num_loads):
 
     for i in range(self.ucp.parameters.num_plants):
       if adjust[i]:
-        p[i][t] += adjustment
+        # add a portion of the delta to every power output
+        self.p[i][t] += adjustment
         Pmax: float = self.ucp.plants[i].Pmax
         Pmin: float = self.ucp.plants[i].Pmin
 
-        if p[i][t] > Pmax:
-          delta += p[i][t] - Pmax
-          p[i][t] = Pmax
+        # if the power output violates the limits of the power plant
+        # set it to the limit and add the difference to the delta again
+        if self.p[i][t] > Pmax:
+          delta += self.p[i][t] - Pmax
+          self.p[i][t] = Pmax
           adjust[i] = False
 
-        elif p[i][t] < Pmin:
-          delta += p[i][t] - Pmin
-          p[i][t] = Pmin
+        elif self.p[i][t] < Pmin:
+          delta += self.p[i][t] - Pmin
+          self.p[i][t] = Pmin
           adjust[i] = False
-\end{lstlisting}
+\end{python}

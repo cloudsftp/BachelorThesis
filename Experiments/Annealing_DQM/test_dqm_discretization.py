@@ -1,4 +1,5 @@
-#!/bin/python3.8
+#!/bin/python
+# version 3.8 required
 
 from typing import List
 import unittest
@@ -7,6 +8,9 @@ from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, U
 from Annealing_DQM.dqm import UCP_DQM
 
 class TestDQMDiscretization(unittest.TestCase):
+  '''
+  tests the discretization of power levels
+  '''
 
   def assertFloatCustomEqual(self, actual: float, expected: float) -> None:
     self.assertAlmostEqual(actual, expected, delta=0.00001)

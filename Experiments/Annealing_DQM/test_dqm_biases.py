@@ -1,7 +1,7 @@
-#!/bin/python3.8
+#!/bin/python
+# version 3.8 required
 
 from typing import List, Union
-
 import numpy as np # type: ignore
 from numpy.testing import assert_array_equal # type: ignore
 import unittest
@@ -10,6 +10,9 @@ from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, U
 from Annealing_DQM.dqm import UCP_DQM
 
 class TestDQMBiases(unittest.TestCase):
+  '''
+  tests the generation of the DQMs with different UCPs
+  '''
 
   def linear_biases(self, dqm: UCP_DQM, i: int, t: int, biases: List[float]) -> None:
     assert_array_equal(dqm.model.get_linear(dqm.p[i][t]), np.array(biases))

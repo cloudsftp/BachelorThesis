@@ -1,4 +1,5 @@
-#!/bin/python3.8
+#!/bin/python
+# version 3.8 required
 
 import os
 from sys import argv
@@ -8,7 +9,17 @@ from UCP.experiments import experiments_main
 from uqo.client.config import Config # type: ignore
 from uqo.client.connection import Connection # type: ignore
 
+'''
+this file is the experiment runner for the annealing optimizations using the UQO framework
+'''
+
 def optimize_annealing_qubo_uqo(ucp: UCP) -> UCPSolution:
+  '''
+  performs the annealing optimization for an UCP using QUBOs
+
+  :ucp: UCP instance
+  '''
+  # initialize a connection to the UQO sarver
   config: Config = Config(configpath='uqo_config.json')
   connection: Connection = config.create_connection()
 
@@ -18,8 +29,13 @@ def optimize_annealing_qubo_uqo(ucp: UCP) -> UCPSolution:
 
   return solution
 
-
 if __name__ == "__main__":
+  '''
+  calls the experiment runner with
+  - the optimization function,
+  - the path and prefix for the result files, and
+  - the command-line arguments
+  '''
   experiments_main(
     optimize_annealing_qubo_uqo,
     os.path.join('Annealing_QUBO', 'Solutions'),
