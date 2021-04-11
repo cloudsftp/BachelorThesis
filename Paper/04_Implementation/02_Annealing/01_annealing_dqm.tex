@@ -24,11 +24,59 @@ The startup and shutdown biases are different for every plant but do not change 
 The program computes them once for every plant.
 Then it applies them to variables that correspond to the same plant but correspond to adjacent time instances.
 So $S_i$ is computed and then applied to variables $p_{i, t-1}$ and $p_{i, t}$ for all $t > 0$.
+Listing \ref{implementation:annealing.dqm.quadratic.startup.code} shows the code implementing these quadratic biases.
+
+\begin{python}[
+  float,
+  caption={Implementation of the Quadratic Startup and Shutdown Biases for DQMs},
+  label={implementation:annealing.dqm.quadratic.startup.code}
+]
+def set_quadratic_startup(self, y_s: float) -> None:
+  '''
+  sets the quadratic biases for the startup costs for the DQM
+  '''
+  for i in range(self.ucp.parameters.num_plants):
+    # compute once for every plant i
+    plant: CombustionPlant = self.ucp.plants[i]
+    num_cases: int = len(self.P[i])
+    quadratic_biases: np.ndarray = np.zeros((num_cases, num_cases))
+
+    for k in range(1, num_cases):
+      quadratic_biases[0, k] = plant.AU
+      quadratic_biases[k, 0] = plant.AD
+
+    quadratic_biases *= y_s
+
+    for t in range(1, self.ucp.parameters.num_loads):
+      # apply for one plant i at every time t > 0
+      self.model.set_quadratic(self.p[i][t-1], self.p[i][t], quadratic_biases)
+\end{python}
 
 The demand biases are different for every pair of plants involved but do not change over time.
 The program computes them once for every pair of plants.
 Then it applies them to the variables that correspond to the same time $t$ but correspond to each one of the involved plants.
 So $P_i \otimes P_j$ is computed and then applied to the variables $p_{i, t}$ and $p_{j, t}$ for all $i < j$.
+Listing \ref{implementation:annealing.dqm.quadratic.demand.code} shows the code implementing these quadratic biases.
+
+\begin{python}[
+  float,
+  caption={Implementation of the Quadratic Demand Biases for DQMs},
+  label={implementation:annealing.dqm.quadratic.demand.code}
+]
+def set_quadratic_demand(self, y_d: float) -> None:
+  '''
+  sets the quadratic biases for the demand for the DQM
+  '''
+  for j in range(1, self.ucp.parameters.num_plants):
+    for i in range(j):
+      # compute once for every pair of plants i, j (i < j)
+      quadratic_biases: np.ndarray = np.tensordot(self.P[i], self.P[j], axes=0)
+      quadratic_biases *= y_d
+
+      for t in range(self.ucp.parameters.num_loads):
+        # apply for one pair of plants i, j at every time t
+        self.model.set_quadratic(self.p[i][t], self.p[j][t], quadratic_biases)
+\end{python}
 
 The two categories of quadratic biases do not overlap.
 This is because the startup and shutdown biases are applied along the time axes, and the demand biases are applied along the plant axes, which is orthogonal to the time axes.
@@ -44,6 +92,37 @@ The formula (\ref{formula:dqm.result.linear}) captures the computation of the li
 The program iterates over all power plants $i$ and time instances $t$.
 It calculates the linear bias as specified in the formula (\ref{formula:dqm.result.linear}) for all indices.
 Then it applies the calculated linear bias to the variable $p_{i, t}$.
+Listing \ref{implementation:annealing.dqm.linear.code} shows the code implementing these linear biases.
+
+\begin{python}[
+  float,
+  caption={Implementation of the Linear Biases for DQMs},
+  label={implementation:annealing.dqm.linear.code}
+]
+  def set_linear(self, y_c: float, y_s: float, y_d: float) -> None:
+    '''
+    sets the linear biases for the DQM
+    '''
+    for i in range(len(self.p)):
+      P_i: np.ndarray = self.P[i]
+      plant: CombustionPlant = self.ucp.plants[i]
+      F_i: np.ndarray = self.calculate_F_i(plant, i)
+
+      for t in range(len(self.p[i])):
+        linear_biases: np.ndarray = y_c * F_i + y_d * (
+          P_i * P_i - self.ucp.loads[t] * P_i
+        ) # implements formula for linear biases of the report
+
+        if t == 0: # if t is 0, add initial startup or shutdown costs
+          if plant.initially_on:
+            linear_biases[0] += y_s * plant.AD
+
+          else:
+            for k in range(1, len(linear_biases)):
+              linear_biases[k] += y_s * plant.AU
+
+        self.model.set_linear(self.p[i][t], linear_biases)
+\end{python}
 
 \subsubsection{Constant Bias}
 

@@ -57,7 +57,7 @@ class UCP_QUBO(object):
     bias: float = self.model.get((m, m), 0)
     self.model[m, m] = bias + value
 
-  def add_linear(self, y_c: float, y_d: float, y_p: float) -> None:
+  def add_linear(self, y_c: float, y_d: float) -> None:
     '''
     sets the linear biases for the QUBO
     '''
@@ -78,7 +78,7 @@ class UCP_QUBO(object):
     sets the linear biases for the QUBO regarding startup and shutdown costs
     '''
     for i in range(self.ucp.parameters.num_plants):
-      # compute once for every plant
+      # compute once for every plant i
       is_initially_on: bool = self.ucp.plants[i].initially_on
 
       if is_initially_on:
@@ -172,7 +172,7 @@ class UCP_QUBO(object):
     self.add_quadratic_demand(y_d)
     self.add_quadratic_discretized(y_p)
 
-    self.add_linear(y_c, y_d, y_p)
+    self.add_linear(y_c, y_d)
     self.add_linear_startup_shutdown(y_s)
 
   def get_variables_from_result(self, result: List[int], u: List[List[bool]], p: List[List[float]]) -> None:
