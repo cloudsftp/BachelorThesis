@@ -1,5 +1,5 @@
-#!/bin/python3.8
-
+#!/bin/python
+# version 3.8 required
 
 import os
 from typing import List
@@ -11,8 +11,12 @@ from Data.DemandData.demand_data import DemandData
 path_to_data: str = 'Data/DemandData/OfficeData/'
 num_data_items: int = 24 * 6
 
-
 def read_file(file_name: str) -> DemandData:
+  '''
+  reads data from a file
+
+  :file_name: file to read from
+  '''
   device_day_load_df: pd.DataFrame = pd.read_csv(file_name)
   device_day_load_df = device_day_load_df.drop(columns=['timestamp', 'deviceMac'])
 
@@ -28,6 +32,11 @@ def read_file(file_name: str) -> DemandData:
 
 
 def read_device(device: str) -> pd.DataFrame:
+  '''
+  reads data of one device
+
+  :device: name of device
+  '''
   print('Reading {}...'.format(device))
 
   path_to_device: str = os.path.join(path_to_data, device)
@@ -45,8 +54,10 @@ def read_device(device: str) -> pd.DataFrame:
 
   return device_load_df
 
-
 def read_all() -> pd.DataFrame:
+  '''
+  reads data of all devices
+  '''
   devices: List[str] = os.listdir(path_to_data)
 
   load_df: pd.DataFrame = pd.DataFrame(data=np.zeros([num_data_items, 1]), columns=['power_kW'])

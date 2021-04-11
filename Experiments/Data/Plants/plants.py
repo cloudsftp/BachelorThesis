@@ -1,4 +1,5 @@
-#!/bin/python3.8
+#!/bin/python
+# version 3.8 required
 
 import os
 import json
@@ -10,12 +11,20 @@ from UCP.unit_commitment_problem import CombustionPlant
 
 @dataclass
 class Plants(object):
+  '''
+  handles the loading of the plant data
+  '''
   meta: Dict[str, Any]
   plants: List[CombustionPlant]
   path: str = os.path.join('Data', 'Plants')
 
   @staticmethod
   def read_from_json(file_name):
+    '''
+    loads the plant data from a json file
+
+    :file_name: file to read from
+    '''
     with open(os.path.join(Plants.path, file_name), 'r') as file:
       raw_data: Dict[str, Any] = json.load(file)
 

@@ -1,15 +1,17 @@
-#!/bin/python3.8
-
+#!/bin/python
+# version 3.8 required
 
 from typing import List
 import unittest
 from Annealing_DQM.dqm import UCP_DQM
 from Annealing_DQM.dqm_simulator import DQMSimulator
-
 from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP, UCPSolution
 
 
 class TestDQMAdjust(unittest.TestCase):
+  '''
+  tests the adjustment of the UCP solution after optimizing a DQM
+  '''
 
   def assertFloatCustomEqual(self, actual: float, expected: float) -> None:
     self.assertAlmostEqual(actual, expected, delta=0.00001)

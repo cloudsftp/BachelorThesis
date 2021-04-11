@@ -1,5 +1,5 @@
-#!/bin/python3.8
-
+##!/bin/python
+# versino 3.8 required
 
 import os
 import argparse
@@ -9,21 +9,34 @@ import matplotlib.pyplot as plt # type: ignore
 import pandas as pd # type: ignore
 from UCP.unit_commitment_problem import UCPSolution
 
+'''
+this file is used to create the figures comparing the experiment results
+it is not part of the experiments
+'''
 
 class ExperimentResults(object):
+  '''
+  class to wrap the experiment results
+  '''
   def __init__(self, solution_dir_name: str, solutions_name: str) -> None:
     self.solution_dir_name: str = solution_dir_name
     self.solutions_name: str = solutions_name
     self.load_expertiment_results()
     self.sort_experiment_results()
 
-
-
   @staticmethod
   def load_experiment_result(solution_file_name: str) -> UCPSolution:
+    '''
+    load a single experiment result
+
+    :solution_file_name: name of the file to read from
+    '''
     return UCPSolution.load_from(solution_file_name)
 
   def load_expertiment_results(self) -> None:
+    '''
+    load all experiment results
+    '''
     solution_file_names: List[str] = os.listdir(self.solution_dir_name)
     self.solutions: List[UCPSolution] = []
 
@@ -34,8 +47,11 @@ class ExperimentResults(object):
         )
       )
 
-
   def sort_experiment_results(self) -> None:
+    '''
+    put experiments in lists that are elements of a dictionary
+    the dictionary holds the lists as elements for a specific number of power plants that are used in the experiment
+    '''
     self.experiments_by_plants: Dict[int, List[UCPSolution]] = {}
 
     for solution in self.solutions:
@@ -48,8 +64,12 @@ class ExperimentResults(object):
 
       solutions_list.append(solution)
 
-
   def get_experiments(self, num_plants: int) -> List[UCPSolution]:
+    '''
+    returns a list of experiment results with the specified number of power plants
+
+    :num_plants: number of plants
+    '''
     solutions_list: Optional[List[UCPSolution]] = self.experiments_by_plants.get(num_plants)
 
     if not solutions_list:
@@ -59,6 +79,13 @@ class ExperimentResults(object):
 
 
   def plot_time(self, num_plants: int, loads: List[int], output_file_name: str) -> None:
+    '''
+    plots the computing time for the specific number of power plants and specified numbers of loads
+
+    :num_plants: number of plants
+    :loads: list of the numbers of loads
+    :output_file_name: name of the output file
+    '''
     solutions_list: List[UCPSolution] = self.get_experiments(num_plants)
 
     times: Dict[int, float] = {}
@@ -79,8 +106,14 @@ class ExperimentResults(object):
     plt.tight_layout()
     plt.savefig(output_file_name)
 
-
   def generate_table(self, num_plants: int, loads: List[int], output_file_name: str) -> None:
+    '''
+    generates a table of the computing time for the specific number of power plants and specified numbers of loads
+
+    :num_plants: number of plants
+    :loads: list of the numbers of loads
+    :output_file_name: name of the output file
+    '''
     solutions_list: List[UCPSolution] = self.get_experiments(num_plants)
 
     with open(output_file_name, 'w') as file:
@@ -99,7 +132,11 @@ class ExperimentResults(object):
 
       file.write('\\end{tabular}\n')
 
+
 if __name__ == "__main__":
+  '''
+  reads the arguments and calls the functions above to either plot or generate tables of the experiments
+  '''
   parser: argparse.ArgumentParser = argparse.ArgumentParser(description='Visualize results')
 
   solutions_dir_action: argparse.Action = parser.add_argument('--solutions-dir', type=str)

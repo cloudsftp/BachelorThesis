@@ -1,16 +1,18 @@
-#!/bin/python3.8
+#!/bin/python
+# version 3.8 required
 
 from typing import List, Union
-
 import numpy as np # type: ignore
 import unittest
-
 from numpy.testing._private.utils import assert_equal # type: ignore
 
 from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP
 from Annealing_QUBO.qubo import UCP_QUBO
 
 class TestQUBOBiases(unittest.TestCase):
+  '''
+  tests the generation of QUBOs using different UCPs
+  '''
 
   def linear_biases(self, qubo: UCP_QUBO, i: int, t: int, biases: List[float]) -> None:
     for k, bias in enumerate(biases):
