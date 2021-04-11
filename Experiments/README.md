@@ -1,7 +1,7 @@
 # Quantum Computing for Smart Energy Systems
 
 This is the code for the bachelor thesis "Quantum Computing for Smart Energy Systems".
-It contains Python code to run the experiments described in the document and produce the figures that compare the performance of the different solvers.
+It contains Python code to run the experiments described in the report and produce the figures that compare the performance of the different solvers.
 
 ### Contents
 
@@ -34,7 +34,7 @@ There are 4 Runners for
 - Direct Annealing QUBO `Annealing_QUBO.perform_experiments`
 - Gate-based QUBO `Gatebased.perform_experiments` (only runs one very small experiment, no command-line options available)
 
-optimization
+optimization.
 
 ### Options
 
