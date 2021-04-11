@@ -7,6 +7,12 @@ The hybrid sampler does not put the DQM on quantum hardware directly.
 It classically searches the solution space.
 The hybrid sampler speeds up this process by using quantum hardware to determine promising regions to explore next~\cite{DQMHybrid2020}.
 
+When running the experiments, this work sets the parameters for tuning the DQM as $1$.
+So $y_c = 1, y_s = 1, y_d = 1$.
+These parameters are part of the formula (\ref{formula:dqm.result}).
+One can change these to obtain better results.
+This work found that for small UCPs, this did not improve the quality of the solution.
+
 The optimization of the DQM using the hybrid sampler for small problems seems to have linear time complexity.
 If the UCP grows by $10$ time instances, the optimization takes about $0.1$ seconds longer.
 Table \ref{table:evaluation.annealing.performance} lists the results of the optimizations and the time the hybrid sampler needed to achieve that result.
@@ -84,7 +90,7 @@ That leads to a non-optimal solution of the UCP.
 \subsubsection{Hybrid QUBO Solver}
 
 This work implements the QUBOs for the UCP using the UQO-client.
-Unfortunately, the access to D-Waves hybrid samplers are limited and this study used all the available computing time for the hybrid DQM sampler.
+Unfortunately, the access to D-Waves hybrid samplers is limited, and this study used all the available computing time for the hybrid DQM sampler.
 For this reason, this work does not consider the performance of the hybrid sampler for QUBOs.
 
 Even though this work does not run the experiments on the hybrid QUBO sampler, the minimum computing power can be computed.
