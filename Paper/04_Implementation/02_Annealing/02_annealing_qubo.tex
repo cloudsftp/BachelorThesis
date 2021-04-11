@@ -25,16 +25,77 @@ In this case, there are $3$ types of quadratic biases --- biases resulting from 
 The startup and shutdown costs are different for every power plant but do not change over time.
 The program iterates over all power plants $i$ and times $t > 0$ and applies the startup and shutdown costs.
 The program iterates over every power output value index $0 \leq k < 2^{n_i}$ for the power plant $i$.
-It adds the quadratic bias $A_U$ for the pair $(p_{i, t-1, 0}, p_{i, t, k})$ and the quadratic bias for the pair $(p_{i, t-1, k}, p_{i, t, 0})$
+It adds the quadratic bias $A_U$ for the pair $(p_{i, t-1, 0}, p_{i, t, k})$ and the quadratic bias for the pair $(p_{i, t-1, k}, p_{i, t, 0})$.
+Listing \ref{implementation:annealing.qubo.quadratic.startup.code} shows the code that implements these quadratic biases.
+
+\begin{python}[
+  float,
+  caption={Implementation of the Quadratic Startup and Shutdown Biases for QUBOs},
+  label={implementation:annealing.qubo.quadratic.startup.code}
+]
+def add_quadratic_startup_shutdown(self, y_s: float) -> None:
+  '''
+  sets the quadratic biases for the startup costs for the QUBO
+  '''
+  for i in range(self.ucp.parameters.num_plants):
+    # compute once for every plant i
+    AU: float = self.ucp.plants[i].AU
+    AD: float = self.ucp.plants[i].AD
+
+    for t in range(1, self.ucp.parameters.num_loads):
+      # apply for one plant i at every time t > 0
+      for k in range(1, len(self.P[i])):
+        self.add_quadratic_bias(i, t-1, 0, i, t, k, AU * y_s)
+        self.add_quadratic_bias(i, t-1, k, i, t, 0, AD * y_s)
+\end{python}
 
 The demand constraints are different for every plant pair but do not change over time, like the startup and shutdown costs.
 The program iterates over all pairs of power plants $(i, j)$ where $i < j$ and power output value indices $0 \leq k < 2^{n_i}$ and $0 \leq l < 2^{n_j}$.
 Then it iterates over all times $t$ and applies the quadratic constraint $\gamma_d P_{i, k} * P_{j, l}$ to the pair $(p_{i, t, k}, p_{j, t, l})$
 The quadratic constraint is only computed once for every pair of power plants $(i, j)$ and pair of power output values $(k, l)$.
+Listing \ref{implementation:annealing.qubo.quadratic.demand.code} shows the code that implements these quadratic biases.
+
+\begin{python}[
+  float,
+  caption={Implementation of the Quadratic Demand Biases for QUBOs},
+  label={implementation:annealing.qubo.quadratic.demand.code}
+]
+def add_quadratic_demand(self, y_d: float) -> None:
+  '''
+  sets the quadratic biases for the demand for the QUBO
+  '''
+  for j in range(self.ucp.parameters.num_plants):
+    for i in range(j):
+      for l in range(len(self.P[j])):
+        for k in range(len(self.P[i])):
+          # compute for every quadruplet i, j, k, l (i < j) (i, j plant indices, k, l power output level indices)
+          value: float = self.P[j][l] * self.P[i][k]
+          for t in range(self.ucp.parameters.num_loads):
+            # apply to every time t
+            self.add_quadratic_bias(i, t, k, j, t, l, value * y_d)
+\end{python}
 
 The discretization constraint is the same for every plant and time instance.
 The program iterates over all power plants $i$ and times $t$.
 Then it iterates over all pairs of power output value indices $(k, l)$ where $0 \leq k < 2^{n_i}, 0 \leq l < 2^{n_j}$ and $k < l$ and aplies the quadratic constraint $\gamma_d$ to the pair $(p_{i, t, k}, p_{i, t, l})$.
+Listing \ref{implementation:annealing.qubo.quadratic.discretization.code} shows the code that implements these quadratic biases.
+
+\begin{python}[
+  float,
+  caption={Implementation of the Quadratic Discretization Biases for QUBOs},
+  label={implementation:annealing.qubo.quadratic.discretization.code}
+]
+  def add_quadratic_discretized(self, y_d: float) -> None:
+    '''
+    sets the quadratic biases for making sure only one power level is active per unit and time
+    '''
+    for i in range(self.ucp.parameters.num_plants):
+      for t in range(self.ucp.parameters.num_loads):
+        for l in range(len(self.P[i])):
+          for k in range(l):
+            # apply for every pair of power output levels k, l (k < l) for every plant i at every time t
+            self.add_quadratic_bias(i, t, k, i, t, l, y_d)
+\end{python}
 
 The quadratic biases do not overlap.
 The demand constraint biases and startup and shutdown biases are on orthogonal axes as mentioned in section \ref{implementation:annealing.dqm.quadratic}.
@@ -52,6 +113,61 @@ The formula (\ref{formula:qubo.result.linear}) captures the computation of the l
 The program iterates over all power plants $i$, times $t$, and possible power levels $0 \leq k < 2^{n_i}$.
 It calculates the linear bias as specified in formula (\ref{formula:qubo.result.linear}) for all indices.
 Then it applies the linear bias to the variable $p_{i, t, k}$.
+Listing \ref{implementation:annealing.qubo.linear.code} shows the code that implements these linear biases.
+
+\begin{python}[
+  float,
+  caption={Implementation of the Linear Biases for QUBOs},
+  label={implementation:annealing.qubo.linear.code}
+]
+def add_linear(self, y_c: float, y_d: float) -> None:
+  '''
+  sets the linear biases for the QUBO
+  '''
+  for i in range(self.ucp.parameters.num_plants):
+    plant: CombustionPlant = self.ucp.plants[i]
+    for t in range(self.ucp.parameters.num_loads):
+      for k in range(1, len(self.P[i])):
+        value: float = 0
+
+        # implements the formula for linear biases of the report
+        value += y_c * (plant.A + plant.B * self.P[i][k] + plant.C * (self.P[i][k] ** 2))
+        value += y_d * (self.P[i][k] ** 2 - self.ucp.loads[t] * self.P[i][k])
+
+        self.add_linear_bias(i, t, k, value)
+\end{python}
+
+The program computes the linear biases regarding the initial startup and shutdown costs independently.
+These biases have to be applied for different power levels $k$, depending on the initial state of the power plant.
+Including this in the algorithm \ref{implementation:annealing.qubo.linear.code} would lead to hard to read code.
+The program iterates over all pants $i$.
+Then it decides, based on the initial state of the plant, whether to apply the startup costs or the shutdown costs at time $t = 0$.
+For the startup costs, the program applies $A_i^U$ to the variable $p_{i, 0, 0}$.
+For the shutdown costs, the program applies $A_i^D$ to all variables $p_{i, 0, k}$ with $k > 0$.
+Listing \ref{implementation:annealing.qubo.linear.startup.code} shows the code that implements these linear biases.
+
+\begin{python}[
+  float,
+  caption={Implementation of the Linear Startup and Shutdown Biases for QUBOs},
+  label={implementation:annealing.qubo.linear.startup.code}
+]
+def add_linear_startup_shutdown(self, y_s: float) -> None:
+  '''
+  sets the linear biases for the QUBO regarding startup and shutdown costs
+  '''
+  for i in range(self.ucp.parameters.num_plants):
+    # compute once for every plant i
+    is_initially_on: bool = self.ucp.plants[i].initially_on
+
+    if is_initially_on:
+      A_D: float = self.ucp.plants[i].AD
+      self.add_linear_bias(i, 0, 0, y_s * A_D)
+
+    else:
+      A_U: float = self.ucp.plants[i].AU
+      for k in range(1, len(self.P[i])):
+        self.add_linear_bias(i, 0, k, y_s * A_U)
+\end{python}
 
 As mentioned in section \ref{implementation:annealing.qubo}, the program first builds the QUBO as a Python \texttt{dict}.
 The keys are pairs of integers $(i, j)$ with $i \neq j$ for quadratic biases.
