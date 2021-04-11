@@ -12,14 +12,14 @@ from Util.logging import debug_msg_time
 
 class UCP_DQM(object):
   '''
-  handles the generation of a DQM using D-Wave's ocean-sdk given an UCP
+  handles the generation of a DQM using D-Wave's ocean-sdk
   '''
   model: DiscreteQuadraticModel
   ucp: UCP
   p: List[List[Any]] # variables of model
   P: List[np.ndarray] # discretizised power levels
 
-  def indices_to_index(self, i: int, t: int) -> int:
+  def map_indices(self, i: int, t: int) -> int:
     '''
     implements the mapping function m of the report
 
@@ -38,7 +38,7 @@ class UCP_DQM(object):
 
   def init_variables(self) -> None:
     '''
-    instanciate the variables of the DQM
+    instantiates the variables of the DQM
     '''
     self.p = []
 
@@ -46,16 +46,16 @@ class UCP_DQM(object):
       p_i: List[Any] = []
       var_size: int = len(self.P[i])
 
-      for t in range(self.ucp.parameters.num_loads):
+      for _ in range(self.ucp.parameters.num_loads):
         p_i.append(self.model.add_variable(var_size))
       self.p.append(p_i)
 
   def calculate_F_i(self, plant: CombustionPlant, i: int) -> np.array:
     '''
-    calculate the F vector for unit i
+    calculates the cost-vector for plant i (called Fi in the report)
 
     :plant: power plant
-    :i: unit instance
+    :i: plant index
     '''
     P_i: np.ndarray = self.P[i]
     F_i: List[float] = [0]
@@ -67,7 +67,7 @@ class UCP_DQM(object):
 
   def set_linear(self, y_c: float, y_s: float, y_d: float) -> None:
     '''
-    set the linear biases for the DQM
+    sets the linear biases for the DQM
     '''
     for i in range(len(self.p)):
       P_i: np.ndarray = self.P[i]
@@ -77,9 +77,9 @@ class UCP_DQM(object):
       for t in range(len(self.p[i])):
         linear_biases: np.ndarray = y_c * F_i + y_d * (
           P_i * P_i - self.ucp.loads[t] * P_i
-        )
+        ) # implements formula for linear biases of the report
 
-        if t == 0:
+        if t == 0: # if t is 0, add initial startup or shutdown costs
           if plant.initially_on:
             linear_biases[0] += y_s * plant.AD
 
@@ -91,9 +91,10 @@ class UCP_DQM(object):
 
   def set_quadratic_startup(self, y_s: float) -> None:
     '''
-    set the quadratic biases for the startup costs for the DQM
+    sets the quadratic biases for the startup costs for the DQM
     '''
     for i in range(self.ucp.parameters.num_plants):
+      # compute once for every plant i
       plant: CombustionPlant = self.ucp.plants[i]
       num_cases: int = len(self.P[i])
       quadratic_biases: np.ndarray = np.zeros((num_cases, num_cases))
@@ -105,18 +106,21 @@ class UCP_DQM(object):
       quadratic_biases *= y_s
 
       for t in range(1, self.ucp.parameters.num_loads):
+        # apply for one plant i at every time t > 0
         self.model.set_quadratic(self.p[i][t-1], self.p[i][t], quadratic_biases)
 
   def set_quadratic_demand(self, y_d: float) -> None:
     '''
-    set the quadratic biases for the demand for the DQM
+    sets the quadratic biases for the demand for the DQM
     '''
     for j in range(1, self.ucp.parameters.num_plants):
       for i in range(j):
+        # compute once for every pair of plants i, j (i < j)
         quadratic_biases: np.ndarray = np.tensordot(self.P[i], self.P[j], axes=0)
         quadratic_biases *= y_d
 
         for t in range(self.ucp.parameters.num_loads):
+          # apply for one pair of plants i, j at every time t
           self.model.set_quadratic(self.p[i][t], self.p[j][t], quadratic_biases)
 
   def __init__(self, ucp: UCP, y_c: float = 1, y_s: float = 1, y_d: float = 1, max_h: float = 10) -> None:
@@ -144,15 +148,15 @@ class UCP_DQM(object):
     computes the UCP variables from a DQM solution
 
     :sample: DQM solution
-    :u: commitment of units (output variable)
-    :p: power output of units (output variable)
+    :u: commitment of plants (output variable)
+    :p: power output of plants (output variable)
     '''
     for i in range(self.ucp.parameters.num_plants):
       u.append([])
       p.append([])
 
       for t in range(self.ucp.parameters.num_loads):
-        value_index: int = int(sample[self.indices_to_index(i, t)])
+        value_index: int = int(sample[self.map_indices(i, t)])
         value: float = self.P[i][value_index]
 
         p[i].append(value)

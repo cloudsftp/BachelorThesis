@@ -1,10 +1,9 @@
-#!/bin/python3.8
+#!/bin/python
+# version 3.8 required
 
 from typing import List, Union
-
 import numpy as np # type: ignore
 import unittest
-
 from numpy.testing._private.utils import assert_equal # type: ignore
 
 from UCP.unit_commitment_problem import CombustionPlant, ExperimentParameters, UCP

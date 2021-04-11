@@ -30,7 +30,7 @@ class UCP_QUBO(object):
 
   def init_variables(self) -> None:
     '''
-    instanciates the variables of the QUBO
+    instantiates the variables of the QUBO
     '''
     self.p = []
 
@@ -49,7 +49,7 @@ class UCP_QUBO(object):
 
   def get_constant(self, y_d: float) -> float:
     '''
-    generates the constant bias for the QUBO
+    computes the constant bias for the QUBO
     '''
     value: float = y_d
     for t in range(self.ucp.parameters.num_loads):
@@ -64,7 +64,7 @@ class UCP_QUBO(object):
     adds a linear bias to the QUBO
 
     :linear: linear biases (output variable)
-    :i: unit index
+    :i: plant index
     :t: time index
     :k: power level index
     :value: weight of the bias
@@ -87,6 +87,7 @@ class UCP_QUBO(object):
         for k in range(len(self.P[i])):
           value: float = 0
 
+          # implements the formula for linear biases of the report
           value += y_c * (plant.A + plant.B * self.P[i][k] + plant.C * (self.P[i][k] ** 2))
           value += y_d * (self.P[i][k] ** 2 - self.ucp.loads[t] * self.P[i][k])
           value -= y_p
@@ -103,10 +104,10 @@ class UCP_QUBO(object):
     adds a quadratic bias to the QUBO
 
     :quadratic: quadratic constraints (output variable)
-    :i1: unit index source
+    :i1: plant index source
     :t1: time index source
     :k1: power level index source
-    :i2: unit index target
+    :i2: plant index target
     :t2: time index target
     :k2: power level index target
     :value: weight of the bias
@@ -124,10 +125,12 @@ class UCP_QUBO(object):
     :quadratic: quadratic constraints (output variable)
     '''
     for i in range(self.ucp.parameters.num_plants):
+      # compute once for every plant i
       AU: float = self.ucp.plants[i].AU
       AD: float = self.ucp.plants[i].AD
 
       for t in range(1, self.ucp.parameters.num_loads):
+        # apply for one plant i at every time t > 0
         for k in range(1, len(self.P[i])):
           self.add_quadratic(quadratic, i, t-1, 0, i, t, k, AU * y_s)
           self.add_quadratic(quadratic, i, t-1, k, i, t, 0, AD * y_s)
@@ -142,8 +145,10 @@ class UCP_QUBO(object):
       for i in range(j):
         for l in range(len(self.P[j])):
           for k in range(len(self.P[i])):
+            # compute for every quadruplet i, j, k, l (i < j) (i, j plant indices, k, l power output level indices)
             value: float = self.P[j][l] * self.P[i][k]
             for t in range(self.ucp.parameters.num_loads):
+              # apply to every time t
               self.add_quadratic(quadratic, i, t, k, j, t, l, value * y_d)
 
   def quadratic_discretized(self, quadratic: Dict[Tuple[str, str], float], y_d: float) -> None:
@@ -156,6 +161,7 @@ class UCP_QUBO(object):
       for t in range(self.ucp.parameters.num_loads):
         for l in range(len(self.P[i])):
           for k in range(l):
+            # apply for every pair of power output levels k, l (k < l) for every plant i at every time t
             self.add_quadratic(quadratic, i, t, k, i, t, l, y_d)
 
   def get_quadratic(self, y_s: float, y_d: float, y_p: float) -> Dict[Tuple[str, str], float]:
@@ -205,6 +211,7 @@ class UCP_QUBO(object):
       p.append([])
 
       for t in range(self.ucp.parameters.num_loads):
+        # store every power level k possible at time t for plant i
         value_indices: List[int] = []
         for k in range(len(self.P[i])):
           if result[self.p[i][t][k].name] == 1:
@@ -213,6 +220,7 @@ class UCP_QUBO(object):
         value: float = 0
         num_indices: int = len(value_indices)
         if num_indices > 0:
+          # choose median power level
           value = self.P[i][value_indices[(int) (num_indices / 2)]]
           if num_indices > 1:
             debug_msg('Warning: {} possible power levels for plant {} detected'.format(num_indices, i))

@@ -1,4 +1,5 @@
-#!/bin/python3.8
+#!/bin/python
+# version 3.8 required
 
 import pandas as pd # type: ignore
 from datetime import date, datetime, timedelta

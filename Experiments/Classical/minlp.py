@@ -23,9 +23,9 @@ class UCP_MINLP(object):
   '''
   model: ConcreteModel
 
-  def instanciate_variables(self) -> None:
+  def instantiate_variables(self) -> None:
     '''
-    instanciates the MINLP variables
+    instantiates the MINLP variables
     '''
     self.model.u = Var(self.model.I, self.model.T, domain=Boolean, initialize=0)
     self.model.p = Var(self.model.I, self.model.T, domain=NonNegativeReals, initialize=0)
@@ -139,7 +139,7 @@ class UCP_MINLP(object):
     self.model.I = range(len(ucp.plants))
     self.model.T = range(len(ucp.loads))
 
-    self.instanciate_variables()
+    self.instantiate_variables()
     self.build_startup_shutdown_disjunctions()
     self.build_objective()
     self.build_load_constraints()

@@ -15,11 +15,11 @@ this file is the experiment runner for the annealing optimizations using the UQO
 
 def optimize_annealing_qubo_uqo(ucp: UCP) -> UCPSolution:
   '''
-  initializes a connection to the UQO server
-  and then performs the classical optimization for an UCP
+  performs the annealing optimization for an UCP using QUBOs
 
   :ucp: UCP instance
   '''
+  # initialize a connection to the UQO sarver
   config: Config = Config(configpath='uqo_config.json')
   connection: Connection = config.create_connection()
 
@@ -28,7 +28,6 @@ def optimize_annealing_qubo_uqo(ucp: UCP) -> UCPSolution:
   solution.check_validity()
 
   return solution
-
 
 if __name__ == "__main__":
   '''
