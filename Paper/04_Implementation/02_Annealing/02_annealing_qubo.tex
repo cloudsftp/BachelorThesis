@@ -2,14 +2,14 @@
 \label{implementation:annealing.qubo}
 
 For the implementation of the QUBO for the annealing-based hardware, this work uses the UQO-client~\cite{UQOPyPI, UQOGitHub}.
-First, it writes the biases into a python \texttt{dict}.
+First, it writes the biases into a Python \texttt{dict}.
 Then the class \texttt{Qubo} of the UQO-client builds the \texttt{dwave-ocean-sdk} \texttt{BinaryQuadraticModel}-instance that the UQO-client can then send to the UQO-server.
 
 \subsubsection{Variables}
 \label{implementation:annealing.qubo.variables}
 
 The variables in this implementation are implicit.
-The indices for the python \texttt{dict} are pairs of integers where the integers are the IDs of the variables.
+The indices for the Python \texttt{dict} are pairs of integers where the integers are the IDs of the variables.
 Each ID is computed with the mapping function $m'$ of the formula (\ref{formula:qubo.mapping}).
 
 \subsubsection{Quadratic Biases}
