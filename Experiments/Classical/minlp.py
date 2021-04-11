@@ -19,7 +19,7 @@ from UCP.unit_commitment_problem import CombustionPlant, UCP, UCPSolution
 
 class UCP_MINLP(object):
   '''
-  handles the formulation of a MINLP given an UCP
+  handles the formulation of MINLPs
   '''
   model: ConcreteModel
 
@@ -33,7 +33,7 @@ class UCP_MINLP(object):
 
   def build_startup_shutdown_disjunctions(self):
     '''
-    build the disjunctive cases that set the startup and shutdown costs
+    builds the disjunctive cases that set the startup and shutdown costs
     '''
     self.model.shutdown_disjunct = Disjunct(self.model.I, self.model.T)
     self.model.on_disjunct = Disjunct(self.model.I, self.model.T)
@@ -67,7 +67,7 @@ class UCP_MINLP(object):
       defines which disjunct cases should be combined
 
       :model: MINLP
-      :i: unit index
+      :i: plant index
       :t: time index
       '''
       if t > 0:
@@ -91,8 +91,8 @@ class UCP_MINLP(object):
     def objective_function(model: ConcreteModel) -> Expression:
       plants: List[CombustionPlant] = self.ucp.plants
 
-      return sum(
-        sum(
+      return sum( # for every plant i
+        sum( # and every time t
           model.u[(i, t)] * (
             plants[i].A +
             plants[i].B * model.p[i, t] +
@@ -110,6 +110,12 @@ class UCP_MINLP(object):
     builds the constraints for the MINLP that make sure the power plants produce enough energy
     '''
     def load_constraint_rule(model: ConcreteModel, t: int) -> Expression:
+      '''
+      defines the rule for the constraints
+
+      :model: MINLP
+      :t: time index
+      '''
       return self.ucp.loads[t] == sum(model.u[(i, t)] * model.p[(i, t)] for i in model.I)
 
     self.model.l_constr = Constraint(self.model.T, rule=load_constraint_rule)
@@ -119,6 +125,13 @@ class UCP_MINLP(object):
     builds the constraints for the MINLP that make sure every power output is inside the limits of the power plants
     '''
     def power_constraint_rule(model: ConcreteModel, i: int, t: int) -> Expression:
+      '''
+      defines the rule for the constraints
+
+      :model: MINLP
+      :i: plant index
+      :t: time index
+      '''
       return inequality(
         self.ucp.plants[i].Pmin,
         model.p[(i, t)],
@@ -129,7 +142,7 @@ class UCP_MINLP(object):
 
   def __init__(self, ucp: UCP) -> None:
     '''
-    builds MINLP from a UCP
+    builds a MINLP from an UCP
 
     :ucp: UCP instance
     '''
