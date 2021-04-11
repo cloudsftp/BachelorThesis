@@ -22,44 +22,19 @@ jobs:
           root_file: main.tex
 
       - name: Rename output
-        run: cp Paper/main.pdf Paper/quantum_computing_for_smart_energy_optimizations_weik.pdf
+        run: cp Paper/main.pdf quantum_computing_for_smart_energy_optimizations_weik.pdf
 
-      - name: Upload PDF
-        uses: actions/upload-artifact@v2
+      - name: Zip Code
+        run: |
+          mv Experiments Quantum_computing_for_smart_energy_optimizations_code_weik
+          zip -r quantum_computing_for_smart_energy_optimizations_code_weik.zip Quantum_computing_for_smart_energy_optimizations_code_weik
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: BachelorThesis_Weik
-          path: Paper/quantum_computing_for_smart_energy_optimizations_weik.pdf
-
-  release:
-    name: Create Release
-    if: contains(github.ref, '/tags/')
-    env:
-      ref: ${{ github.ref }}
-    needs: build_paper
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download PDF
-        uses: actions/download-artifact@v2
-        with:
-          name: BachelorThesis_Weik
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+          files: |
+            quantum_computing_for_smart_energy_optimizations_weik.pdf
+            quantum_computing_for_smart_energy_optimizations_code_weik.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: Upload PDF to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./quantum_computing_for_smart_energy_optimizations_weik.pdf
-          asset_name: quantum_computing_for_smart_energy_optimizations_weik.pdf
-          asset_content_type: application/pdf
