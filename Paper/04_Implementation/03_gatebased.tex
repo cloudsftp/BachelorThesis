@@ -8,6 +8,9 @@ After the program instantiates the QUBO using the \texttt{QuadraticProgram} clas
 This class handles executing the Grover Optimization algorithm that section \ref{fundamentals:quantum.grover.optimization} describes.
 That includes building the quantum circuits of Grover algorithm instances for every iteration and the classical computation in between iterations.
 
+This section omits the code snippets because they are the same as in section \ref{implementation:annealing.qubo}.
+The only difference is how the program adds the biases to the model because it uses a different framework.
+
 \subsubsection{Variables}
 
 In this implementation, the variables are not implicit as with the UQO-client in section \ref{implementation:annealing.qubo.variables}.
