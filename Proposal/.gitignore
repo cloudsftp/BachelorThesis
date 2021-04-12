@@ -1,0 +1,21 @@
+# LaTeX
+*.alg
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.code
+*.fdb_latexmk
+*.fls
+*.idx
+*.lof
+*.log
+*.lol
+*.lot
+*.out
+*.pdf
+*.run.xml
+*.synctex*
+*.thm
+*.toc
+*.wrt
