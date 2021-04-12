@@ -5,7 +5,7 @@ Pyomo is open-source and supports the formulation of various optimization proble
 It also supports performing the optimization of the problems with standard open-source or commercial solvers~\cite{hart2011pyomo}.
 
 The program is given a UCP object that holds information about the power demands and the available power plants.
-It then creates a ''ConcreteModel'' from this information.
+It then creates a ``ConcreteModel'' from this information.
 This model of the MINLP formulation of the UCP has three $\aI \times \aT$ matrices as variables.
 The first two are the variables for the commitment $u_{i, t}$ and the power output $p_{i, t}$ for every power plant at every time.
 These are the free variables of the model that will be adjusted so that the objective function is minimized.
