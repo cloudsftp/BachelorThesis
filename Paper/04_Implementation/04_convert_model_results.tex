@@ -5,7 +5,7 @@
 
 For QUBOs, it can happen that for a single power plant at a single time instance, multiple binary variables for different power levels are $1$.
 The program then has to choose one of the possible power levels where the binary variable is $1$.
-For this the algorithm \ref{implementation:quantum.read.solution.qubo.algorithm} is used.
+Listing \ref{implementation:quantum.read.solution.qubo.algorithm} shows the code that is used to choose one power level.
 The program always chooses the median value.
 
 \begin{python}[
@@ -38,7 +38,7 @@ This solution, however, is not legal.
 The sum of the power outputs at every time instance does not satisfy the demand.
 The program, therefore, raises the power outputs of all plants at every time instance uniformly.
 While doing so, it also avoids violating the power limits of the individual plants.
-For this the algortihm \ref{implementation:quantum.read.solution.algorithm} is used.
+Listing \ref{implementation:quantum.read.solution.algorithm} shows the code that adjusts the power levels.
 
 \begin{python}[
   float,
